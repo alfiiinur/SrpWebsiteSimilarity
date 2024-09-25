@@ -1,7 +1,10 @@
-import React from 'react';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import React, {useState} from 'react';
+import { Menu, MenuButton, MenuItems } from '@headlessui/react'
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import TuneIcon from '@mui/icons-material/Tune';
+
 export function Form_createTbl(){
     return (
         <div className="max-w-2xl mx-auto py-10">
@@ -53,101 +56,142 @@ export function Form_createTbl(){
 
 
 export function DropdownMethodBased() {
-    return (
-        <Menu as="div" className="relative  inline-block text-left ">
-            <div>
-                <MenuButton
-                    className=" outline outline-1 inline-flex w-full justify-center gap-x-1.5 rounded-md bg-yellow-primary px-3 py-2 text-sm font-semibold font-poppins ttext-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50">
-                    Pilih Method-Based
-                    <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400"/>
-                </MenuButton>
-            </div>
 
-            <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-                <div className="py-1">
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            User-Based
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            Item-Based
-                        </a>
-                    </MenuItem>
+    const [selectMetode, setSelectMetode] = useState('Pilih Metode')
+
+    const handleChange = (method) => {
+        setSelectMetode(method);
+    }
+
+    return (
+
+        <FormControl>
+            <Menu as="div" className="relative inline-block text-left">
+                <div>
+                    <MenuButton
+                        className="outline outline-1 inline-flex w-full justify-center gap-x-1.5 rounded-md bg-yellow-primary px-3 py-2 text-sm font-semibold font-poppins text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50">
+                        {selectMetode}
+                        <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
+                    </MenuButton>
                 </div>
-            </MenuItems>
-        </Menu>
+
+                <Menu.Items
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                >
+                    <div className="py-1">
+                        <Menu.Item>
+                            {({ active }) => (
+                                <button
+                                    onClick={() => handleChange('User-Based')}
+                                    className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                                >
+                                    User-Based
+                                </button>
+                            )}
+                        </Menu.Item>
+                        <Menu.Item>
+                            {({ active }) => (
+                                <button
+                                    onClick={() => handleChange('Item-Based')}
+                                    className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                                >
+                                    Item-Based
+                                </button>
+                            )}
+                        </Menu.Item>
+                    </div>
+                </Menu.Items>
+            </Menu>
+        </FormControl>
     )
 }
 
+
+
 export function DropdownSimilarityMeasure() {
+
+    const [selectSimiliarty, setSelectSimiliarity] = useState('Pilih Similarity Measure')
+
+    const handleChange = (method) => {
+        setSelectSimiliarity(method)
+    }
+
     return (
-        <Menu as="div" className="relative  inline-block text-left ">
+        <FormControl>
+            <Menu as="div" className="relative  inline-block text-left ">
             <div>
                 <MenuButton
                     className=" outline outline-1 inline-flex w-full justify-center gap-x-1.5 rounded-md bg-yellow-primary px-3 py-2 text-sm font-semibold font-poppins text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50">
-                    Pilih Method-Based
+                    {selectSimiliarty}
                     <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400"/>
                 </MenuButton>
             </div>
 
-            <MenuItems
+            <Menu.Items
                 transition
                 className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
             >
                 <div className="py-1">
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            PCC
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            Vector Cosine
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            Adjuedted Vector Cosine
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            BC
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                        >
-                            KL
-                        </a>
-                    </MenuItem>
+                    <Menu.Item>
+                        {({active}) => (
+                            <button
+                                onClick={() => handleChange('Pearson Coreallation Coeficient (PCC)')}
+                                className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                                >
+                                Pearson Coreallation Coeficient (PCC)
+                            </button>
+                        )}
+
+                    </Menu.Item>
+                    <Menu.Item>
+                        {({active}) => (
+                            <button
+                                onClick={() => handleChange('Vectore Cosine')}
+                                className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                            >
+                                Vectore Cosine
+                            </button>
+                        )}
+                    </Menu.Item>
+                    <Menu.Item>
+                        {({active}) => (
+                            <button
+                                onClick={() => handleChange('Adjusted Vector Cosine')}
+                                className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                            >
+                                Adjusted Vector Cosine
+                            </button>
+                        )}
+                    </Menu.Item>
+                    <Menu.Item>
+                        {({active}) => (
+                            <button
+                                onClick={() => handleChange('Bhattacharyya Coefficient Similarity (BC)')}
+                                className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                            >
+                                Bhattacharyya Coefficient Similarity (BC)
+                            </button>
+                        )}
+                    </Menu.Item>
+                    <Menu.Item>
+                        {({active}) => (
+                            <button
+                                onClick={() => handleChange('Kullback-Leibler Distance (KL)')}
+                                className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
+                            >
+                                Kullback-Leibler Distance (KL)
+                            </button>
+                        )}
+
+                    </Menu.Item>
                 </div>
-            </MenuItems>
+            </Menu.Items>
         </Menu>
+        </FormControl>
     )
 }
+
+
+
+

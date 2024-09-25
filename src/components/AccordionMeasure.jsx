@@ -18,7 +18,7 @@ export function AccordionMeasure({headingMeasure, descriptionMeasure }) {
                 >
                     {headingMeasure}
                 </AccordionSummary>
-                <AccordionDetails className='text-sm font-normal'>
+                <AccordionDetails className='text-sm font-normal text-justify'>
                     {descriptionMeasure}
                 </AccordionDetails>
             </Accordion>
