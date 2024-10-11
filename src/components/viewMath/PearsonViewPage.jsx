@@ -3,6 +3,8 @@ import {MeanCenteredSimItemBased, MeanCenteredSimUserBased} from "../MathSimilar
 import {MeanMeasureItemBased, MeanMeasureUserBased} from "../MathSimilarity/meanMeasure";
 import {PearsonSimItemBased, PearsonSimUserBased} from "../MathSimilarity/pccMath";
 import {ItemBasedPrediciton, UserBasedPredicition} from "../MathSimilarity/PredicitionMath";
+import TabelView from "../Tabel_Data";
+import {getPearsonPC} from "../../api/api";
 
 
 
@@ -10,11 +12,11 @@ import {ItemBasedPrediciton, UserBasedPredicition} from "../MathSimilarity/Predi
 export function PearsonViewPageUserBased(){
     return(
         <div>
-            <h1>Ini adalah pcc user based</h1>
-            <MeanMeasureUserBased/>
-            <MeanCenteredSimUserBased/>
-            <PearsonSimUserBased/>
-            <UserBasedPredicition/>
+            <TabelView/>
+            <MeanMeasureUserBased opsional={1} similaritas={getPearsonPC}/>
+            <MeanCenteredSimUserBased opsional={1} similaritas={getPearsonPC}/>
+            <PearsonSimUserBased opsional={1} similaritas={getPearsonPC}/>
+            <UserBasedPredicition opsional={1} similaritas={getPearsonPC}/>
         </div>
     )
 }
@@ -23,11 +25,10 @@ export function PearsonViewPageUserBased(){
 export function PearsonViewPageItemBased(){
     return(
         <div>
-            <h1>Ini adalah ppc item based</h1>
-            <MeanMeasureItemBased/>
-            <MeanCenteredSimItemBased/>
-            <PearsonSimItemBased/>
-            <ItemBasedPrediciton/>
+            <MeanMeasureItemBased opsional={0} similaritas={getPearsonPC}/>
+            <MeanCenteredSimItemBased opsional={0} similaritas={getPearsonPC}/>
+            <PearsonSimItemBased opsional={0} similaritas={getPearsonPC}/>
+            <ItemBasedPrediciton opsional={0} similaritas={getPearsonPC}/>
         </div>
     )
 }

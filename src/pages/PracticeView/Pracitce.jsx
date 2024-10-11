@@ -5,17 +5,30 @@ import TabelView from "../../components/Tabel_Data";
 import CardSteps from "../../components/Card";
 import PercentIcon from "@mui/icons-material/Percent";
 import TuneIcon from '@mui/icons-material/Tune';
-import {DropdownMethodBased, DropdownSimilarityMeasure, Form_createTbl} from "../../components/form/form_createTbl";
+import {DropdownMethodBased, DropdownSimilarityMeasure} from "../../components/form/form_Practice";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DetailPageBox from "../detailPageView/DetailPage";
+import DetailPageBox, {HasilPerhitunganSimilaritas} from "../detailPageView/DetailPage";
 import NavbarMenu from "../../components/Navbar";
+import {Form_createTbl} from "../../components/form/form_createTbl";
 
 function Practice() {
     const [isDescriptionVisible, setDescriptionVisible] = useState(false);
 
     const toggleDescription = () => {
         setDescriptionVisible(!isDescriptionVisible);
+    };
+
+
+    const [selectedMethod, setSelectedMethod] = useState('');
+    const [selectedSimilarity, setSelectedSimilarity] = useState('');
+
+    const handleMethodChange = (method) => {
+        setSelectedMethod(method);
+    };
+
+    const handleSimilarityChange = (similaritas) => {
+        setSelectedSimilarity(similaritas);
     };
 
   return (
@@ -26,7 +39,7 @@ function Practice() {
 
           <section className='max-w-4xl mx-auto text-center py-10'>
               <h1 className='text-5xl font-bold font-poppins py-10 '>Practice Fungsi Similaritas</h1>
-              <p className='font-sm font-poppins'>Pada Page tutorial ini pengguna akan diberikan tutorial tentang perhitungan fungsi similaritas dalam Sistem Rekomendasi. Sehingga pengguna paham tentang perhitungan Fungsi Similaritas dengan berbagai metode yang bisa digunakan.</p>
+              <p className='font-sm font-poppins'>Pada Page Practice ini pengguna bisa  berexplorasi dan ingin melakukan experiment tentang perhitungan Fungsi Similaritas untuk pemahaman yang lebih lanjut.</p>
           </section>
 
           <section className='max-w-4xl mx-auto text-center py-10'>
@@ -35,27 +48,21 @@ function Practice() {
           </section>
 
 
-          <section className='max-4xl mx-auto text-center py-10'>
+          <section className='max-4xl mx-auto text-center'>
               <div className="flex flex-row items-center justify-center p-4">
 
                   <CardSteps
-                      heading='Membuat Tabel Matrix'
-                      description='  Membuat tabel matrix yang berfungsi sebagai representasi data. Tabel ini akan menampung rating dari pengguna terhadap berbagai item, memungkinkan analisis lebih lanjut mengenai pola dan hubungan di dalam data  '
+                      heading='Menyiapkan Data Rating'
+                      description=' Menyiapkan Data rating yang akan digunakan untuk perhitungan fungsi similaritas'
                   />
 
                   <CardSteps
-                      heading='Menentukan Sparsity'
-                      description=' Sparsity memberikan gambaran tentang proporsi data yang hilang dibandingkan dengan data yang tersedia, yang penting untuk memahami efektivitas sistem rekomendasi. '
+                      heading='Memilih Metode Digunakan'
+                      description='Memilih metode yang ingin digunakan yaitu User-Based atau Item-Based '
                   />
-
                   <CardSteps
-                      heading='Pilih Metode Sistem Rekomendasi '
-                      description=' Memilih metode sistem rekomendasi apa yang ingin digunakan, menggunakan Item-Based atau User-Based '
-                  />
-
-                  <CardSteps
-                      heading='Pilih Fungsi Similaritas'
-                      description=' Memilih metode yang tepat untuk menghitung similaritas. Terdapat berbagai metode yang bisa digunakan untuk menghitung similaritas '
+                      heading='Memilih Fungsi Similaritas'
+                      description=' Memilih fungsi similaritas untuk perhitungan kemiripan yang ingin di cari '
                   />
 
               </div>
@@ -71,43 +78,8 @@ function Practice() {
                   <h1 className='text-2xl font-bold font-poppins py-5 ml-3'>Buat Tabel Matrix:</h1>
               </div>
               <Form_createTbl/>
-
           </section>
 
-          <section className='max-w-2xl mx-auto text-center py-5'>
-              <div className='flex flex-col items-center'>
-                  <div className='flex flex-row items-center'>
-                      <div
-                          className='w-10 h-10 font-poppins rounded-full bg-green-500 text-white flex items-center justify-center text-lg'>2
-                      </div>
-                      <h1 className='text-2xl font-bold font-poppins py-10 px-3'>Sparsity</h1>
-                  </div>
-
-                  <div className='max-w-2xl flex flex-row items-center'>
-                      <form className='flex items-center'>
-                          <div
-                              className="outline outline-1 inline-flex  justify-center items-center gap-x-1.5 rounded-md bg-yellow-primary px-3 py-2 text-md font-poppins font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300">
-                              <input
-                                  id="sparsity"
-                                  name="sparsity"
-                                  type="number"
-                                  placeholder="sparsity..."
-                                  className="w-24 border-none bg-transparent focus:outline-none text-gray-900"
-                              />
-                              <div className="flex items-center">
-                                  <PercentIcon className="h-5 text-gray-500"/>
-                              </div>
-                          </div>
-                          <button type="submit"
-                                  className="w-30 ml-5 bg-purple-btn-primary text-white font-semibold px-3 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none flex items-center">
-                              <TuneIcon className="mr-2"/>
-                              Generate Random
-                          </button>
-
-                      </form>
-                  </div>
-              </div>
-          </section>
 
           <section className='max-w-4xl mx-auto text-center py-5'>
               <h1 className='text-2xl font-bold font-poppins py-10 '>Hasil Tabel Matrix </h1>
@@ -127,7 +99,7 @@ function Practice() {
                           </div>
                           <h1 className='text-2xl font-bold font-poppins py-10 px-3'>Pilih Metode Sistem Rekomendasi </h1>
                       </div>
-                      <DropdownMethodBased/>
+                      <DropdownMethodBased onChange={handleMethodChange}/>
                   </div>
 
                   <div className='flex flex-col items-center'>
@@ -138,7 +110,7 @@ function Practice() {
                           </div>
                           <h1 className='text-2xl font-bold font-poppins py-10 px-3'>Pilih Fungsi Similaritas</h1>
                       </div>
-                      <DropdownSimilarityMeasure/>
+                      <DropdownSimilarityMeasure onChange={handleSimilarityChange}/>
                   </div>
               </div>
           </section>
@@ -154,14 +126,9 @@ function Practice() {
               {isDescriptionVisible && (
                   <section className='max-w-4xl mx-auto text-center my-10 py-10'>
                       <h1 className='text-4xl font-semibold font-poppins m-10'>Hasil dan Pembahasan :</h1>
-                      <h1 className='text-2xl text-card_green_primary underline underline-1 font-poppins font-semibold py-10'>Hasil Perhitungan Fungsi Similaritas </h1>
-                      <TabelView/>
 
-                      <DetailPageBox/>
-
-
-
-
+                      <DetailPageBox method={selectedMethod} similaritas={selectedSimilarity}/>
+                      <HasilPerhitunganSimilaritas/>
                   </section>
               )}
           </section>

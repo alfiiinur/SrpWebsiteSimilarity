@@ -12,12 +12,57 @@ import {
     AdjustedCosineViewPageItemBased,
     AdjustedCosineViewPageUserBased
 } from "../../components/viewMath/AdjustedCosineViewPage";
+import {KullbackViewPageItemBased, KullbackViewPageUserBased} from "../../components/viewMath/KullbackLViewPage";
+import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
+import {BhattacharyyaViewItemBased, BhattacharyyaViewUserBased} from "../../components/viewMath/BhattacharyyaViewPage";
+import TabelView from "../../components/Tabel_Data";
 
 
-export default function DetailPageBox() {
+export default function DetailPageBox({method, similaritas}) {
+
+    const renderContent = () => {
+        if (method === 'User-Based') {
+            switch (similaritas) {
+                case 'Pearson Coreallation Coeficient (PCC)':
+                    return PearsonViewPageUserBased();
+                case 'Vectore Cosine':
+                    return CosineViewPageUserBased();
+                case 'Adjusted Vector Cosine'  :
+                    return AdjustedCosineViewPageUserBased();
+                case 'Bhattacharyya Coefficient Similarity (BC)' :
+                    return BhattacharyyaViewUserBased();
+                case 'Kullback-Leibler Distance (KL)':
+                    return KullbackViewPageUserBased();
+                default:
+                    return <p>Pilih Fungsi Similiartias untuk user-based.</p>;
+            }
+        } else if (method === 'Item-Based') {
+            switch (similaritas) {
+                case 'Pearson Coreallation Coeficient (PCC)':
+                    return PearsonViewPageItemBased();
+                case 'Vectore Cosine':
+                    return CosineViewPageItemBased();
+                case 'Adjusted Vector Cosine'  :
+                    return AdjustedCosineViewPageItemBased();
+                case 'Bhattacharyya Coefficient Similarity (BC)' :
+                    return BhattacharyyaViewItemBased();
+                case 'Kullback-Leibler Distance (KL)':
+                    return KullbackViewPageItemBased();
+                default:
+                    return <p>Pilih Fungsi Similiartias untuk Item-Based.</p>;
+            }
+        }
+        // Add more conditions as needed
+        return <p className='flex items-center text-xl font-semibold font-poppins text-red-600 '>
+            <SdCardAlertIcon className='mr-2'/> {/* Adjust margin as needed */}
+            Silahkan pilih metode dan fungsi similaritas terlebih dahulu.
+        </p>;
+    };
+
+
     return (
         <React.Fragment>
-            <CssBaseline />
+            <CssBaseline/>
             <Container maxWidth="max-w-5xl">
                 <Box
                     sx={{
@@ -34,21 +79,42 @@ export default function DetailPageBox() {
                     }}
                 >
                     <section className='max-w-4xl mx-auto text-center'>
-                        <h1 className='text-2xl font-bold font-poppins py-10'>Langkah-Langkah (User-based) dan Metode (Fungsi Similaritas)</h1>
-                        <p className='text-sm px-10 font-sm font-poppins'>
+                        <h1 className='text-2xl font-bold font-poppins py-5'>Langkah-Langkah {method} dan Metode {similaritas}</h1>
+                        <p className='text-sm px-10 py-5 font-sm font-poppins'>
                                 {/*tempat untuk ganti-ganti similiarity untuk sesuai metode yang di submit*/}
-                                {/*Pearson User Based*/}
-                                <PearsonViewPageUserBased/>
-                                {/*Pearson Item Based*/}
-                                <PearsonViewPageItemBased/>
-                                {/*Cosine User Based*/}
-                                <CosineViewPageUserBased/>
-                                {/*Cosine Item Based*/}
-                                <CosineViewPageItemBased/>
-                                {/*Adjusted User Based*/}
-                                <AdjustedCosineViewPageUserBased/>
-                                {/*Adjusted Item Based*/}
-                                <AdjustedCosineViewPageItemBased/>
+                            {renderContent()}
+                        </p>
+                    </section>
+                </Box>
+            </Container>
+        </React.Fragment>
+    );
+}
+
+
+export function HasilPerhitunganSimilaritas() {
+    return (
+        <React.Fragment>
+            <CssBaseline/>
+            <Container maxWidth="max-w-5xl">
+                <Box
+                    sx={{
+                        bgcolor: '#FDF9ED',
+                        height: 'auto',
+                        border: '1px solid black',
+                        borderRadius: 1,
+                        margin: 3,
+                        padding: 2,
+                        boxShadow: 3,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'flex-center',
+                    }}
+                >
+                    <section className='max-w-4xl mx-auto text-center'>
+                        <h1 className='text-2xl font-bold font-poppins py-5'>Hasil Perhitungan Similaritas</h1>
+                        <p className='text-sm px-10 py-5 font-sm font-poppins'>
+                            <TabelView/>
                         </p>
                     </section>
                 </Box>

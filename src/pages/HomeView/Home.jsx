@@ -55,15 +55,15 @@ function Home() {
           {/*    <NavbarMenu/>*/}
           {/*</section>*/}
           <section className='relative h-screen flex flex-col justify-center items-center'>
-              <div className='max-w-6xl mx-auto text-center relative z-10 px-4'>
+              <div className='max-w-7xl mx-auto text-center relative z-10 px-4'>
                   {/*<h1 className="text-3xl font-bold font-poppins">Media Pembelajarn Interaktif</h1>*/}
-                  <h1 className="text-7xl font-bold font-poppins">Media Pembelajaran Interaktif Perhitungan Fungsi Similaritas </h1>
+                  <h1 className="text-7xl font-bold font-poppins">Media Pembelajaran Interaktif Sistem Rekomendasi Perhitungan Fungsi Similaritas </h1>
                   <ScrollButton/>
               </div>
           </section>
 
           <section id='belajar' className='max-w-4xl mx-auto text-center py-10 px-4'>
-              <h2 className='text-5xl font-bold font-poppins mb-20'>Sekarang Waktunya Belajar dan Berlatih Fungsi Similaritas</h2>
+              <h2 className='text-5xl font-bold font-poppins mb-20'>Pilih Tutorial atau Practice Untuk Perhitungan Fungsi Similaritas</h2>
               <p className='text-md font-poppins'>Pengguna bisa memilih untuk memulai pembelajaran sistem rekomendasi
                   dengan 2 pilihan yaitu Tutorial Fungsi Similaritas dan Pracitce Fungsi Similaritas nya.</p>
               <div className='grid grid-cols-1 my-20 md:grid-cols-2 gap-8'>
@@ -136,10 +136,6 @@ function Home() {
                       {
                           title: 'Bhattacharyya Coefficient Similarity (BC)',
                           description: 'Jarak Bhattacharyya adalah ukuran statistik yang mengukur kesamaan antara dua distribusi probabilitas. Ukuran ini dinamai menurut Anil Kumar Bhattacharyya, seorang ahli statistik India-Amerika. Jarak ini didefinisikan untuk distribusi probabilitas kontinu dan didasarkan pada koefisien Bhattacharyya.'
-                      },
-                      {
-                          title: 'Kullback-Leibler Distance (KL)',
-                          description: 'Metrik divergensi Kullback-Leibler (entropi relatif) adalah pengukuran statistik dari teori informasi yang umumnya digunakan untuk mengukur perbedaan antara satu distribusi probabilitas dari distribusi probabilitas referensi.'
                       }
                   ].map((item, index) => (
                       <AccordionMeasure key={index} headingMeasure={item.title} descriptionMeasure={item.description}/>
@@ -158,32 +154,34 @@ function Home() {
               <div className='grid grid-cols-1 my-20 md:grid-cols-3 gap-8'>
                   <div
                       className='bg-card_blue_primary border-4 border-black  shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-center space-x-4'>
-                      <div className="flex-1 text-end">
+                      <div className="flex-1 text-center text-white font-poppins">
                           <div className=" flex-shrink-0 items-center flex justify-center">
                               <img src={ImageAs} alt="Descriptive Alt Text"
                                    className="w-32 h-32 object-cover rounded-lg "/>
                           </div>
                           <h3 className="text-xl text-white text-center font-bold font-poppins mb-2">Dr. Noor Ifada,
                               S.T., MISD.</h3>
+                          <p>NIDN : 0017037802 </p>
                           {/*<p className="mb-4 text-center text-white font-poppins font-sm">Dosen Pembimbing MBKM RISET 2024</p>*/}
                       </div>
                   </div>
 
                   <div
                       className="bg-card_green_primary border-4 border-black  shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-center space-x-4">
-                      <div className="flex-1 text-end">
+                      <div className="flex-1 text-center text-white font-poppins">
                           <div className="flex-shrink-0 items-center flex justify-center">
                               <img src={ImageAs} alt="Descriptive Alt Text"
                                    className="w-32 h-32 object-cover rounded-lg"/>
                           </div>
                           <h3 className="text-xl text-white text-center font-bold font-poppins mb-2">ALFI NUR
                               DANIALIN</h3>
+                          <p >NIM : 210411100059</p>
                           {/*<p className="mb-4 text-center text-white font-poppins font-sm">Mahasiswa </p>*/}
                       </div>
                   </div>
                   <div
                       className="bg-card_pink_primary border-4 border-black  shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-center space-x-4">
-                      <div className="flex-1 text-end">
+                      <div className="flex-1 text-center text-white font-poppins">
                           <div className="flex-shrink-0 items-center flex justify-center">
                               <img src={ImageAs} alt="Descriptive Alt Text"
                                    className="w-32 h-32 object-cover rounded-lg"/>
@@ -192,6 +190,8 @@ function Home() {
                               RAHMAN</h3>
                           {/*<p className="mb-4 text-center text-white font-poppins font-sm">Access a variety of resources*/}
                           {/*    and tutorials to enhance your skills.</p>*/}
+
+                          <p >NIM : 210411100080</p>
                       </div>
                   </div>
               </div>
