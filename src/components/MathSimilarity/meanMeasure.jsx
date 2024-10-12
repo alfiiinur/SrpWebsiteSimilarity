@@ -6,10 +6,18 @@ import {FunctionMeasureDropdown} from "./DropdownFunction/FunctionMeasureDropdow
 import {AllSimilaritas, getInitialData} from "../../api/getDataSet";
 
 
+export const data2 = [
+    [5, 0, 4, 3, 5, 4], // User 1
+    [4, 5, 0, 3, 2, 3], // User 2
+    [0, 3, 0, 2, 1, 0], // User 3
+    [1, 2, 2, 0, 3, 4], // User 4
+    [1, 0, 1, 2, 3, 3], // User 5
+];
+
 // MEAN USER-BASED
 
 const meanExpressionsUserBased = [
-    `\\[ \\mu_{u} = \\frac{\\sum_i\\in I_{u} r_{ui}}{\\left[I_{u}\\right]}   \\forall u\\in\\left\\{1...m\\right\\} \\]`,
+    `\\[ \\mu_{u} = \\frac{\\sum_{i\\in I_{u}} r_{ui}}{\\left|I_{u}\\right|}   \\forall u\\in\\left\\{1...m\\right\\} \\]`,
 
 ];
 
@@ -28,7 +36,6 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-    const [selectedRowData, setSelectedRowData] = useState(null);
 
 
     const handleMeanClick = (mean, index) => {
@@ -40,7 +47,6 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
     const closeModal = () => {
         setShowModal(false); // Sembunyikan modal
         setSelectedMean(null); // Reset nilai mean yang dipilih
-        setSelectedRowData(null)
     };
 
 
@@ -50,13 +56,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
     const { result, error } = AllSimilaritas(data, similaritas);
 
 
-    const data2 = [
-        [5, 0, 4, 3, 5, 4], // User 1
-        [4, 5, 0, 3, 2, 3], // User 2
-        [0, 3, 0, 2, 1, 0], // User 3
-        [1, 2, 2, 0, 3, 4], // User 4
-        [1, 0, 1, 2, 3, 3], // User 5
-    ];
+
 
     const getUserCount = () => {
         return data2.length;
@@ -66,7 +66,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
         return data2.map((userData, index) => {
 
 
-            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_i\\in I_{${index+1}} r_{${index+1}i}}{I_{${index+1}}}   \\forall u\\in\\left\\{${index+1}...${getUserCount()}\\right\\} \\]`;
+            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${index+1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
         });
     };
 
@@ -75,18 +75,18 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
         return data2.map((userData, index) => {
             const nonZeroIndices = userData
                 .map((val, idx) => (val !== 0 ? idx + 1 : null)) // Mengambil indeks (dimulai dari 1)
-                .filter((idx) => idx !== null) // Menghapus nilai null
+                .filter((idx) => idx !== null); // Menghapus nilai null
 
-            const nonZeroIndicesString = nonZeroIndices.join(" + "); // Menggabungkan indeks yang bukan nol
+            // Menghasilkan string dalam format r11, r12, ...
+            const nonZeroIndicesString = nonZeroIndices.map(idx => `r_{${index + 1}${idx}}`).join(" + "); // Menggabungkan indeks yang bukan nol dalam format r11 + r12 + r13
 
             // Menghitung jumlah indeks yang bukan nol
-            const countNonZero = nonZeroIndices.length;
+            const countNonZero = nonZeroIndices.join(" + ");
 
-
-
-            return  `\\[ \\mu_{${index+1}_{index}} = \\frac{( ${nonZeroIndicesString})}{${countNonZero}}   \\forall u\\in\\left\\{${index+1}...${getUserCount()}\\right\\} \\]`;
+            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\forall  ${index + 1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
         });
     }
+
     const MeanHasil = () => {
         return data2.map((userData, index) => {
             // const meanValue = calculateMean(userData);
@@ -94,7 +94,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
             const countNonZero = userData.filter((val) => val !== 0).length;
 
 
-            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{${countNonZero}}   \\forall u\\in\\left\\{${index+1}...${getUserCount()}\\right\\} \\]`;
+            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\forall  ${index+1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
         });
     };
 
@@ -138,15 +138,11 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg">
-                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan  Mean <span className='italic'>(μ)</span>  </h2>
+                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan  Mean <span className='italic'>(μ)</span> user- {selectedUserIndex + 1}  </h2>
                             {/* Menampilkan rumus mean menggunakan MathJax */}
                             <MathJaxContext options={mathjaxConfig}>
                                 <div className='flex justify-start items-start flex-col px-10'>
                                     {/* Tampilkan hanya rumus dan hasil untuk user yang dipilih */}
-                                    {/*<MathJaxComponent math={meanRumusIdx[selectedUserIndex]} />*/}
-                                    {/*<MathJaxComponent math={meanIndexExp[selectedUserIndex]} />*/}
-                                    {/*<MathJaxComponent math={meanExpressionsValues[selectedUserIndex]} />*/}
-
                                     {meanRumusIdx[selectedUserIndex]?.length > 0 ? (
                                         <MathJaxComponent math={meanRumusIdx[selectedUserIndex]} />
                                     ) : (
@@ -170,7 +166,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
                             </MathJaxContext>
 
                             {/* Menampilkan perhitungan manual */}
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari user {selectedUserIndex+1}  adalah : {selectedMean}</p>
+                            <p className="text-xl font-bold text-gray-700">Hasil mean dari user {selectedUserIndex+1}  adalah = {selectedMean}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
                                 onClick={closeModal} // Menutup modal saat tombol ditekan
@@ -218,7 +214,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
 //MEAN ITEM-BASED
 
 const meanExpressionsItemBased = [
-    `\\[ U_{i} = \\frac{\\sum_u\\in U_{i} r_{ui}}{\\left[U_{i}\\right]}   \\forall u\\in\\left\\{1...m\\right\\} \\]`
+    `\\[ U_{i} = \\frac{\\sum_{I\\in U_{i}} r_{ui}}{\\left|U_{i}\\right|}   \\forall u\\in\\left\\{1...m\\right\\} \\]`
 ]
 
 //keterangan rumus mean
@@ -230,12 +226,87 @@ const DetailRumusMeanItemBased = [
 ]
 
 export function MeanMeasureItemBased({opsional, similaritas}){
+
+    const transposedData = data2[0].map((_, colIndex) => {
+        return data2.map(row => row[colIndex]);
+    });
+
+    // console.log(transposedData);
+
+
+    const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
+    const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
+    const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+
+
+    const handleMeanClick = (mean, index) => {
+        setSelectedMean(mean); // Simpan nilai mean yang ditekan
+        setSelectedUserIndex(index)
+        setShowModal(true); // Tampilkan modal
+    };
+
+    const closeModal = () => {
+        setShowModal(false); // Sembunyikan modal
+        setSelectedMean(null); // Reset nilai mean yang dipilih
+    };
+
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
 
     const { result, error } = AllSimilaritas(data, similaritas);
+
+
+    const getItemCount = () => {
+        return transposedData.length;
+
+    }
+
+    const MeanRumusIndex = () => {
+        return transposedData.map((userData, index) => {
+
+
+            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${index+1}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+        });
+    };
+
+
+    const MeanItemIndex = () => {
+        return transposedData.map((userData, index) => {
+            const nonZeroIndices = userData
+                .map((val, idx) => (val !== 0 ? idx + 1 : null)) // Mengambil indeks (dimulai dari 1)
+                .filter((idx) => idx !== null); // Menghapus nilai null
+
+            // Menghasilkan string dalam format r11, r12, ...
+            const nonZeroIndicesString = nonZeroIndices.map(idx => `r_{${index + 1}${idx}}`).join(" + "); // Menggabungkan indeks yang bukan nol dalam format r11 + r12 + r13
+
+            // Menghitung jumlah indeks yang bukan nol
+            const countNonZero = nonZeroIndices.join(" + ");
+
+            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\forall  ${index + 1}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+        });
+    }
+
+    const MeanHasil = () => {
+        return transposedData.map((userData, index) => {
+            // const meanValue = calculateMean(userData);
+            const nonZeroValues = userData.filter((val) => val !== 0).join(" + ");
+            const countNonZero = userData.filter((val) => val !== 0).length;
+
+
+            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\forall  ${index+1}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+        });
+    };
+
+    const meanRumusIdx = MeanRumusIndex();
+
+    const meanIndexExp = MeanItemIndex();
+
+    const meanExpressionsValues = MeanHasil();
+
     const RenderItemTableMean = () => {
-        if (!result || !result['mean-list']) return null;
+        if (!result || !result['mean-list']) {
+            return <p>Loading or no data available...</p>;  // Tambahkan penanganan error atau loading
+        }
         return (
             <div className='flex justify-center mt-4'>
 
@@ -243,15 +314,17 @@ export function MeanMeasureItemBased({opsional, similaritas}){
                     <thead>
                     <tr className=" bg-gray-200">
                         <th className="border border-black px-4 py-2">U</th>
-                        <th className="border border-black px-4 py-2">Mean</th>
+                        <th className="border border-black px-4 py-2">μ</th>
                     </tr>
                     </thead>
                     <tbody>
                     {result['mean-list'].map((mean, index) => (
-                        <tr key={index}>
+                        <tr key={index} className='hover:bg-card_green_primary'>
                             <td className="border border-black px-4 py-2">{index + 1}</td>
                             <td className="border border-black px-4 py-2">
-                                <div className="text-center">
+                                <div className="text-center cursor-pointer hover:underline"
+                                     onClick={() => handleMeanClick(mean, index)}
+                                >
                                     {mean}
                                 </div>
                             </td>
@@ -259,6 +332,48 @@ export function MeanMeasureItemBased({opsional, similaritas}){
                     ))}
                     </tbody>
                 </table>
+                {/* Modal Card */}
+                {showModal && (
+                    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg">
+                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan  Mean <span className='italic'>(μ)</span> item - {selectedUserIndex + 1}  </h2>
+                            {/* Menampilkan rumus mean menggunakan MathJax */}
+                            <MathJaxContext options={mathjaxConfig}>
+                                <div className='flex justify-start items-start flex-col px-10'>
+                                    {/* Tampilkan hanya rumus dan hasil untuk user yang dipilih */}
+                                    {meanRumusIdx[selectedUserIndex]?.length > 0 ? (
+                                        <MathJaxComponent math={meanRumusIdx[selectedUserIndex]} />
+                                    ) : (
+                                        <p>Data untuk user ini tidak tersedia.</p>
+                                    )}
+
+                                    {meanIndexExp[selectedUserIndex]?.length > 0 ? (
+                                        <MathJaxComponent math={meanIndexExp[selectedUserIndex]} />
+                                    ): (
+                                        <p>Data untuk user ini tidak tersedia.</p>
+                                    )}
+
+                                    {meanExpressionsValues[selectedUserIndex]?.length > 0 ? (
+                                        <MathJaxComponent math={meanExpressionsValues[selectedUserIndex]} />
+                                    ): (
+                                        <p>Data untuk user ini tidak tersedia.</p>
+                                    )}
+
+
+                                </div>
+                            </MathJaxContext>
+
+                            {/* Menampilkan perhitungan manual */}
+                            <p className="text-xl font-bold text-gray-700">Hasil mean dari item {selectedUserIndex+1}  adalah = {selectedMean}</p>
+                            <button
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={closeModal} // Menutup modal saat tombol ditekan
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                )}
 
             </div>
 
