@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import {MeanCenteredSimItemBased, MeanCenteredSimUserBased} from "../MathSimilarity/meanCentredSim";
 import {MeanMeasureItemBased, MeanMeasureUserBased} from "../MathSimilarity/meanMeasure";
 import {PearsonSimItemBased, PearsonSimUserBased} from "../MathSimilarity/pccMath";
@@ -9,26 +9,27 @@ import {getPearsonPC} from "../../api/api";
 
 
 
-export function PearsonViewPageUserBased(){
+export const PearsonViewPageUserBased = forwardRef(({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi }, ref) => {
     return(
         <div>
-            <TabelView/>
-            <MeanMeasureUserBased opsional={1} similaritas={getPearsonPC}/>
-            <MeanCenteredSimUserBased opsional={1} similaritas={getPearsonPC}/>
-            <PearsonSimUserBased opsional={1} similaritas={getPearsonPC}/>
-            <UserBasedPredicition opsional={1} similaritas={getPearsonPC}/>
+            <MeanMeasureUserBased  ref={meanRef} opsional={1} similaritas={getPearsonPC}/>
+            <MeanCenteredSimUserBased  ref={meanCenteredRef} opsional={1} similaritas={getPearsonPC}/>
+            <PearsonSimUserBased  ref={fungsiSimilaritas} opsional={1} similaritas={getPearsonPC}/>
+            <UserBasedPredicition  ref={prediksi} opsional={1} similaritas={getPearsonPC}/>
         </div>
     )
-}
+})
 
 
-export function PearsonViewPageItemBased(){
+
+
+export function PearsonViewPageItemBased({meanRef, meanCenteredRef, fungsiSimilaritas, prediksi}){
     return(
         <div>
-            <MeanMeasureItemBased opsional={0} similaritas={getPearsonPC}/>
-            <MeanCenteredSimItemBased opsional={0} similaritas={getPearsonPC}/>
-            <PearsonSimItemBased opsional={0} similaritas={getPearsonPC}/>
-            <ItemBasedPrediciton opsional={0} similaritas={getPearsonPC}/>
+            <MeanMeasureItemBased  ref={meanRef} opsional={0} similaritas={getPearsonPC}/>
+            <MeanCenteredSimItemBased  ref={meanCenteredRef}opsional={0} similaritas={getPearsonPC}/>
+            <PearsonSimItemBased  ref={fungsiSimilaritas} opsional={0} similaritas={getPearsonPC}/>
+            <ItemBasedPrediciton  ref={prediksi} opsional={0} similaritas={getPearsonPC}/>
         </div>
     )
 }

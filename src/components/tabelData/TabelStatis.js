@@ -121,17 +121,11 @@ function TabelViewDataStatis() {
                         <div className="flex justify-between">
                             <div className="w-1/2">
                                 <p><strong className="italic">I</strong><sub>13</sub>: {'{ 4,3,5 }'}</p>
-                                <p><strong className="italic">I</strong><sub>14</sub>: 3</p>
-                                <p><strong className="italic">I</strong><sub>15</sub>: 5</p>
-                                <p><strong className="italic">I</strong><sub>16</sub>: 4</p>
-                                <p><strong className="italic">I</strong><sub>11</sub>: 5</p>
+
                             </div>
                             <div className="w-1/2">
                                 <p><strong className="italic">U</strong><sub>11</sub>: 5</p>
                                 <p><strong className="italic">U</strong><sub>13</sub>: 4</p>
-                                <p><strong className="italic">U</strong><sub>14</sub>: 3</p>
-                                <p><strong className="italic">U</strong><sub>15</sub>: 5</p>
-                                <p><strong className="italic">U</strong><sub>16</sub>: 4</p>
                             </div>
                         </div>
                     </div>

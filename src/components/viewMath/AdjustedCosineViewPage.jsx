@@ -11,8 +11,9 @@ import {getACosine, getBC} from "../../api/api";
 export function AdjustedCosineViewPageUserBased(){
     return(
         <div>
-            <MeanMeasureUserBased opsional={1} similaritas={getACosine}/>
-            <MeanCenteredSimUserBased opsional={1} similaritas={getACosine}/>
+            <MeanMeasureItemBased opsional={1} similaritas={getACosine}/>
+            <MeanCenteredSimItemBased opsional={1} similaritas={getACosine}/>
+            {/*<MeanCenteredSimUserBased opsional={1} similaritas={getACosine}/>*/}
             <AdjustedCosineUserBased opsional={1} similaritas={getACosine}/>
             <UserBasedPredicition opsional={1} similaritas={getACosine}/>
         </div>
@@ -23,8 +24,9 @@ export function AdjustedCosineViewPageUserBased(){
 export function AdjustedCosineViewPageItemBased(){
     return(
         <div>
-            <MeanMeasureItemBased opsional={0} similaritas={getACosine}/>
+            <MeanMeasureUserBased opsional={0} similaritas={getACosine}/>
             <MeanCenteredSimItemBased opsional={0} similaritas={getACosine}/>
+            {/*<MeanCenteredSimUserBased opsional={0} similaritas={getACosine}/>*/}
             <AdjustedCosineItemBased opsional={0} similaritas={getACosine}/>
             <ItemBasedPrediciton opsional={0} similaritas={getACosine}/>
         </div>

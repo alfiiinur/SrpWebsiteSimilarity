@@ -16,7 +16,7 @@ import NavbarMenu from "../../components/Navbar";
 
 
 const ScrollButton = () => {
-    const scrollRef = useRef(null);
+    // const scrollRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
 
     const scrollToSection = () => {

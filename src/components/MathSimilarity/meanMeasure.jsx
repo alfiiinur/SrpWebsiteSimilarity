@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {forwardRef, useCallback, useEffect, useState} from 'react'
 import {MathJaxContext} from "better-react-mathjax";
 import mathjaxConfig from "../../mathjax-config";
 import MathJaxComponent from "../../MathJaxComponent";
@@ -17,7 +17,7 @@ export const data2 = [
 // MEAN USER-BASED
 
 const meanExpressionsUserBased = [
-    `\\[ \\mu_{u} = \\frac{\\sum_{i\\in I_{u}} r_{ui}}{\\left|I_{u}\\right|}   \\forall u\\in\\left\\{1...m\\right\\} \\]`,
+    `\\[ \\mu_{u} = \\frac{\\sum_{i\\in I_{u}} r_{ui}}{\\left|I_{u}\\right|} \\ \\ \\  \\forall u\\in\\left\\{1...m\\right\\} \\]`,
 
 ];
 
@@ -32,7 +32,10 @@ const DetailRumusMeanUserBased = [
 
 
 
-export function MeanMeasureUserBased({opsional, similaritas}) {
+export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) => {
+
+
+
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
@@ -66,7 +69,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
         return data2.map((userData, index) => {
 
 
-            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${index+1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
+            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|} \\ \\ \\   \\forall ${index + 1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
         });
     };
 
@@ -83,7 +86,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
             // Menghitung jumlah indeks yang bukan nol
             const countNonZero = nonZeroIndices.join(" + ");
 
-            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\forall  ${index + 1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
+            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\]`;
         });
     }
 
@@ -94,7 +97,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
             const countNonZero = userData.filter((val) => val !== 0).length;
 
 
-            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\forall  ${index+1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
+            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}  \\]`;
         });
     };
 
@@ -123,7 +126,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
                         <tr key={index} className='hover:bg-card_green_primary'>
                             <td className="border border-black px-4 py-2 ">{index + 1}</td>
                             <td className="border border-black px-4 py-2 ">
-                                <div className="text-center cursor-pointer hover:underline "
+                                <div className="text-center cursor-pointer "
                                      onClick={() => handleMeanClick(mean, index)}
                                 >
                                 {mean}
@@ -141,7 +144,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
                             <h2 className="text-lg font-semibold mb-4">Detail Perhitungan  Mean <span className='italic'>(μ)</span> user- {selectedUserIndex + 1}  </h2>
                             {/* Menampilkan rumus mean menggunakan MathJax */}
                             <MathJaxContext options={mathjaxConfig}>
-                                <div className='flex justify-start items-start flex-col px-10'>
+                                <div className='flex justify-center items-center flex-col px-10'>
                                     {/* Tampilkan hanya rumus dan hasil untuk user yang dipilih */}
                                     {meanRumusIdx[selectedUserIndex]?.length > 0 ? (
                                         <MathJaxComponent math={meanRumusIdx[selectedUserIndex]} />
@@ -183,8 +186,8 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
     };
 
     return (
-        <div className='mt-5'>
-            <div className="flex items-center ">
+        <div className='mt-5' >
+            <div ref={ref} className="flex items-center " >
                 <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Mean Rating</h1>
@@ -208,7 +211,7 @@ export function MeanMeasureUserBased({opsional, similaritas}) {
 
         </div>
     );
-}
+});
 
 
 //MEAN ITEM-BASED
@@ -265,7 +268,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
         return transposedData.map((userData, index) => {
 
 
-            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${index+1}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${getItemCount()}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
         });
     };
 
@@ -282,7 +285,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
             // Menghitung jumlah indeks yang bukan nol
             const countNonZero = nonZeroIndices.join(" + ");
 
-            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\forall  ${index + 1}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\forall  ${getItemCount()}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
         });
     }
 
@@ -293,7 +296,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
             const countNonZero = userData.filter((val) => val !== 0).length;
 
 
-            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\forall  ${index+1}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\forall  ${getItemCount()}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
         });
     };
 
@@ -322,7 +325,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
                         <tr key={index} className='hover:bg-card_green_primary'>
                             <td className="border border-black px-4 py-2">{index + 1}</td>
                             <td className="border border-black px-4 py-2">
-                                <div className="text-center cursor-pointer hover:underline"
+                                <div className="text-center cursor-pointer"
                                      onClick={() => handleMeanClick(mean, index)}
                                 >
                                     {mean}
@@ -336,35 +339,41 @@ export function MeanMeasureItemBased({opsional, similaritas}){
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg">
-                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan  Mean <span className='italic'>(μ)</span> item - {selectedUserIndex + 1}  </h2>
+                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Mean <span
+                                className='italic'>(μ)</span> item - {selectedUserIndex + 1}</h2>
                             {/* Menampilkan rumus mean menggunakan MathJax */}
                             <MathJaxContext options={mathjaxConfig}>
-                                <div className='flex justify-start items-start flex-col px-10'>
+                                <div className='flex justify-center items-center flex-col px-10'>
                                     {/* Tampilkan hanya rumus dan hasil untuk user yang dipilih */}
                                     {meanRumusIdx[selectedUserIndex]?.length > 0 ? (
-                                        <MathJaxComponent math={meanRumusIdx[selectedUserIndex]} />
+                                        <div className="text-center">
+                                            <MathJaxComponent math={meanRumusIdx[selectedUserIndex]}/>
+                                        </div>
                                     ) : (
-                                        <p>Data untuk user ini tidak tersedia.</p>
+                                        <p className="text-center">Data untuk user ini tidak tersedia.</p>
                                     )}
 
                                     {meanIndexExp[selectedUserIndex]?.length > 0 ? (
-                                        <MathJaxComponent math={meanIndexExp[selectedUserIndex]} />
-                                    ): (
-                                        <p>Data untuk user ini tidak tersedia.</p>
+                                        <div className="text-center">
+                                            <MathJaxComponent math={meanIndexExp[selectedUserIndex]}/>
+                                        </div>
+                                    ) : (
+                                        <p className="text-center">Data untuk user ini tidak tersedia.</p>
                                     )}
 
                                     {meanExpressionsValues[selectedUserIndex]?.length > 0 ? (
-                                        <MathJaxComponent math={meanExpressionsValues[selectedUserIndex]} />
-                                    ): (
-                                        <p>Data untuk user ini tidak tersedia.</p>
+                                        <div className="text-center">
+                                            <MathJaxComponent math={meanExpressionsValues[selectedUserIndex]}/>
+                                        </div>
+                                    ) : (
+                                        <p className="text-center">Data untuk user ini tidak tersedia.</p>
                                     )}
-
-
                                 </div>
                             </MathJaxContext>
 
                             {/* Menampilkan perhitungan manual */}
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari item {selectedUserIndex+1}  adalah = {selectedMean}</p>
+                            <p className="text-xl font-bold text-gray-700 text-center">Hasil mean dari
+                                item {selectedUserIndex + 1} adalah = {selectedMean}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
                                 onClick={closeModal} // Menutup modal saat tombol ditekan
@@ -379,7 +388,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
 
         );
     };
-    return(
+    return (
         <div className='mt-5'>
             <div className="flex items-center">
                 <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>

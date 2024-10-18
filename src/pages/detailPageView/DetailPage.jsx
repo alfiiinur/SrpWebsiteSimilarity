@@ -16,15 +16,33 @@ import {KullbackViewPageItemBased, KullbackViewPageUserBased} from "../../compon
 import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
 import {BhattacharyyaViewItemBased, BhattacharyyaViewUserBased} from "../../components/viewMath/BhattacharyyaViewPage";
 import TabelView from "../../components/Tabel_Data";
+import {useRef} from "react";
 
 
 export default function DetailPageBox({method, similaritas}) {
+    // const { meanRef, meanCenteredRef, fungsiSimilaritas, prediksi } = refs;
+
+    const meanRef = useRef(null);
+    const meanCenteredRef = useRef(null);
+    const fungsiSimilaritas = useRef(null);
+    const prediksi = useRef(null);
+
+
+    // const scrollToSection = (ref) => {
+    //     if (ref.current) {
+    //         console.log('Scrolling to:', ref.current); // Cek ref di console
+    //         ref.current.scrollIntoView({ behavior: 'smooth' });
+    //     } else {
+    //         console.log('Reference not found:', ref); // Cek jika ref belum terhubung
+    //     }
+    // };
 
     const renderContent = () => {
         if (method === 'User-Based') {
             switch (similaritas) {
                 case 'Pearson Coreallation Coeficient (PCC)':
-                    return PearsonViewPageUserBased();
+                    return <PearsonViewPageUserBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi}/>;
+
                 case 'Vectore Cosine':
                     return CosineViewPageUserBased();
                 case 'Adjusted Vector Cosine'  :
@@ -39,7 +57,7 @@ export default function DetailPageBox({method, similaritas}) {
         } else if (method === 'Item-Based') {
             switch (similaritas) {
                 case 'Pearson Coreallation Coeficient (PCC)':
-                    return PearsonViewPageItemBased();
+                    return <PearsonViewPageItemBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi} />;
                 case 'Vectore Cosine':
                     return CosineViewPageItemBased();
                 case 'Adjusted Vector Cosine'  :
@@ -61,6 +79,7 @@ export default function DetailPageBox({method, similaritas}) {
 
 
     return (
+
         <React.Fragment>
             <CssBaseline/>
             <Container maxWidth="max-w-5xl">
@@ -75,13 +94,14 @@ export default function DetailPageBox({method, similaritas}) {
                         boxShadow: 3,
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'flex-center',
+                        alignItems: 'flex-start', // Change this to 'flex-start' for better alignment
                     }}
                 >
                     <section className='max-w-4xl mx-auto text-center'>
-                        <h1 className='text-2xl font-bold font-poppins py-5'>Langkah-Langkah {method} dan Metode {similaritas}</h1>
+                        <h1 className='text-2xl font-bold font-poppins py-5'>Langkah-Langkah {method} dan
+                            Metode {similaritas}</h1>
                         <p className='text-sm px-10 py-5 font-sm font-poppins'>
-                                {/*tempat untuk ganti-ganti similiarity untuk sesuai metode yang di submit*/}
+                            {/* Tempat untuk ganti-ganti similarity untuk sesuai metode yang di submit */}
                             {renderContent()}
                         </p>
                     </section>

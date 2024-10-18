@@ -47,7 +47,7 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
                         <tr key={rowIndex}>
                             <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                             {row.map((value, colIndex) => (
-                                <td key={colIndex} className={`border border-black px-4 py-2 text-center ${
+                                <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
                                     value === 1 ? 'bg-red-200' : ''
                                 }`}>
                                     {value.toFixed(1)} {/* Format desimal */}

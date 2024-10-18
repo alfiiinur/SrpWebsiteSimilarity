@@ -22,6 +22,26 @@ const DetailRumusSimBhattacharyyaUserBased = [
 ]
 
 export function BhattacharyyaUserBased({opsional, similaritas}){
+
+    const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
+    const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
+    const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+    const [selectedExpression, setSelectedExpression] = useState(null);
+
+
+    const handleMeanClick = (value, rowIndex, colIndex) => {
+        setSelectedMean(value); // Simpan nilai mean yang ditekan
+        setSelectedUserIndex([rowIndex, colIndex])
+        setShowModal(true); // Tampilkan modal
+    };
+
+    const closeModal = () => {
+        setShowModal(false); // Sembunyikan modal
+        setSelectedMean(null); // Reset nilai mean yang dipilih
+        setSelectedUserIndex(null)
+    };
+
+
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
 
@@ -48,16 +68,37 @@ export function BhattacharyyaUserBased({opsional, similaritas}){
                         <tr key={rowIndex}>
                             <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                             {row.map((value, colIndex) => (
-                                <td key={colIndex} className={`border border-black px-4 py-2 text-center ${
+                                <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
                                     value === 1 ? 'bg-red-200' : ''
-                                }`}>
-                                    {value.toFixed(1)} {/* Format desimal */}
+                                }`}
+                                    onClick= {() => handleMeanClick(value)}
+                                >
+                                    {value.toFixed(4)} {/* Format desimal */}
                                 </td>
                             ))}
                         </tr>
                     ))}
                     </tbody>
                 </table>
+                {showModal && (
+                    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
+                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Fungsi Similaritas</h2>
+
+                            <h2 className='font-semibold text-md'>Data Mean-Centered Yang Dipilih Selain 0</h2>
+
+                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                                = {selectedMean.toFixed(2)}</p>
+
+                            <button
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={closeModal} // Menutup modal saat tombol ditekan
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     };
@@ -105,6 +146,26 @@ const DetailRumusSimBhattacharyyaItemBased = [
 ]
 
 export function BhattacharyyaItemBased({opsional, similaritas}){
+
+
+    const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
+    const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
+    const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+    const [selectedExpression, setSelectedExpression] = useState(null);
+
+
+    const handleMeanClick = (value, rowIndex, colIndex) => {
+        setSelectedMean(value); // Simpan nilai mean yang ditekan
+        setSelectedUserIndex([rowIndex, colIndex])
+        setShowModal(true); // Tampilkan modal
+    };
+
+    const closeModal = () => {
+        setShowModal(false); // Sembunyikan modal
+        setSelectedMean(null); // Reset nilai mean yang dipilih
+        setSelectedUserIndex(null)
+    };
+
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
 
@@ -131,16 +192,37 @@ export function BhattacharyyaItemBased({opsional, similaritas}){
                         <tr key={rowIndex}>
                             <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                             {row.map((value, colIndex) => (
-                                <td key={colIndex} className={`border border-black px-4 py-2 text-center ${
+                                <td key={colIndex} className={`border border-black px-4 py-2 text-center hover:bg-card_green_primary ${
                                     value === 1 ? 'bg-red-200' : ''
-                                }`}>
-                                    {value.toFixed(1)} {/* Format desimal */}
+                                }`}
+                                    onClick= {() => handleMeanClick(value)}
+                                >
+                                    {value.toFixed(4)} {/* Format desimal */}
                                 </td>
                             ))}
                         </tr>
                     ))}
                     </tbody>
                 </table>
+                {showModal && (
+                    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
+                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Fungsi Similaritas</h2>
+
+                            <h2 className='font-semibold text-md'>Data Mean-Centered Yang Dipilih Selain 0</h2>
+
+                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                                = {selectedMean.toFixed(2)}</p>
+
+                            <button
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={closeModal} // Menutup modal saat tombol ditekan
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     };
