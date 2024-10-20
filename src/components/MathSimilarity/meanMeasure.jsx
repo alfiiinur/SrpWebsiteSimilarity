@@ -268,7 +268,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
         return transposedData.map((userData, index) => {
 
 
-            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${getItemCount()}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+            return    `\\[ \\mu_{${index+1}} = \\frac{\\sum_{i\\in I_{${index+1}}} r_{${index+1}i}}{\\left|I_{${index+1}}\\right|}   \\forall ${index +1 }\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
         });
     };
 
@@ -285,7 +285,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
             // Menghitung jumlah indeks yang bukan nol
             const countNonZero = nonZeroIndices.join(" + ");
 
-            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\forall  ${getItemCount()}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+            return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }  \\]`;
         });
     }
 
@@ -296,7 +296,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
             const countNonZero = userData.filter((val) => val !== 0).length;
 
 
-            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\forall  ${getItemCount()}\\in\\left\\{1...${getItemCount()}\\right\\} \\]`;
+            return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}   \\]`;
         });
     };
 

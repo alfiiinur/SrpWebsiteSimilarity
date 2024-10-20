@@ -58,9 +58,9 @@ export function CosineMathUserBased({opsional, similaritas}){
 
         const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
 
-        const expression = `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesRow.join(', ')} \\right\\}, 
-        I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol.join(', ')} \\right\\} \\text{ maka : }
-        I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`;
+        const expression = ` \\[ \\text{ Numerator : }I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\} \\ \\text{dan Denominator : } \\ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesRow.join(', ')} \\right\\}, 
+         I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol.join(', ')} \\right\\} 
+        \\]`;
 
         return (
             <>
@@ -70,7 +70,7 @@ export function CosineMathUserBased({opsional, similaritas}){
     };
 
 
-    const SimilaritasValue = ({ rowIndex, colIndex, dataOnly }) => {
+    const SimilaritasValueDa = ({ rowIndex, colIndex, dataOnly }) => {
         // Ambil index yang di-filter dari SimilaritasIndexNonZero
         const nonZeroIndexesRow = dataOnly[rowIndex]
             .map((value, index) => (value !== 0 ? index : null))
@@ -83,23 +83,27 @@ export function CosineMathUserBased({opsional, similaritas}){
         // Cari intersection
         const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
 
-        // Ambil mean-centered value dari data untuk rowIndex dan colIndex
-        const meanCenteredRow = intersection.map(i => dataOnly[rowIndex][i] - mean(dataOnly[rowIndex]));
-        const meanCenteredCol = intersection.map(i => dataOnly[colIndex][i] - mean(dataOnly[colIndex]));
+        // Ambil nilai langsung dari data untuk rowIndex dan colIndex
+        const rowValues = intersection.map(i => dataOnly[rowIndex][i]);
+        const colValues = intersection.map(i => dataOnly[colIndex][i]);
 
+        // Hitung numerator
+        const numerator = rowValues.map((val, idx) => `(${val.toFixed(2)} \\times ${colValues[idx].toFixed(2)})`).join(' + ');
 
+        // Hitung denominator, ambil semua nilai non-zero
+        const denominatorRow = nonZeroIndexesRow.map(i => dataOnly[rowIndex][i]);
+        const denominatorCol = nonZeroIndexesCol.map(i => dataOnly[colIndex][i]);
 
-        // Buat expression untuk MathJax (hanya menampilkan nilai mean-centered)
-        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(2)} \\times ${meanCenteredCol[idx].toFixed(2)})`).join(' + ')}}{${meanCenteredRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)}) +  (${meanCenteredCol[idx].toFixed(2)})}`).join(' \\times ')}} \\]`;
+        const denominator = `{\\sqrt{(${denominatorRow.filter(val => val !== 0).map(val => `(${val.toFixed(2)})^2`).join(' + ')})} \\times  \\sqrt {(${denominatorCol.filter(val => val !== 0).map(val => `(${val.toFixed(2)})^2`).join(' + ')})}}`;
+
+        // Buat expression untuk MathJax (menampilkan numerator dan denominator)
+        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${numerator}}{${denominator}} \\]`;
 
         return <MathJaxComponent math={expression} />;
     };
 
-// Fungsi untuk menghitung rata-rata (mean)
-    const mean = (arr) => {
-        const validValues = arr.filter(value => value !== 0); // Hanya hitung non-zero values
-        return validValues.reduce((sum, value) => sum + value, 0) / validValues.length;
-    };
+
+
 
 
 
@@ -117,8 +121,6 @@ export function CosineMathUserBased({opsional, similaritas}){
         if (!result || !result['similarity']) return null;
 
         const numberOfColumnsSim = result['similarity'][0].length; // Ambil jumlah kolom dari baris pertama
-        const numberOfColumnsCen = result['mean-centered'][0].length; // Ambil jumlah kolom dari baris pertama
-        if (!result || !result['mean-centered']) return null;
 
 
         return (
@@ -162,13 +164,13 @@ export function CosineMathUserBased({opsional, similaritas}){
                                     <thead>
                                     <tr className="bg-gray-200">
                                         <th className="border border-black px-4 py-2">U/I</th>
-                                        {Array.from({length: numberOfColumnsCen}, (_, index) => (
+                                        {Array.from({length: dataOnly[0].length}, (_, index) => (
                                             <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                                         ))}
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {result['mean-centered'].map((row, rowIndex) => (
+                                    {dataOnly.map((row, rowIndex) => (
                                         <tr key={rowIndex}>
                                             <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
@@ -221,7 +223,7 @@ export function CosineMathUserBased({opsional, similaritas}){
                                     {selectedUserIndex && dataOnly ? (
                                         <>
                                             {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
-                                            <SimilaritasValue rowIndex={selectedUserIndex[0]}
+                                            <SimilaritasValueDa rowIndex={selectedUserIndex[0]}
                                                               colIndex={selectedUserIndex[1]} dataOnly={dataOnly}/>
                                         </>
                                     ) : (
@@ -288,34 +290,125 @@ const DetailRumusSimCosineItemBased = [
 export function CosineMathItemBased({opsional, similaritas}) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
-    const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
+    const [selectedUserIndexItem, setSelectedUserIndexItem] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
     const [selectedExpression, setSelectedExpression] = useState(null);
 
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
         setSelectedMean(value); // Simpan nilai mean yang ditekan
-        setSelectedUserIndex([rowIndex, colIndex])
+        setSelectedUserIndexItem([rowIndex, colIndex])
         setShowModal(true); // Tampilkan modal
     };
 
     const closeModal = () => {
         setShowModal(false); // Sembunyikan modal
         setSelectedMean(null); // Reset nilai mean yang dipilih
-        setSelectedUserIndex(null)
+        setSelectedUserIndexItem(null)
     };
 
 
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
+    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const transposedData = dataOnly[0].map((_, colIndex) =>
+        dataOnly.map(row => row[colIndex])
+    );
 
     const {result, error} = AllSimilaritas(data, similaritas);
+
+
+    const SimilaritasIndexItem = ({ rowIndex, colIndex }) => {
+        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}}\\right)\\left(r_{${colIndex + 1}i}-\\overline{r_{${rowIndex + 1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${colIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}} \\]`;
+        return <MathJaxComponent math={expression} />;
+    };
+
+    const SimilaritasIndexNonZeroItem = ({ rowIndex, colIndex, dataOnly }) => {
+        const nonZeroIndexesRow = dataOnly.map(row => row[rowIndex])
+            .map((value, index) => (value !== 0 ? index + 1 : null))
+            .filter(index => index !== null);
+
+        // Ambil non-zero indexes dari kolom berdasarkan col
+        const nonZeroIndexesCol = dataOnly.map(row => row[colIndex])
+            .map((value, index) => (value !== 0 ? index + 1 : null))
+            .filter(index => index !== null);
+
+
+        const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
+
+        const expression = ` \\[ \\text{ Numerator : }I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\} \\ \\text{dan Denominator : } \\ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesRow.join(', ')} \\right\\}, 
+         I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol.join(', ')} \\right\\} 
+        \\]`;
+
+        return (
+            <>
+                <MathJaxComponent math={expression} />
+            </>
+        );
+    };
+
+// Utility function to transpose the matrix
+    const transposeMatrix = (matrix) => {
+        return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+    };
+
+    const SimilaritasValueItem = ({ rowIndex, colIndex, dataOnly }) => {
+
+        // Transpose the matrix first
+        const transposedDataOnly = transposeMatrix(dataOnly);
+
+
+        // Ambil index yang di-filter dari SimilaritasIndexNonZero
+        // const nonZeroIndexesRow = transposedDataOnly.map((row, index) => (row[rowIndex] !== 0 ? index : null))
+        //     .map((value, index) => (value !== 0 ? index : null))
+        //     .filter(index => index !== null);
+        //
+        // // Mengakses data untuk kolom: iterasi pada dataOnly dan ambil nilai pada colIndex untuk tiap baris
+        // const nonZeroIndexesCol = transposedDataOnly.map((row, index) => (row[colIndex] !== 0 ? index : null))
+        //     .filter(index => index !== null);
+
+        const nonZeroIndexesRow = transposedDataOnly[rowIndex]
+            .map((value, index) => (value !== 0 ? index : null))
+            .filter(index => index !== null);
+
+        const nonZeroIndexesCol = transposedDataOnly[colIndex]
+            .map((value, index) => (value !== 0 ? index : null))
+            .filter(index => index !== null);
+
+        // Cari intersection antara indeks baris dan kolom yang memiliki nilai non-zero
+        const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
+
+        // Ambil nilai langsung dari data untuk rowIndex dan colIndex pada intersection
+        const rowValues = intersection.map(i => transposedDataOnly[rowIndex][i]);
+        const colValues = intersection.map(i => transposedDataOnly[colIndex][i]);
+
+        // Hitung numerator (pembilang)
+        const numerator = rowValues.map((val, idx) => `(${val} \\times ${colValues[idx]})`).join(' + ');
+
+        // Hitung denominator, ambil semua nilai non-zero dari rowIndex dan colIndex
+        const denominatorRow = nonZeroIndexesRow.map(i => transposedDataOnly[rowIndex][i]);
+        const denominatorCol = nonZeroIndexesCol.map(i => transposedDataOnly[colIndex][i]);
+
+        const denominator = `{\\sqrt{(${denominatorRow.filter(val => val !== 0).map(val => `(${val})^2`).join(' + ')})} \\times  \\sqrt {(${denominatorCol.filter(val => val !== 0).map(val => `(${val})^2`).join(' + ')})}}`;
+
+        // Buat expression untuk MathJax (menampilkan numerator dan denominator)
+        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${numerator}}{${denominator}} \\]`;
+
+        return <MathJaxComponent math={expression} />;
+    };
+
+
+
+
+
+
+
 
     const RenderItemTabelSimiliartas = () => {
 
         if (!result || !result['similarity']) return null;
 
-        const numberOfColumns = result['similarity'][0].length; // Ambil jumlah kolom dari baris pertama
+        const numberOfColumnsSimItem = result['similarity'][0].length; // Ambil jumlah kolom dari baris pertama
 
 
         return (
@@ -324,7 +417,7 @@ export function CosineMathItemBased({opsional, similaritas}) {
                     <thead>
                     <tr className="bg-gray-200">
                         <th className="border border-black px-4 py-2">U/U</th>
-                        {Array.from({length: numberOfColumns}, (_, index) => (
+                        {Array.from({length: numberOfColumnsSimItem}, (_, index) => (
                             <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                         ))}
                     </tr>
@@ -338,9 +431,9 @@ export function CosineMathItemBased({opsional, similaritas}) {
                                     className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
                                         value === 1 ? 'bg-red-200' : ''
                                     }`}
-                                    onClick={() => handleMeanClick(value)}
+                                    onClick={() => handleMeanClick(value, rowIndex, colIndex)}
                                 >
-                                    {value.toFixed(2)} {/* Format desimal */}
+                                    {value.toFixed(4)} {/* Format desimal */}
                                 </td>
                             ))}
                         </tr>
@@ -353,9 +446,83 @@ export function CosineMathItemBased({opsional, similaritas}) {
                             <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Fungsi Similaritas</h2>
 
                             <h2 className='font-semibold text-md'>Data Mean-Centered Yang Dipilih Selain 0</h2>
+                            <div className="overflow-x-auto"> {/* Tambahkan ini untuk responsivitas tabel */}
+                                <table
+                                    className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
+                                    <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-black px-4 py-2">U/I</th>
+                                        {Array.from({length: transposedData[0].length}, (_, index) => (
+                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                        ))}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {transposedData.map((row, rowIndex) => (
+                                        <tr key={rowIndex}>
+                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+
+                                            {row.map((value, colIndex) => {
+                                                const OriginalValue = transposedData[rowIndex][colIndex];
+                                                const IsZero = OriginalValue === 0;
+
+                                                return (
+                                                    <td key={colIndex}
+                                                        className={`border border-black px-4 py-2 text-center 
+                                                            ${IsZero ? 'text-red-500' : ''} 
+                                                            ${
+                                                            !IsZero &&
+                                                            (selectedUserIndexItem.includes(rowIndex))
+                                                                ? 'bg-green-200'
+                                                                : ''
+                                                        }`}
+                                                    >
+                                                        {value.toFixed(1)} {/* Format desimal */}
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Menampilkan perhitungan manual */}
+                            <MathJaxContext options={mathjaxConfig}>
+                                <div className='flex justify-center items-center flex-col px-10'>
+                                    {selectedUserIndexItem ? (
+                                        <>
+                                            <SimilaritasIndexItem rowIndex={selectedUserIndexItem[0]}
+                                                                  colIndex={selectedUserIndexItem[1]}/>
+                                            <SimilaritasIndexNonZeroItem rowIndex={selectedUserIndexItem[0]}
+                                                                         colIndex={selectedUserIndexItem[1]}
+                                                                         dataOnly={dataOnly}/>
+                                        </>
+                                    ) : (
+                                        <p>No expression selected.</p>
+                                    )}
+                                </div>
+                            </MathJaxContext>
+
+
+                            <h2 className='font-semibold text-md'>Data yang sudah terfilter</h2>
+                            <MathJaxContext options={mathjaxConfig}>
+                                <div className='flex justify-center items-center flex-col px-10'>
+                                    {selectedUserIndexItem && dataOnly ? (
+                                        <>
+                                            {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
+                                            <SimilaritasValueItem rowIndex={selectedUserIndexItem[0]}
+                                                                  colIndex={selectedUserIndexItem[1]}
+                                                                  dataOnly={dataOnly}/>
+                                        </>
+                                    ) : (
+                                        <p>No expression selected.</p>
+                                    )}
+                                </div>
+                            </MathJaxContext>
 
                             <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
-                                = {selectedMean.toFixed(2)}</p>
+                                = {selectedMean.toFixed(4)}</p>
 
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"

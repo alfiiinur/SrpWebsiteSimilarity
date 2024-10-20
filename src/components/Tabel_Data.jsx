@@ -122,7 +122,7 @@ export const TabelRatingData = ({ opsional }) => {
         <div className='flex flex-col mb-5 font-poppins'>
             <table className="border border-black mt-4 mr-3 text-center">
                 <thead>
-                <tr className="bg-gray-200">
+                <tr className="bg-card_blue_primary">
                     <th className="border border-black px-4 py-2">U/I</th>
                     {Array.from({ length: item }, (_, index) => (
                         <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
@@ -136,7 +136,7 @@ export const TabelRatingData = ({ opsional }) => {
                         {row.map((value, colIndex) => {
                             const cellClass = value === 0
                                 ? 'border border-black px-4 py-2 text-center bg-red-200'
-                                : 'border border-black px-4 py-2 text-center hover:bg-yellow-200 cursor-pointer';
+                                : 'border border-black px-4 py-2 text-center hover:bg-card_green_primary cursor-pointer';
 
                             return (
                                 <td
@@ -177,8 +177,8 @@ export const TabelRatingData = ({ opsional }) => {
                 <div className="flex items-start justify-start space-x-6">
                     {/* Left Column */}
                     <div className="w-1/2   space-y-2">
-                        <p><strong>user</strong>: {user}</p>
-                        <p><strong>item</strong>: {item}</p>
+                        <p><strong>m</strong>: {user}</p>
+                        <p><strong>n</strong>: {item}</p>
                     </div>
 
                     {/* Right Column */}
@@ -267,13 +267,13 @@ export const NotationCard = () => {
                         className="italic">user</span> (target) <em>u</em> terhadap <span className="italic">item</span>
                         <em>j</em></p>
                     <p><strong>l</strong>: jumlah <span className="italic">item</span> tetangga terdekat</p>
-                    <p><strong>Y<sub>u(j)</sub></strong>: himpunan sejumlah <em>l</em> <span
-                        className="italic">item</span> yang telah diberi rating <span
-                        className="italic">user</span> target <em>u</em>, yang telah merupakan tetangga terdekat
-                        (atau <span className="italic">similar</span> dengan) <span className="italic">item</span>
-                        <em>j</em>. <em>Catatan: |X<sub>u(j)</sub>| ≤ k</em></p>
-                    <p><strong>TopN<sub>u</sub></strong>: rekomendasi <span className="italic">top-N</span> <span
-                        className="italic">item</span> untuk <span className="italic">user</span> (target) <em>u</em></p>
+                    {/*<p><strong>Y<sub>u(j)</sub></strong>: himpunan sejumlah <em>l</em> <span*/}
+                    {/*    className="italic">item</span> yang telah diberi rating <span*/}
+                    {/*    className="italic">user</span> target <em>u</em>, yang telah merupakan tetangga terdekat*/}
+                    {/*    (atau <span className="italic">similar</span> dengan) <span className="italic">item</span>*/}
+                    {/*    <em>j</em>. <em>Catatan: |X<sub>u(j)</sub>| ≤ k</em></p>*/}
+                    {/*<p><strong>TopN<sub>u</sub></strong>: rekomendasi <span className="italic">top-N</span> <span*/}
+                    {/*    className="italic">item</span> untuk <span className="italic">user</span> (target) <em>u</em></p>*/}
                 </div>
             </div>
 

@@ -157,7 +157,7 @@ export function PearsonSimUserBased({opsional, similaritas}) {
 
 
         // Buat expression untuk MathJax (hanya menampilkan nilai mean-centered)
-        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(2)} \\times ${meanCenteredCol[idx].toFixed(2)})`).join(' + ')}}{${meanCenteredRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)}) +  (${meanCenteredCol[idx].toFixed(2)})}`).join(' \\times ')}} \\]`;
+        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(2)} \\times ${meanCenteredCol[idx].toFixed(2)})`).join(' + ')}}{${meanCenteredRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)})^2 +  (${meanCenteredCol[idx].toFixed(2)})^2}`).join(' \\times ')}} \\]`;
 
         return <MathJaxComponent math={expression} />;
     };
@@ -421,6 +421,15 @@ export function PearsonSimItemBased({opsional, similaritas}) {
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
     const [selectedExpression, setSelectedExpression] = useState(null);
 
+    const initialData = getInitialData(opsional);
+    const [data, setData] = useState(initialData);
+    // get only data
+    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const transposedData = dataOnly[0].map((_, colIndex) =>
+        dataOnly.map(row => row[colIndex])
+    );
+
+    const {result, error} = AllSimilaritas(data, similaritas);
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
         setSelectedMean(value); // Simpan nilai mean yang ditekan
@@ -439,19 +448,20 @@ export function PearsonSimItemBased({opsional, similaritas}) {
         return <MathJaxComponent math={expression} />;
     };
 
-    const SimilaritasIndexNonZero = ({ rowIndex, colIndex, dataOnly }) => {
-        const nonZeroIndexesRow = dataOnly[colIndex]
-            .map((value, index) => (value !== 0 ? index + 1 : null))
+    const SimilaritasIndexNonZeroItem = ({ rowIndex, colIndex, dataOnly }) => {
+        // Ambil indeks non-zero dari kolom colIndex
+        const nonZeroIndexesCol1 = dataOnly.map((row, index) => (row[colIndex] !== 0 ? index + 1 : null))
+            .filter(index => index !== null); // +1 untuk 1-based indexing
+
+        // Ambil indeks non-zero dari kolom rowIndex (yang dipakai sebagai perbandingan)
+        const nonZeroIndexesCol2 = dataOnly.map((row, index) => (row[rowIndex] !== 0 ? index + 1 : null))
             .filter(index => index !== null);
 
-        const nonZeroIndexesCol = dataOnly[rowIndex]
-            .map((value, index) => (value !== 0 ? index + 1 : null))
-            .filter(index => index !== null);
+        // Cari intersection antara kedua kolom
+        const intersection = nonZeroIndexesCol1.filter(index => nonZeroIndexesCol2.includes(index));
 
-        const intersection = nonZeroIndexesCol.filter(index => nonZeroIndexesRow.includes(index));
-
-        const expression = `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesRow.join(', ')} \\right\\}, 
-        I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol.join(', ')} \\right\\} \\text{ maka : }
+        const expression = `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+        I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
         I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`;
 
         return (
@@ -462,27 +472,56 @@ export function PearsonSimItemBased({opsional, similaritas}) {
     };
 
 
+    // const SimilaritasValue = ({ rowIndex, colIndex, dataOnly }) => {
+    //     // Ambil index yang di-filter dari SimilaritasIndexNonZero
+    //     const nonZeroIndexesRow = dataOnly.map((row, index) => (row[colIndex] !== 0 ? index + 1 : null))
+    //         .filter(index => index !== null); // +1 untuk 1-based indexing
+    //
+    //     const nonZeroIndexesCol = dataOnly.map((row, index) => (row[rowIndex] !== 0 ? index + 1 : null))
+    //         .filter(index => index !== null);
+    //
+    //     // Cari intersection
+    //     const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
+    //
+    //
+    //     const numberOfColumnsCen = result['mean-centered'][0].length; // Ambil jumlah kolom dari baris pertama
+    //     if (!result || !result['mean-centered']) return null;
+    //
+    //
+    //     // Ambil mean-centered value dari data untuk rowIndex dan colIndex
+    //     const meanCenteredRow = intersection.map(i => numberOfColumnsCen[rowIndex][i]  );
+    //     const meanCenteredCol = intersection.map(i => numberOfColumnsCen[colIndex][i] );
+    //
+    //     // Buat expression untuk MathJax (hanya menampilkan nilai mean-centered)
+    //     const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(2)} \\times ${meanCenteredCol[idx].toFixed(2)})`).join(' + ')}}{${meanCenteredRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)}) +  (${meanCenteredCol[idx].toFixed(2)})}`).join(' \\times ')}} \\]`;
+    //
+    //     return <MathJaxComponent math={expression} />;
+    // };
+
     const SimilaritasValue = ({ rowIndex, colIndex, dataOnly }) => {
         // Ambil index yang di-filter dari SimilaritasIndexNonZero
-        const nonZeroIndexesRow = dataOnly[rowIndex]
-            .map((value, index) => (value !== 0 ? index : null))
+        const nonZeroIndexesRow = dataOnly.map((row, index) => (row[colIndex] !== 0 ? index : null)) // Remove +1 for 0-based indexing
             .filter(index => index !== null);
 
-        const nonZeroIndexesCol = dataOnly[colIndex]
-            .map((value, index) => (value !== 0 ? index : null))
+        const nonZeroIndexesCol = dataOnly.map((row, index) => (row[rowIndex] !== 0 ? index : null)) // Remove +1 for 0-based indexing
             .filter(index => index !== null);
 
         // Cari intersection
         const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
 
-        // Ambil mean-centered value dari data untuk rowIndex dan colIndex
-        const meanCenteredRow = intersection.map(i => dataOnly[rowIndex][i] - mean(dataOnly[rowIndex]));
-        const meanCenteredCol = intersection.map(i => dataOnly[colIndex][i] - mean(dataOnly[colIndex]));
+        const meanCentered = result['mean-centered']; // Access mean-centered array
 
+        if (!meanCentered || meanCentered.length === 0) return null;
 
+        // Map intersection indexes to retrieve mean-centered values
+        const meanCenteredRow = intersection.map(i => meanCentered[rowIndex][i]);
+        const meanCenteredCol = intersection.map(i => meanCentered[colIndex][i]);
+
+        // Check if values are valid
+        if (!meanCenteredRow || !meanCenteredCol) return null;
 
         // Buat expression untuk MathJax (hanya menampilkan nilai mean-centered)
-        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(2)} \\times ${meanCenteredCol[idx].toFixed(2)})`).join(' + ')}}{${meanCenteredRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)}) +  (${meanCenteredCol[idx].toFixed(2)})}`).join(' \\times ')}} \\]`;
+        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(1)} \\times ${meanCenteredCol[idx].toFixed(1)})`).join(' + ')}}{\\sqrt{${meanCenteredRow.map((val, idx) => `(${val.toFixed(1)})^2`).join(' + ')}} \\times \\sqrt{${meanCenteredCol.map((val, idx) => `(${val.toFixed(1)})^2`).join(' + ')}}} \\]`;
 
         return <MathJaxComponent math={expression} />;
     };
@@ -490,23 +529,6 @@ export function PearsonSimItemBased({opsional, similaritas}) {
 
 
 
-// Fungsi untuk menghitung rata-rata (mean)
-    const mean = (arr) => {
-        const validValues = arr.filter(value => value !== 0); // Hanya hitung non-zero values
-        return validValues.reduce((sum, value) => sum + value, 0) / validValues.length;
-    };
-
-
-
-    const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
-    // get only data
-    const [dataOnly, setDataOnly] = useState(initialData.data);
-    const transposedData = dataOnly[0].map((_, colIndex) =>
-        dataOnly.map(row => row[colIndex])
-    );
-
-    const {result, error} = AllSimilaritas(data, similaritas);
 
     const RenderItemTabelSimilarity = () => {
         if (!result || !result['similarity']) return null;
@@ -599,7 +621,7 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                                         <>
                                             <SimilaritasIndex rowIndex={selectedUserIndexItem[0]}
                                                               colIndex={selectedUserIndexItem[1]}/>
-                                            <SimilaritasIndexNonZero rowIndex={selectedUserIndexItem[0]}
+                                            <SimilaritasIndexNonZeroItem rowIndex={selectedUserIndexItem[0]}
                                                                      colIndex={selectedUserIndexItem[1]}
                                                                      dataOnly={dataOnly}/>
                                         </>

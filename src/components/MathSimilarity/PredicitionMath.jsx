@@ -466,26 +466,73 @@ const DetailRumusPrediksiItemBased = [
 
 export function ItemBasedPrediciton({opsional, similaritas}) {
 
+
+    const initialData = getInitialData(opsional);
+    const [data, setData] = useState(initialData);
+    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const transposedData = dataOnly[0].map((_, colIndex) =>
+        dataOnly.map(row => row[colIndex])
+    );
+    const { result, error } = AllSimilaritas(data, similaritas);
+
+
+
     const [selectedValue, setSelectedValue] = useState(null); // State untuk menyimpan mean yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
     const [selectedItem, setSelectedItem] = useState(null); // Menyimpan item yang diklik
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // Menyimpan user yang diklik
+    const [selectedUserIndexMean, setSelectedUserIndexMean] = useState(null); // Menyimpan user yang diklik
 
     const [selectedRowIndex, setSelectedRowIndex] = useState(null); // Menyimpan user yang diklik
 
 
-    const [topSimilarities, setTopSimilarities] = useState([]); // State to store top similarities
-    const [PrediksiFormula, setPrediksiFormula] = useState([]); // State to store top similarities
+    const [topSimilaritiesItem, setTopSimilarities] = useState([]); // State to store top similarities
+    const [PrediksiFormulaItem, setPrediksiFormula] = useState([]); // State to store top similarities
 
     const [selectedExpression, setSelectedExpression] = useState([]);
 
+
+    // Function to find top `count` similarities closest to 1 where the user has a valid rating
+    const findTopSimilaritiesWithValidRatings = (similarityData, transposedData, itemIndex, userIndex, count = 2) => {
+
+        // Ambil semua similaritas dan cek apakah user telah memberikan rating pada item tersebut
+        const similarities = similarityData.map((row, index) => ({
+            index,
+            value: row[userIndex],   // Nilai similaritas
+            diff: Math.abs(row[userIndex] - 1),  // Jarak absolut dari 1
+            hasRated: transposedData[index][itemIndex] !== 0  // Cek apakah user telah memberikan rating
+        }));
+
+        // Sort by proximity to 1 (ascending) and filter users who have rated the item (rating is not 0)
+        const validSimilarities = similarities
+            .filter(item => item.hasRated)  // Hanya simpan user yang telah memberikan rating
+            .sort((a, b) => b.value - a.value);  // Urutkan berdasarkan nilai tertinggi
+
+        return validSimilarities.slice(0, count);  // Kembalikan top 'count' similaritas
+    };
+
+
+
     const handleMeanClick = (value, rowIndex, colIndex) => {
+        const expressionIndexItem = PrediksiIndexItem(rowIndex, colIndex);
+        // const expressionValue = PrediksiValue(rowIndex, colIndex);
+        setSelectedExpression([expressionIndexItem]); //
 
         setSelectedValue(value)
         setSelectedItem(colIndex); // Simpan item yang diklik (index)
-        setSelectedUserIndex(rowIndex); // Simpan user yang diklik (index)
+        setSelectedUserIndex(colIndex); // Simpan user yang diklik (index)
+        setSelectedUserIndexMean(rowIndex); // Simpan user yang diklik (index)
         setSelectedRowIndex(rowIndex); // Simpan user yang diklik (index)
 
+        // Get the top similarities when clicking
+        const top = findTopSimilaritiesWithValidRatings(result['similarity'], transposedData, colIndex, rowIndex, 2);
+        setTopSimilarities(top);
+
+        // Call PrediksiValue with the top similarities to generate the formula
+        const formulaItem = PrediksiValueItem(rowIndex, colIndex, top);
+        setPrediksiFormula(formulaItem); // Store the formula in state
+
+        setShowModal(true); // Tampilkan modal
     };
 
     const closeModal = () => {
@@ -495,20 +542,58 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
         setSelectedValue(null)
         setSelectedUserIndex(null)
         setTopSimilarities(null)
+        setSelectedUserIndexMean(null)
 
 
     };
 
-    const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
-    const [dataOnly, setDataOnly] = useState(initialData.data);
 
-    const { result, error } = AllSimilaritas(data, similaritas);
+    // rumus
+    const PrediksiIndexItem = (rowIndex, colIndex) => {
+        return  `\\[ {\\widetilde{r_{${rowIndex+1}${colIndex + 1}}}} = \\overline{r_{${rowIndex+1}}} +\\frac{\\sum_{v\\in N_${rowIndex+1}^${colIndex+1}} Sim_{${rowIndex+1}v} \\times \\left(r_{v${colIndex+1}} - \\overline{r_{v}}\\right)}{\\sum_{v \\in N_${rowIndex+1}^${colIndex+1}}\\mid Sim_{${rowIndex+1}v} \\mid} \\]`;
+    }
+
+
+    const PrediksiValueItem = (rowIndex, colIndex, similarValues = []) => {
+        if (!Array.isArray(similarValues) || similarValues.length === 0) {
+            return ''; // Return empty if no similarities found
+        }
+
+        if (!result || !result['similarity']) return null;
+
+        const selectedUserMean = result['mean-list'][rowIndex]; // Mengambil nilai mean untuk user yang dipilih
+
+        // Bangun bagian similarity dan mean-centered yang dinamis
+        const simPart = similarValues
+            .filter(sim => result['mean-centered'][sim.index][rowIndex] !== 0) // Only include values where rating is non-zero
+            .map(sim => {
+                // Ambil nilai mean-centered berdasarkan similaritas yang terpilih
+                const meanCenteredValue = result['mean-centered'][sim.index][rowIndex];
+                return `\\left(${sim.value.toFixed(4)} \\times \\left(${meanCenteredValue.toFixed(2)}\\right)\\right)`;
+            })
+            .join(' + '); // Gabungkan setiap elemen dengan simbol penjumlahan
+
+        const denominatorPart = similarValues
+            .filter(sim => result['mean-centered'][sim.index][rowIndex] !== 0) // Only include values where rating is non-zero
+            .map(sim => `\\mid ${sim.value.toFixed(4)} \\mid`) // Ambil nilai absolut dari similaritas
+            .join(' + '); // Jumlahkan nilai absolut dari similaritas
+
+        // Bangun formula LaTeX lengkap
+        return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = {${selectedUserMean}} + \\frac{${simPart}}{${denominatorPart}} \\]`;
+    };
+
+
+
 
     const RenderItemTabelPrediksi = () => {
         if (!result || !result['prediction']) return null;
 
-        const numberOfColumns = result['prediction'][0].length; // Ambil jumlah kolom dari baris pertama
+        const numberOfColumnsPredItem = result['prediction'][0].length; // Ambil jumlah kolom dari baris pertama
+        if (!result || !result['mean-centered']) return null;
+        const numberOfColumnsMeanCenItem = result['mean-centered'][0].length; // Ambil jumlah kolom dari baris pertama
+
+        if (!result || !result['similarity']) return null;
+        const numberOfColumnsSimItem = result['similarity'][0].length; // Ambil jumlah kolom dari baris pertama
 
         return (
             <div className='flex justify-center mt-4'>
@@ -516,7 +601,7 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
                     <thead>
                     <tr className="bg-gray-200">
                         <th className="border border-black px-4 py-2">U/I</th>
-                        {Array.from({ length: numberOfColumns }, (_, index) => (
+                        {Array.from({ length: numberOfColumnsPredItem }, (_, index) => (
                             <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                         ))}
                     </tr>
@@ -531,7 +616,7 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
                                 return (
                                     <td key={colIndex}
                                         className={`border border-black px-4 py-2 text-center ${IsZero ? 'bg-red-200 cursor-pointer hover:bg-card_green_primary' : ''}`}
-                                        onClick={IsZero ? () => handleMeanClick(value) : undefined} // hanya aktif jika IsZero
+                                        onClick={IsZero ? () => handleMeanClick(value, rowIndex, colIndex) : undefined} // hanya aktif jika IsZero
 
                                     >
                                         {value.toFixed(3)} {/* Format desimal */}
@@ -543,10 +628,156 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
                     </tbody>
                 </table>
             {/*    show modal*/}
-                {showModal && (
+                {showModal &&   selectedItem !== null && selectedUserIndex !== null && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
                             <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Prediksi</h2>
+                            <div className="overflow-x-auto"> {/* Tambahkan ini untuk responsivitas tabel */}
+                                {/* Menampilkan rumus mean menggunakan MathJax */}
+                                {/*matriks rating*/}
+                                <h2 className='font-semibold'>Data Matrix Rating</h2>
+                                <table className="border border-black mt-4 mx-auto text-center my-4 ">
+                                    <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-black px-4 py-2">User</th>
+                                        <th className="border border-black px-4 py-2">Data Rating
+                                            (Item {selectedUserIndexMean + 1})
+                                        </th>
+                                        {/* Hanya tampilkan item yang dipilih */}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {transposedData.map((row, rowIndex) => {
+                                        const OriginalValue = transposedData[rowIndex][selectedUserIndexMean]; // Ambil OriginalValue berdasarkan item yang dipilih
+                                        const IsZero = OriginalValue === 0; // Cek apakah nilainya 0
+
+                                        return (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                                <td
+                                                    className={`border border-black px-4 py-2 text-center ${IsZero ? 'bg-red-200' : ''}`}
+                                                >
+                                                    {row[selectedUserIndexMean]?.toFixed(1) || 'N/A'} {/* Tampilkan nilai mean-centered untuk item yang dipilih */}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                    </tbody>
+                                </table>
+
+                                <h2 className='font-semibold'>Matrix Mean Rating</h2>
+
+                                <table className="border border-black mt-4 mx-auto text-center my-4">
+                                    <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-black px-4 py-2">U</th>
+                                        <th className="border border-black italic px-4 py-2">μ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {result['mean-list'].map((mean, index) => {
+                                        const isActiveUser = index === selectedUserIndexMean; // Highlight the active user in the mean rating table
+
+                                        return (
+                                            <tr key={index}
+                                                className={isActiveUser ? 'bg-green-200' : ''}> {/* Highlight active user */}
+                                                <td className="border border-black px-4 py-2">{index + 1}</td>
+                                                <td className="border border-black px-4 py-2">
+                                                    <div className="text-center">
+                                                        {mean}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                    </tbody>
+                                </table>
+
+                                <h2 className='font-semibold'>Matrix Mean-Centerd Rating</h2>
+
+                                <table className="border border-black mt-4 mx-auto text-center ">
+                                    <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-black px-4 py-2">Item</th>
+                                        <th className="border border-black px-4 py-2">Mean-Centered
+                                            (User {selectedUserIndexMean + 1})
+                                        </th>
+                                        {/* Hanya tampilkan item yang dipilih */}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {result['mean-centered'].map((row, rowIndex) => {
+                                        const OriginalValue = transposedData[rowIndex][selectedUserIndexMean]; // Get original value (dataOnly)
+                                        const IsZero = OriginalValue === 0; // Check if the rating is 0
+                                        const isTopSimilarity = topSimilaritiesItem.some(top => top.index === rowIndex && !IsZero); // Check if this user is in the top 2 similarities and has rated the item
+                                        return (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                                <td className={`border border-black px-4 py-2 text-center ${IsZero ? 'bg-red-200' : ''} ${isTopSimilarity ? 'bg-green-200' : ''}`}>
+                                                    {row[selectedUserIndexMean]?.toFixed(2) || 'N/A'} {/* Display mean-centered value */}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                    </tbody>
+                                </table>
+
+
+                                <h2 className='font-semibold my-4'>Nilai Similaritas</h2>
+                                {selectedUserIndex < result['similarity'].length ? (
+                                    <table className="border border-black mt-4 mx-auto text-center">
+                                        <thead>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">Item</th>
+                                            <th className="border border-black px-4 py-2">Nilai Similaritas
+                                                (Item {selectedUserIndex + 1})
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {result['similarity'].map((row, colIndex) => {
+                                            const isTopSimilarity = topSimilaritiesItem.some(top => top.index === colIndex); // Check if this row is in the top similarities
+
+                                            return (
+                                                <tr key={colIndex}>
+                                                    <td className="border border-black px-4 py-2 bg-gray-200">{colIndex + 1}</td>
+                                                    <td className={`border border-black px-4 py-2 text-center ${row[selectedUserIndex] === 1 ? 'bg-red-200' : ''} ${isTopSimilarity ? 'bg-green-200' : ''}`}>
+                                                        {row[selectedUserIndex]?.toFixed(4) || 'N/A'} {/* Display similarity value */}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                        </tbody>
+                                    </table>
+                                ) : (
+                                    <p>Data for this user is not available.</p>
+                                )}
+
+                            </div>
+
+                            {/* Menampilkan perhitungan manual */}
+
+                            <MathJaxContext options={mathjaxConfig}>
+                                <div className='flex justify-center items-center flex-col px-10'>
+                                    {selectedExpression ? (
+                                        <MathJaxComponent math={selectedExpression}/>
+                                    ) : (
+                                        <p>No expression selected.</p>
+                                    )}
+                                </div>
+                            </MathJaxContext>
+
+                            <MathJaxContext options={mathjaxConfig}>
+                                <div className='flex justify-center items-center flex-col px-10'>
+                                    {PrediksiFormulaItem ? (
+                                        <MathJaxComponent math={PrediksiFormulaItem}/>
+                                    ) : (
+                                        <p>No expression selected.</p>
+                                    )}
+                                </div>
+                            </MathJaxContext>
+
+
                             <p className="text-xl font-bold text-gray-700">Hasil prdiksi rating Item
                                 target {selectedUserIndex + 1} terhadap
                                 item {selectedItem + 1} adalah = {selectedValue.toFixed(3)}</p>
