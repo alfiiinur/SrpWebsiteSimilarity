@@ -1,10 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/HomeView/Home';
+import Home from './pages/Home/Home';
 import Tutorial from './pages/TutorialView/Tutorial';
-import Pracitce from './pages/PracticeView/Pracitce';
-import Test from "./pages/tetsaja";
-
+import Practice from './pages/PracticeView/Practice';
 
 function App() {
   return (
@@ -15,12 +13,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/TutorialView/tutorial" element={<Tutorial />} />
-            <Route path="/PracticeView/pracitce" element={<Pracitce />} />
-            <Route path="/tetsaja" element={<Test />} />
+            <Route path="/PracticeView/practice" element={<Practice />} />
           </Routes>
         </div>
       </div>
-  </Router>
+    </Router>
   );
 }
 

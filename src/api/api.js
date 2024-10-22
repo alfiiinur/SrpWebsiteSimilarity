@@ -1,13 +1,13 @@
 import React from 'react'
 import axios from "axios";
 
-const API_URL = 'http://localhost:8000';
+const API_URL = process.env.API_URL;
 
 
 
 
 // GET API PPC
-export  const getPearsonPC = async (data) => {
+export const getPearsonPC = async (data) => {
     const respone = await axios.post(`${API_URL}/pearson`, data)
     return respone.data;
 

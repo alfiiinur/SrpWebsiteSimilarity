@@ -1,15 +1,15 @@
-import React, {useState} from 'react'
-import {MathJaxContext} from "better-react-mathjax";
+import React, { useState } from 'react'
+import { MathJaxContext } from "better-react-mathjax";
 import mathjaxConfig from "../../mathjax-config";
 import MathJaxComponent from "../../MathJaxComponent";
-import {FunctionMeasureDropdown} from "./DropdownFunction/FunctionMeasureDropdown";
-import {AllSimilaritas, getInitialData} from "../../api/getDataSet";
+import { FunctionMeasureDropdown } from "./DropdownFunction/FunctionMeasureDropdown";
+import { AllSimilaritas, getInitialData } from "../../api/getDataSet";
 
 
 
 // USER-BASED
 
-const  PccFunctionMathUserBased =[
+const PccFunctionMathUserBased = [
     `\\[ PCC(u,v) = \\frac{\\sum_{i\\in I_{uv}} \\left(r_{ui} - \\overline{r_{u}}\\right)\\left(r_{vi}-\\overline{r_{u}}\\right)}{\\sqrt{\\sum_{i\\in I_{ui}} \\left(r_{ui} - \\overline{r_{u}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{vi}} \\left(r_{vi} - \\overline{r_{v}} \\right)^{2}}} \\]`
 ]
 
@@ -29,7 +29,7 @@ const DetailRumusSimUserBased = [
 
 
 
-export function PearsonSimUserBased({opsional, similaritas}) {
+export function PearsonSimUserBased({ opsional, similaritas }) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
@@ -167,7 +167,7 @@ export function PearsonSimUserBased({opsional, similaritas}) {
         return <MathJaxComponent math={expression} />;
     };
 
-// Fungsi untuk menghitung rata-rata (mean)
+    // Fungsi untuk menghitung rata-rata (mean)
     const mean = (arr) => {
         const validValues = arr.filter(value => value !== 0); // Hanya hitung non-zero values
         return validValues.reduce((sum, value) => sum + value, 0) / validValues.length;
@@ -195,32 +195,31 @@ export function PearsonSimUserBased({opsional, similaritas}) {
 
         return (
             <div className='flex justify-center mt-4'>
-            <table className="border border-black mt-4">
-                <thead>
-                <tr className="bg-gray-200">
-                    <th className="border border-black px-4 py-2">U/U</th>
-                    {Array.from({ length: numberOfColumnsSim }, (_, index) => (
-                        <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {result['similarity'].map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                        {row.map((value, colIndex) => (
-                            <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
-                                value === 1 ? 'bg-red-200' : ''
-                            }`}
-                                onClick={() => handleMeanClick(value, rowIndex, colIndex)}
-                            >
-                                {value.toFixed(4)} {/* Format desimal */}
-                            </td>
+                <table className="border border-black mt-4">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="border border-black px-4 py-2">U/U</th>
+                            {Array.from({ length: numberOfColumnsSim }, (_, index) => (
+                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {result['similarity'].map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                {row.map((value, colIndex) => (
+                                    <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''
+                                        }`}
+                                        onClick={() => handleMeanClick(value, rowIndex, colIndex)}
+                                    >
+                                        {value.toFixed(4)} {/* Format desimal */}
+                                    </td>
+                                ))}
+                            </tr>
                         ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
                 {/* Modal Card */}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
@@ -233,39 +232,38 @@ export function PearsonSimUserBased({opsional, similaritas}) {
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">U/I</th>
-                                        {Array.from({length: numberOfColumnsCen}, (_, index) => (
-                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                                        ))}
-                                    </tr>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">U/I</th>
+                                            {Array.from({ length: numberOfColumnsCen }, (_, index) => (
+                                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                            ))}
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {result['mean-centered'].map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {result['mean-centered'].map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
-                                            {row.map((value, colIndex) => {
-                                                const OriginalValue = dataOnly[rowIndex][colIndex];
-                                                const IsZero = OriginalValue === 0;
+                                                {row.map((value, colIndex) => {
+                                                    const OriginalValue = dataOnly[rowIndex][colIndex];
+                                                    const IsZero = OriginalValue === 0;
 
-                                                return (
-                                                    <td key={colIndex}
-                                                        className={`border border-black px-4 py-2 text-center 
+                                                    return (
+                                                        <td key={colIndex}
+                                                            className={`border border-black px-4 py-2 text-center 
                                                             ${IsZero ? 'text-red-500' : ''} 
-                                                            ${
-                                                            !IsZero &&
-                                                            (selectedUserIndex.includes(rowIndex))
-                                                                ? 'bg-green-200'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {value.toFixed(1)} {/* Format desimal */}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
+                                                            ${!IsZero &&
+                                                                    (selectedUserIndex.includes(rowIndex))
+                                                                    ? 'bg-green-200'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {value.toFixed(1)} {/* Format desimal */}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -287,76 +285,19 @@ export function PearsonSimUserBased({opsional, similaritas}) {
 
 
                             <h2 className='font-semibold text-md'>Data yang sudah terfilter</h2>
-                            {/*<div className="overflow-x-auto"> /!* Tambahkan ini untuk responsivitas tabel *!/*/}
-                            {/*    <table*/}
-                            {/*        className="border border-black mt-4 mx-auto text-center"> /!* Tambahkan mx-auto dan text-center *!/*/}
-                            {/*        <thead>*/}
-                            {/*        <tr className="bg-gray-200">*/}
-                            {/*            <th className="border border-black px-4 py-2">U/I</th>*/}
-                            {/*            {Array.from({length: numberOfColumnsCen}, (_, index) => (*/}
-                            {/*                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>*/}
-                            {/*            ))}*/}
-                            {/*        </tr>*/}
-                            {/*        </thead>*/}
-                            {/*        <tbody>*/}
-                            {/*        {result['mean-centered'].map((row, rowIndex) => (*/}
-                            {/*            <tr key={rowIndex}>*/}
-                            {/*                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>*/}
 
-                            {/*                {row.map((value, colIndex) => {*/}
-                            {/*                    // data real nya*/}
-                            {/*                    const OriginalValue = dataOnly[rowIndex][colIndex];*/}
-                            {/*                    const IsZero = OriginalValue === 0;*/}
-
-                            {/*                    let isInIntersection = false;*/}
-
-                            {/*                    // Cek apakah user ini dipilih (dari selectedUserIndex)*/}
-                            {/*                    if (selectedUserIndex.includes(rowIndex)) {*/}
-                            {/*                        // Ambil indeks non-zero dari baris dan kolom yang dipilih*/}
-                            {/*                        const nonZeroIndexesRow = dataOnly[rowIndex]*/}
-                            {/*                            .map((value, index) => (value !== 0 ? index : null))*/}
-                            {/*                            .filter(index => index !== null);*/}
-
-                            {/*                        const nonZeroIndexesCol = dataOnly[selectedUserIndex[1]] // Kolom user lain*/}
-                            {/*                            .map((value, index) => (value !== 0 ? index : null))*/}
-                            {/*                            .filter(index => index !== null);*/}
-
-                            {/*                        // Hitung intersection dari baris yang dipilih dan kolom yang dipilih*/}
-                            {/*                        const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));*/}
-
-                            {/*                        // Jika colIndex saat ini ada di intersection, beri highlight*/}
-                            {/*                        isInIntersection = intersection.includes(colIndex);*/}
-                            {/*                    }*/}
-
-                            {/*                    return (*/}
-                            {/*                        <td key={colIndex}*/}
-                            {/*                            className={`border border-black px-4 py-2 text-center */}
-                            {/*                                ${IsZero ? 'text-red-500' : ''} */}
-                            {/*                                ${!IsZero && isInIntersection ? 'bg-green-200' : ''}*/}
-                            {/*                            `}*/}
-                            {/*                        >*/}
-                            {/*                            {value.toFixed(1)} /!* Format desimal *!/*/}
-                            {/*                        </td>*/}
-                            {/*                    );*/}
-                            {/*                })}*/}
-                            {/*            </tr>*/}
-                            {/*        ))}*/}
-                            {/*        </tbody>*/}
-                            {/*    </table>*/}
-                            {/*</div>*/}
                             <MathJaxContext options={mathjaxConfig}>
                                 <div className='flex justify-center items-center flex-col px-10'>
                                     {selectedUserIndex && dataOnly ? (
                                         <>
-                                            {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
-                                            <SimilaritasValue rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} dataOnly={dataOnly}  />
+                                            <SimilaritasValue rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0] + 1} dan {selectedUserIndex[1] + 1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -377,7 +318,7 @@ export function PearsonSimUserBased({opsional, similaritas}) {
     return (
         <div>
             <div className="flex items-center">
-                <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
+                <div className="border-l-4 border-card_blue_primary h-10 mr-4" />
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Koefisien Korelasi Pearson
                     Correlation Coefficient (PCC) User-Based</h1>
@@ -386,16 +327,16 @@ export function PearsonSimUserBased({opsional, similaritas}) {
                 <div className='flex justify-start items-start flex-col px-10'>
 
                     {PccFunctionMathUserBased.map((math, index) => (
-                        <MathJaxComponent key={index} math={math}/>
+                        <MathJaxComponent key={index} math={math} />
                     ))}
                 </div>
             </MathJaxContext>
-            <FunctionMeasureDropdown DetailRumus={DetailRumusSimUserBased}/>
+            <FunctionMeasureDropdown DetailRumus={DetailRumusSimUserBased} />
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Fungsi Similaritas User-Based</h1>
                 {/*    call api */}
-                <RenderUserTabelSimilarity/>
+                <RenderUserTabelSimilarity />
             </div>
             <div>
                 <h1>HASIL VISUALISASI SIMILARITY PEARSON</h1>
@@ -421,7 +362,7 @@ const DetailRumusSimItemBased = [
 
 ]
 
-export function PearsonSimItemBased({opsional, similaritas}) {
+export function PearsonSimItemBased({ opsional, similaritas }) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndexItem, setSelectedUserIndexItem] = useState(null); // State untuk menyimpan user yang dipilih
@@ -436,11 +377,11 @@ export function PearsonSimItemBased({opsional, similaritas}) {
         dataOnly.map(row => row[colIndex])
     );
 
-    const {result, error} = AllSimilaritas(data, similaritas);
+    const { result, error } = AllSimilaritas(data, similaritas);
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
         setSelectedMean(value); // Simpan nilai mean yang ditekan
-        setSelectedUserIndexItem([rowIndex, colIndex ])
+        setSelectedUserIndexItem([rowIndex, colIndex])
         setShowModal(true); // Tampilkan modal
     };
 
@@ -548,32 +489,31 @@ export function PearsonSimItemBased({opsional, similaritas}) {
             <div className='flex justify-center mt-4'>
                 <table className="border border-black mt-4">
                     <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-black px-4 py-2">U/U</th>
-                        {Array.from({length: numberOfColumnsSim}, (_, index) => (
-                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                        ))}
-                    </tr>
+                        <tr className="bg-gray-200">
+                            <th className="border border-black px-4 py-2">U/U</th>
+                            {Array.from({ length: numberOfColumnsSim }, (_, index) => (
+                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                            ))}
+                        </tr>
                     </thead>
                     <tbody>
-                    {result['similarity'].map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                        {row.map((value, colIndex) => (
-                            <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
-                                value === 1 ? 'bg-red-200' : ''
-                            }`}
-                                onClick={() => handleMeanClick(value, rowIndex, colIndex)}
+                        {result['similarity'].map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                {row.map((value, colIndex) => (
+                                    <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''
+                                        }`}
+                                        onClick={() => handleMeanClick(value, rowIndex, colIndex)}
 
-                            >
-                                {value.toFixed(4)} {/* Format desimal */}
-                            </td>
+                                    >
+                                        {value.toFixed(4)} {/* Format desimal */}
+                                    </td>
+                                ))}
+                            </tr>
                         ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            {/*    modal card item */}
+                    </tbody>
+                </table>
+                {/*    modal card item */}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
@@ -584,39 +524,38 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">I/U</th>
-                                        {Array.from({length: numberOfColumnsCen}, (_, index) => (
-                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                                        ))}
-                                    </tr>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">I/U</th>
+                                            {Array.from({ length: numberOfColumnsCen }, (_, index) => (
+                                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                            ))}
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {result['mean-centered'].map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {result['mean-centered'].map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
-                                            {row.map((value, colIndex) => {
-                                                const OriginalValue = dataOnly[colIndex][rowIndex];
-                                                const IsZero = OriginalValue === 0;
+                                                {row.map((value, colIndex) => {
+                                                    const OriginalValue = dataOnly[colIndex][rowIndex];
+                                                    const IsZero = OriginalValue === 0;
 
-                                                return (
-                                                    <td key={colIndex}
-                                                        className={`border border-black px-4 py-2 text-center 
+                                                    return (
+                                                        <td key={colIndex}
+                                                            className={`border border-black px-4 py-2 text-center 
                                                             ${IsZero ? 'text-red-500' : ''} 
-                                                            ${
-                                                            !IsZero &&
-                                                            (selectedUserIndexItem.includes(rowIndex))
-                                                                ? 'bg-green-200'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {value.toFixed(1)} {/* Format desimal */}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
+                                                            ${!IsZero &&
+                                                                    (selectedUserIndexItem.includes(rowIndex))
+                                                                    ? 'bg-green-200'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {value.toFixed(1)} {/* Format desimal */}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -627,10 +566,10 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                                     {selectedUserIndexItem ? (
                                         <>
                                             <SimilaritasIndex rowIndex={selectedUserIndexItem[0]}
-                                                              colIndex={selectedUserIndexItem[1]}/>
+                                                colIndex={selectedUserIndexItem[1]} />
                                             <SimilaritasIndexNonZeroItem rowIndex={selectedUserIndexItem[0]}
-                                                                     colIndex={selectedUserIndexItem[1]}
-                                                                     dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndexItem[1]}
+                                                dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
@@ -646,14 +585,14 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                                         <>
                                             {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
                                             <SimilaritasValue rowIndex={selectedUserIndexItem[0]}
-                                                              colIndex={selectedUserIndexItem[1]} dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndexItem[1]} dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndexItem[0]+1} dan {selectedUserIndexItem[1]+1}
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndexItem[0] + 1} dan {selectedUserIndexItem[1] + 1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -670,7 +609,7 @@ export function PearsonSimItemBased({opsional, similaritas}) {
     return (
         <div>
             <div className="flex items-center">
-                <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
+                <div className="border-l-4 border-card_blue_primary h-10 mr-4" />
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Koefisien Korelasi
                     Pearson Correlation Coefficient (PCC) Item Based</h1>
@@ -679,16 +618,16 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                 <div className='flex justify-start items-start flex-col px-10'>
 
                     {PccFunctionMathItemBased.map((math, index) => (
-                        <MathJaxComponent key={index} math={math}/>
+                        <MathJaxComponent key={index} math={math} />
                     ))}
                 </div>
             </MathJaxContext>
-            <FunctionMeasureDropdown DetailRumus={DetailRumusSimItemBased}/>
+            <FunctionMeasureDropdown DetailRumus={DetailRumusSimItemBased} />
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Fungsi Similaritas Item-Based</h1>
                 {/*    call api */}
-                <RenderItemTabelSimilarity/>
+                <RenderItemTabelSimilarity />
             </div>
             <div>
                 <h1 className='font-semibold'>HASIL VISUALISASI SIMILARITY PEARSON</h1>

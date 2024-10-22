@@ -1,15 +1,15 @@
-import React, {useState} from 'react'
-import {MathJaxContext} from "better-react-mathjax";
+import React, { useState } from 'react'
+import { MathJaxContext } from "better-react-mathjax";
 import mathjaxConfig from "../../mathjax-config";
 import MathJaxComponent from "../../MathJaxComponent";
-import {FunctionMeasureDropdown} from "./DropdownFunction/FunctionMeasureDropdown";
-import {AllSimilaritas, getInitialData} from "../../api/getDataSet";
+import { FunctionMeasureDropdown } from "./DropdownFunction/FunctionMeasureDropdown";
+import { AllSimilaritas, getInitialData } from "../../api/getDataSet";
 
 
 
 
 //User-Based
-const  adjustCosineUserBased = [
+const adjustCosineUserBased = [
     `\\[ ACosine(u,v) = \\frac{\\sum_i\\in I_{uv} \\left(r_{ui} - \\overline{r_{i}}\\right)\\left(r_{vi}-\\overline{r_{i}}\\right)}{\\sqrt{\\sum_u \\in I_{uv} \\left(r_{ui} - \\overline{r_{i}} \\right)^{2}}\\sqrt{\\sum_i \\in I_{uv} \\left(r_{vi} - \\overline{r_{i}} \\right)^{2}}} \\]`
 ]
 
@@ -20,12 +20,11 @@ const DetailRumusSimAdjustedUserBased = [
 
 ]
 
-export function AdjustedCosineUserBased({opsional, similaritas}){
+export function AdjustedCosineUserBased({ opsional, similaritas }) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-    const [selectedExpression, setSelectedExpression] = useState(null);
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
         setSelectedMean(value); // Simpan nilai mean yang ditekan
@@ -95,7 +94,7 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
     };
 
 
-// Fungsi untuk menghitung rata-rata (mean) per item (kolom)
+    // Fungsi untuk menghitung rata-rata (mean) per item (kolom)
     const meanPerItem = (data, itemIndex) => {
         // Ambil nilai di kolom yang diinginkan (item) dan abaikan nilai 0
         const columnValues = data.map(row => row[itemIndex]).filter(value => value !== 0);
@@ -121,31 +120,30 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
             <div className='flex justify-center mt-4'>
                 <table className="border border-black mt-4">
                     <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-black px-4 py-2">U/U</th>
-                        {Array.from({ length: numberOfColumnsSimAdj }, (_, index) => (
-                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {result['similarity'].map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                            {row.map((value, colIndex) => (
-                                <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
-                                    value === 1 ? 'bg-red-200' : ''
-                                }`}
-                                    onClick={() => handleMeanClick(value, colIndex,rowIndex )}
-                                >
-                                    {value.toFixed(4)} {/* Format desimal */}
-                                </td>
+                        <tr className="bg-gray-200">
+                            <th className="border border-black px-4 py-2">U/U</th>
+                            {Array.from({ length: numberOfColumnsSimAdj }, (_, index) => (
+                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                             ))}
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                        {result['similarity'].map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                {row.map((value, colIndex) => (
+                                    <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''
+                                        }`}
+                                        onClick={() => handleMeanClick(value, colIndex, rowIndex)}
+                                    >
+                                        {value.toFixed(4)} {/* Format desimal */}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-            {/*    show modal */}
+                {/*    show modal */}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
@@ -156,39 +154,38 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">U/I</th>
-                                        {Array.from({length: numberOfColumnsCenAdj}, (_, index) => (
-                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                                        ))}
-                                    </tr>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">U/I</th>
+                                            {Array.from({ length: numberOfColumnsCenAdj }, (_, index) => (
+                                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                            ))}
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {result['mean-centered'].map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {result['mean-centered'].map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
-                                            {row.map((value, colIndex) => {
-                                                const OriginalValue = dataOnly[colIndex ][rowIndex];
-                                                const IsZero = OriginalValue === 0;
+                                                {row.map((value, colIndex) => {
+                                                    const OriginalValue = dataOnly[colIndex][rowIndex];
+                                                    const IsZero = OriginalValue === 0;
 
-                                                return (
-                                                    <td key={colIndex}
-                                                        className={`border border-black px-4 py-2 text-center 
+                                                    return (
+                                                        <td key={colIndex}
+                                                            className={`border border-black px-4 py-2 text-center 
                                                             ${IsZero ? 'text-red-500' : ''} 
-                                                            ${
-                                                            !IsZero &&
-                                                            (selectedUserIndex.includes(colIndex))
-                                                                ? 'bg-green-200'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {value.toFixed(2)} {/* Format desimal */}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
+                                                            ${!IsZero &&
+                                                                    (selectedUserIndex.includes(colIndex))
+                                                                    ? 'bg-green-200'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {value.toFixed(2)} {/* Format desimal */}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -199,10 +196,10 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
                                     {selectedUserIndex ? (
                                         <>
                                             <SimilaritasIndex rowIndex={selectedUserIndex[0]}
-                                                              colIndex={selectedUserIndex[1]}/>
+                                                colIndex={selectedUserIndex[1]} />
                                             <SimilaritasIndexNonZero rowIndex={selectedUserIndex[0]}
-                                                                     colIndex={selectedUserIndex[1]}
-                                                                     dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndex[1]}
+                                                dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
@@ -218,14 +215,14 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
                                         <>
                                             {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
                                             <SimilaritasValue rowIndex={selectedUserIndex[0]}
-                                                              colIndex={selectedUserIndex[1]} dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndex[1]} dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0] + 1} dan {selectedUserIndex[1] + 1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -243,7 +240,7 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
     return (
         <div>
             <div className="flex items-center">
-                <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
+                <div className="border-l-4 border-card_blue_primary h-10 mr-4" />
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Similaritas Adjusted Cosine
                     User-Based</h1>
@@ -252,16 +249,16 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
                 <div className='flex justify-start items-start flex-col px-10'>
 
                     {adjustCosineUserBased.map((math, index) => (
-                        <MathJaxComponent key={index} math={math}/>
+                        <MathJaxComponent key={index} math={math} />
                     ))}
                 </div>
             </MathJaxContext>
-            <FunctionMeasureDropdown DetailRumus={DetailRumusSimAdjustedUserBased}/>
+            <FunctionMeasureDropdown DetailRumus={DetailRumusSimAdjustedUserBased} />
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Fungsi Similaritas User-Based</h1>
                 {/*    call api */}
-                <RenderUserTabelSimilarity/>
+                <RenderUserTabelSimilarity />
             </div>
         </div>
     )
@@ -283,7 +280,7 @@ const DetailRumusSimAdjustedItemBased = [
 ]
 
 
-export function AdjustedCosineItemBased({opsional, similaritas}) {
+export function AdjustedCosineItemBased({ opsional, similaritas }) {
 
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
@@ -292,7 +289,7 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
         dataOnly.map(row => row[colIndex])
     );
 
-    const {result, error} = AllSimilaritas(data, similaritas);
+    const { result, error } = AllSimilaritas(data, similaritas);
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
@@ -376,7 +373,7 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
     };
 
 
-// Fungsi untuk menghitung rata-rata (mean) per item (kolom)
+    // Fungsi untuk menghitung rata-rata (mean) per item (kolom)
     const meanPerItem = (data, itemIndex) => {
         // Ambil nilai di kolom yang diinginkan (item) dan abaikan nilai 0
         const columnValues = data.map(row => row[itemIndex]).filter(value => value !== 0);
@@ -400,31 +397,30 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
             <div className='flex justify-center mt-4'>
                 <table className="border border-black mt-4">
                     <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-black px-4 py-2">U/U</th>
-                        {Array.from({length: numberOfColumnsItemAjd}, (_, index) => (
-                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {result['similarity'].map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                            {row.map((value, colIndex) => (
-                                <td key={colIndex} className={`border border-black px-4 py-2 text-center  cursor-pointer hover:bg-card_green_primary ${
-                                    value === 1 ? 'bg-red-200' : ''
-                                }`}
-                                    onClick={() => handleMeanClick(value, colIndex, rowIndex)}
-                                >
-                                    {value.toFixed(4)} {/* Format desimal */}
-                                </td>
+                        <tr className="bg-gray-200">
+                            <th className="border border-black px-4 py-2">U/U</th>
+                            {Array.from({ length: numberOfColumnsItemAjd }, (_, index) => (
+                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                             ))}
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                        {result['similarity'].map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                {row.map((value, colIndex) => (
+                                    <td key={colIndex} className={`border border-black px-4 py-2 text-center  cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''
+                                        }`}
+                                        onClick={() => handleMeanClick(value, colIndex, rowIndex)}
+                                    >
+                                        {value.toFixed(4)} {/* Format desimal */}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-            {/*    show modal*/}
+                {/*    show modal*/}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
@@ -435,39 +431,38 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">I/U</th>
-                                        {Array.from({length: numberOfColumnsCenItemAdj}, (_, index) => (
-                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                                        ))}
-                                    </tr>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">I/U</th>
+                                            {Array.from({ length: numberOfColumnsCenItemAdj }, (_, index) => (
+                                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                            ))}
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {result['mean-centered'].map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {result['mean-centered'].map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
-                                            {row.map((value, colIndex) => {
-                                                const OriginalValue = dataOnly[colIndex][rowIndex];
-                                                const IsZero = OriginalValue === 0;
+                                                {row.map((value, colIndex) => {
+                                                    const OriginalValue = dataOnly[colIndex][rowIndex];
+                                                    const IsZero = OriginalValue === 0;
 
-                                                return (
-                                                    <td key={colIndex}
-                                                        className={`border border-black px-4 py-2 text-center 
+                                                    return (
+                                                        <td key={colIndex}
+                                                            className={`border border-black px-4 py-2 text-center 
                                                             ${IsZero ? 'text-red-500' : ''} 
-                                                            ${
-                                                            !IsZero &&
-                                                            (selectedUserIndex.includes(rowIndex))
-                                                                ? 'bg-green-200'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {value.toFixed(2)} {/* Format desimal */}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
+                                                            ${!IsZero &&
+                                                                    (selectedUserIndex.includes(rowIndex))
+                                                                    ? 'bg-green-200'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {value.toFixed(2)} {/* Format desimal */}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -478,10 +473,10 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
                                     {selectedUserIndex ? (
                                         <>
                                             <SimilaritasIndex rowIndex={selectedUserIndex[0]}
-                                                              colIndex={selectedUserIndex[1]}/>
+                                                colIndex={selectedUserIndex[1]} />
                                             <SimilaritasIndexNonZero rowIndex={selectedUserIndex[0]}
-                                                                     colIndex={selectedUserIndex[1]}
-                                                                     dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndex[1]}
+                                                dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
@@ -497,14 +492,14 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
                                         <>
                                             {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
                                             <SimilaritasValueItem rowIndex={selectedUserIndex[0]}
-                                                              colIndex={selectedUserIndex[1]} dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndex[1]} dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndex[0] + 1} dan {selectedUserIndex[1] + 1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -521,7 +516,7 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
     return (
         <div>
             <div className="flex items-center">
-                <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
+                <div className="border-l-4 border-card_blue_primary h-10 mr-4" />
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Similaritas Adjusted Cosine
                     Item-Based</h1>
@@ -530,16 +525,16 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
                 <div className='flex justify-start items-start flex-col px-10'>
 
                     {adjustedCosineItemBased.map((math, index) => (
-                        <MathJaxComponent key={index} math={math}/>
+                        <MathJaxComponent key={index} math={math} />
                     ))}
                 </div>
             </MathJaxContext>
-            <FunctionMeasureDropdown DetailRumus={DetailRumusSimAdjustedItemBased}/>
+            <FunctionMeasureDropdown DetailRumus={DetailRumusSimAdjustedItemBased} />
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Fungsi Similaritas Item-Based</h1>
                 {/*    call api */}
-                <RenderItemTabelSimilarity/>
+                <RenderItemTabelSimilarity />
             </div>
         </div>
     )

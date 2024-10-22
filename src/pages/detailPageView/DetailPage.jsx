@@ -7,19 +7,19 @@ import {
     PearsonViewPageItemBased,
     PearsonViewPageUserBased
 } from "../../components/viewMath/PearsonViewPage";
-import {CosineViewPageItemBased, CosineViewPageUserBased} from "../../components/viewMath/CosineViewPage";
+import { CosineViewPageItemBased, CosineViewPageUserBased } from "../../components/viewMath/CosineViewPage";
 import {
     AdjustedCosineViewPageItemBased,
     AdjustedCosineViewPageUserBased
 } from "../../components/viewMath/AdjustedCosineViewPage";
-import {KullbackViewPageItemBased, KullbackViewPageUserBased} from "../../components/viewMath/KullbackLViewPage";
+import { KullbackViewPageItemBased, KullbackViewPageUserBased } from "../../components/viewMath/KullbackLViewPage";
 import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
-import {BhattacharyyaViewItemBased, BhattacharyyaViewUserBased} from "../../components/viewMath/BhattacharyyaViewPage";
+import { BhattacharyyaViewItemBased, BhattacharyyaViewUserBased } from "../../components/viewMath/BhattacharyyaViewPage";
 import TabelView from "../../components/Tabel_Data";
-import {useRef} from "react";
+import { useRef } from "react";
 
 
-export default function DetailPageBox({method, similaritas}) {
+export default function DetailPageBox({ method, similaritas }) {
     // const { meanRef, meanCenteredRef, fungsiSimilaritas, prediksi } = refs;
 
     const meanRef = useRef(null);
@@ -27,27 +27,17 @@ export default function DetailPageBox({method, similaritas}) {
     const fungsiSimilaritas = useRef(null);
     const prediksi = useRef(null);
 
-
-    // const scrollToSection = (ref) => {
-    //     if (ref.current) {
-    //         console.log('Scrolling to:', ref.current); // Cek ref di console
-    //         ref.current.scrollIntoView({ behavior: 'smooth' });
-    //     } else {
-    //         console.log('Reference not found:', ref); // Cek jika ref belum terhubung
-    //     }
-    // };
-
     const renderContent = () => {
         if (method === 'User-Based') {
             switch (similaritas) {
                 case 'Pearson Coreallation Coeficient (PCC)':
-                    return <PearsonViewPageUserBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi}/>;
+                    return <PearsonViewPageUserBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi} />;
 
                 case 'Vectore Cosine':
                     return CosineViewPageUserBased();
-                case 'Adjusted Vector Cosine'  :
+                case 'Adjusted Vector Cosine':
                     return AdjustedCosineViewPageUserBased();
-                case 'Bhattacharyya Coefficient Similarity (BC)' :
+                case 'Bhattacharyya Coefficient Similarity (BC)':
                     return BhattacharyyaViewUserBased();
                 case 'Kullback-Leibler Distance (KL)':
                     return KullbackViewPageUserBased();
@@ -60,9 +50,9 @@ export default function DetailPageBox({method, similaritas}) {
                     return <PearsonViewPageItemBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi} />;
                 case 'Vectore Cosine':
                     return CosineViewPageItemBased();
-                case 'Adjusted Vector Cosine'  :
+                case 'Adjusted Vector Cosine':
                     return AdjustedCosineViewPageItemBased();
-                case 'Bhattacharyya Coefficient Similarity (BC)' :
+                case 'Bhattacharyya Coefficient Similarity (BC)':
                     return BhattacharyyaViewItemBased();
                 case 'Kullback-Leibler Distance (KL)':
                     return KullbackViewPageItemBased();
@@ -72,7 +62,7 @@ export default function DetailPageBox({method, similaritas}) {
         }
         // Add more conditions as needed
         return <p className='flex items-center text-xl font-semibold font-poppins text-red-600 '>
-            <SdCardAlertIcon className='mr-2'/> {/* Adjust margin as needed */}
+            <SdCardAlertIcon className='mr-2' /> {/* Adjust margin as needed */}
             Silahkan pilih metode dan fungsi similaritas terlebih dahulu.
         </p>;
     };
@@ -81,7 +71,7 @@ export default function DetailPageBox({method, similaritas}) {
     return (
 
         <React.Fragment>
-            <CssBaseline/>
+            <CssBaseline />
             <Container maxWidth="max-w-5xl">
                 <Box
                     sx={{
@@ -115,7 +105,7 @@ export default function DetailPageBox({method, similaritas}) {
 export function HasilPerhitunganSimilaritas() {
     return (
         <React.Fragment>
-            <CssBaseline/>
+            <CssBaseline />
             <Container maxWidth="max-w-5xl">
                 <Box
                     sx={{
@@ -134,7 +124,7 @@ export function HasilPerhitunganSimilaritas() {
                     <section className='max-w-4xl mx-auto text-center'>
                         <h1 className='text-2xl font-bold font-poppins py-5'>Hasil Perhitungan Similaritas</h1>
                         <p className='text-sm px-10 py-5 font-sm font-poppins'>
-                            <TabelView/>
+                            <TabelView />
                         </p>
                     </section>
                 </Box>
