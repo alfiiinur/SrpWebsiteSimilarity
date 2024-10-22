@@ -53,10 +53,15 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
     };
 
 
+
+
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
+    // get only data
+    const [dataOnly, setDataOnly] = useState(initialData.data);
 
     const { result, error } = AllSimilaritas(data, similaritas);
+
 
 
 
@@ -84,7 +89,7 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
             const nonZeroIndicesString = nonZeroIndices.map(idx => `r_{${index + 1}${idx}}`).join(" + "); // Menggabungkan indeks yang bukan nol dalam format r11 + r12 + r13
 
             // Menghitung jumlah indeks yang bukan nol
-            const countNonZero = nonZeroIndices.join(" + ");
+            const countNonZero = nonZeroIndices.join(" , ");
 
             return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }   \\]`;
         });
@@ -100,6 +105,9 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
             return  `\\[ \\mu_{${index +1 }} = \\frac{${nonZeroValues}}{ ${countNonZero}}  \\]`;
         });
     };
+
+
+
 
     const meanRumusIdx = MeanRumusIndex();
 
@@ -141,26 +149,63 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg">
-                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan  Mean <span className='italic'>(μ)</span> user- {selectedUserIndex + 1}  </h2>
+                            <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Mean <span
+                                className='italic'>(μ)</span> user- {selectedUserIndex + 1}  </h2>
+                            <div className='overflow-x-auto'>
+                                <h2 className='font-semibold'>Data Rating (r)</h2>
+                                <table className="border border-black mt-4 mx-auto text-center">
+                                    <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-black px-4 py-2">U/I</th>
+                                        {Array.from({length: dataOnly[0].length}, (_, index) => (  // Menggunakan panjang kolom dari data
+                                            <th key={index}
+                                                className="border border-black px-4 py-2">{index + 1}</th>
+                                        ))}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {dataOnly.map((row, rowIndex) => (
+                                        <tr key={rowIndex}>
+                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                            {row.map((value, colIndex) => {
+                                                const isSelected = selectedUserIndex.row === colIndex ;
+
+                                                const cellClass = value === 0
+                                                    ? 'border border-black px-4 py-2 text-center bg-red-200'
+                                                    : 'border border-black px-4 py-2 text-center';
+                                                return (
+                                                    <td key={colIndex}
+                                                        // className="border border-black px-4 py-2 text-center"
+                                                        className={`${cellClass}`}
+                                                    >
+                                                        {value.toFixed ? value.toFixed(0) : value} {/* Format desimal hanya jika diperlukan */}
+                                                    </td>
+                                                )
+                                            })}
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
                             {/* Menampilkan rumus mean menggunakan MathJax */}
                             <MathJaxContext options={mathjaxConfig}>
                                 <div className='flex justify-center items-center flex-col px-10'>
                                     {/* Tampilkan hanya rumus dan hasil untuk user yang dipilih */}
                                     {meanRumusIdx[selectedUserIndex]?.length > 0 ? (
-                                        <MathJaxComponent math={meanRumusIdx[selectedUserIndex]} />
+                                        <MathJaxComponent math={meanRumusIdx[selectedUserIndex]}/>
                                     ) : (
                                         <p>Data untuk user ini tidak tersedia.</p>
-                                        )}
+                                    )}
 
                                     {meanIndexExp[selectedUserIndex]?.length > 0 ? (
-                                        <MathJaxComponent math={meanIndexExp[selectedUserIndex]} />
-                                    ): (
+                                        <MathJaxComponent math={meanIndexExp[selectedUserIndex]}/>
+                                    ) : (
                                         <p>Data untuk user ini tidak tersedia.</p>
                                     )}
 
                                     {meanExpressionsValues[selectedUserIndex]?.length > 0 ? (
-                                        <MathJaxComponent math={meanExpressionsValues[selectedUserIndex]} />
-                                    ): (
+                                        <MathJaxComponent math={meanExpressionsValues[selectedUserIndex]}/>
+                                    ) : (
                                         <p>Data untuk user ini tidak tersedia.</p>
                                     )}
 
@@ -169,7 +214,8 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
                             </MathJaxContext>
 
                             {/* Menampilkan perhitungan manual */}
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari user {selectedUserIndex+1}  adalah = {selectedMean}</p>
+                            <p className="text-xl font-bold text-gray-700">Hasil mean dari
+                                user {selectedUserIndex + 1} adalah = {selectedMean}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
                                 onClick={closeModal} // Menutup modal saat tombol ditekan
@@ -185,9 +231,14 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
         );
     };
 
+
+    useEffect(() => {
+        console.log('MeanMeasureUserBased ref:', ref);
+    }, [ref]);
+
     return (
-        <div className='mt-5' >
-            <div ref={ref} className="flex items-center " >
+        <div className='mt-5'>
+            <div ref={ref} className="flex items-center ">
                 <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Mean Rating</h1>
@@ -205,7 +256,7 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
                     Mean User-Based</h1>
 
                 {/*<MeanUserDetail/>*/}
-                <RenderUserTableMean />
+                <RenderUserTableMean/>
             </div>
 
 
@@ -217,7 +268,7 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
 //MEAN ITEM-BASED
 
 const meanExpressionsItemBased = [
-    `\\[ U_{i} = \\frac{\\sum_{I\\in U_{i}} r_{ui}}{\\left|U_{i}\\right|}   \\forall u\\in\\left\\{1...m\\right\\} \\]`
+    `\\[ U_{i} = \\frac{\\sum_{I\\in U_{i}} r_{ui}}{\\left|U_{i}\\right|}  \\ \\ \\   \\forall u\\in\\left\\{1...m\\right\\} \\]`
 ]
 
 //keterangan rumus mean
@@ -228,7 +279,7 @@ const DetailRumusMeanItemBased = [
     `\\[ r_{uv} = \\text{Rating user u terhadap item i} \\]`
 ]
 
-export function MeanMeasureItemBased({opsional, similaritas}){
+export function MeanMeasureItemBased({opsional, similaritas}) {
 
     const transposedData = data2[0].map((_, colIndex) => {
         return data2.map(row => row[colIndex]);
@@ -255,6 +306,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
 
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
+    const [dataOnly, setDataOnly] = useState(initialData.data);
 
     const { result, error } = AllSimilaritas(data, similaritas);
 
@@ -283,7 +335,7 @@ export function MeanMeasureItemBased({opsional, similaritas}){
             const nonZeroIndicesString = nonZeroIndices.map(idx => `r_{${index + 1}${idx}}`).join(" + "); // Menggabungkan indeks yang bukan nol dalam format r11 + r12 + r13
 
             // Menghitung jumlah indeks yang bukan nol
-            const countNonZero = nonZeroIndices.join(" + ");
+            const countNonZero = nonZeroIndices.join(" , ");
 
             return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndicesString})}{ | \\left\\{ ${countNonZero} \\right\\} | }  \\]`;
         });
@@ -341,6 +393,42 @@ export function MeanMeasureItemBased({opsional, similaritas}){
                         <div className="bg-white p-6 rounded-lg shadow-lg">
                             <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Mean <span
                                 className='italic'>(μ)</span> item - {selectedUserIndex + 1}</h2>
+                            <div className='overflow-x-auto'>
+                                <h2 className='font-semibold'>Data Rating (r)</h2>
+                                <table className="border border-black mt-4 mx-auto text-center">
+                                    <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-black px-4 py-2">U/I</th>
+                                        {Array.from({length: transposedData[0].length}, (_, index) => (  // Menggunakan panjang kolom dari data
+                                            <th key={index}
+                                                className="border border-black px-4 py-2">{index + 1}</th>
+                                        ))}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {transposedData.map((row, rowIndex) => (
+                                        <tr key={rowIndex}>
+                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                            {row.map((value, colIndex) => {
+                                                const isSelected = selectedUserIndex.row === colIndex;
+
+                                                const cellClass = value === 0
+                                                    ? 'border border-black px-4 py-2 text-center bg-red-200'
+                                                    : 'border border-black px-4 py-2 text-center';
+                                                return (
+                                                    <td key={colIndex}
+                                                        // className="border border-black px-4 py-2 text-center"
+                                                        className={`${cellClass}`}
+                                                    >
+                                                        {value.toFixed ? value.toFixed(0) : value} {/* Format desimal hanya jika diperlukan */}
+                                                    </td>
+                                                )
+                                            })}
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
                             {/* Menampilkan rumus mean menggunakan MathJax */}
                             <MathJaxContext options={mathjaxConfig}>
                                 <div className='flex justify-center items-center flex-col px-10'>

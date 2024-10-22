@@ -159,13 +159,13 @@ export function BhattacharyyaUserBased({opsional, similaritas}){
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
                             <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Fungsi Similaritas</h2>
 
-                            <h2 className='text-xl font-semibold'>Probabilities</h2>
+                            <h2 className='text-xl font-semibold'>Probabilitas</h2>
                             <div className="overflow-x-auto"> {/* Tambahkan ini untuk responsivitas tabel */}
                                 <table className="border border-black mt-2 mx-auto text-center">
                                     <thead>
                                     <tr className="bg-gray-200">
                                         <th className="border border-black px-4 py-2">User</th>
-                                        <th className="border border-black px-4 py-2">Rating Probability</th>
+                                        <th className="border border-black px-4 py-2">Rating Probabilitas</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -190,7 +190,7 @@ export function BhattacharyyaUserBased({opsional, similaritas}){
                                 </div>
                             </MathJaxContext>
 
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
                                 = {selectedMean.toFixed(4)}</p>
 
                             <button
@@ -385,7 +385,7 @@ export function BhattacharyyaItemBased({ opsional, similaritas }) {
                                     <thead>
                                     <tr className="bg-gray-200">
                                         <th className="border border-black px-4 py-2">Item</th>
-                                        <th className="border border-black px-4 py-2">Rating Probability</th>
+                                        <th className="border border-black px-4 py-2">Rating Probabilitas (P)</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -412,7 +412,7 @@ export function BhattacharyyaItemBased({ opsional, similaritas }) {
                                 </div>
                             </MathJaxContext>
 
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded" onClick={closeModal}>
                                 Tutup

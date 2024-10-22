@@ -11,8 +11,12 @@ const UserBasedPrediciton = [
     `\\[ {\\widetilde{r_{ui}}} = \\overline{r_{u}} +\\frac{\\sum_{v\\in N_u^i} Sim_{uv}*\\left(r_{vi} - \\overline{r_{v}}\\right)}{\\sum_{v \\in N_u^i}\\mid Sim_{uv} \\mid} \\]`
 ]
 
+// const ArgMax = [
+//     `\\[ X_u(j) = \\underset{v \\in U_j}{\\operatorname{argmax}^k} \\operatorname{sim}(u, v) \\]`
+// ]
+
 const ArgMax = [
-    `\\[ X_u(j) = \\underset{v \\in U_j}{\\operatorname{argmax}^k} \\operatorname{sim}(u, v) \\]`
+    `\\[  X_u(j)=\\ \\begin{matrix}k\\\\argmax\\ \\\\i\\ \\in\\ \\hat{I}\\\\\\end{matrix}{\\hat{r}}_{ui}\\  \\]`
 ]
 const DetailRumusPrediksiUserBased = [
     `\\[ \\overline{r_{u}} = \\text{Rata-rata rating yang diberikan oleh user u pada seluruh item} \\] `,
@@ -253,7 +257,7 @@ export function UserBasedPredicition({opsional, similaritas}){
                                     })}
                                     </tbody>
                                 </table>
-                                <h2 className='font-semibold'>Matrix Mean Rating</h2>
+                                <h2 className='font-semibold'>Matrix Mean Rating (μ)</h2>
 
                                 <table className="border border-black mt-4 mx-auto text-center my-4">
                                     <thead>
@@ -470,6 +474,7 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
     const initialData = getInitialData(opsional);
     const [data, setData] = useState(initialData);
     const [dataOnly, setDataOnly] = useState(initialData.data);
+    // tranpose data
     const transposedData = dataOnly[0].map((_, colIndex) =>
         dataOnly.map(row => row[colIndex])
     );
@@ -493,22 +498,39 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
 
 
     // Function to find top `count` similarities closest to 1 where the user has a valid rating
-    const findTopSimilaritiesWithValidRatings = (similarityData, transposedData, itemIndex, userIndex, count = 2) => {
+    // const findTopSimilaritiesWithValidRatings = (similarityData, transposedData, itemIndex, userIndex, count = 2) => {
+    //
+    //     // Ambil semua similaritas dan cek apakah user telah memberikan rating pada item tersebut
+    //     const similarities = similarityData.map((row, index) => ({
+    //         index,
+    //         value: row[userIndex],   // Nilai similaritas
+    //         diff: Math.abs(row[userIndex] - 1),  // Jarak absolut dari 1
+    //         hasRated: transposedData[index][itemIndex] !== 0  // Cek apakah user telah memberikan rating
+    //     }));
+    //
+    //     // Sort by proximity to 1 (ascending) and filter users who have rated the item (rating is not 0)
+    //     const validSimilarities = similarities
+    //         .filter(item => item.hasRated)  // Hanya simpan user yang telah memberikan rating
+    //         .sort((a, b) => b.value - a.value);  // Urutkan berdasarkan nilai tertinggi
+    //
+    //     return validSimilarities.slice(0, count);  // Kembalikan top 'count' similaritas
+    // };
 
-        // Ambil semua similaritas dan cek apakah user telah memberikan rating pada item tersebut
+    const findTopSimilaritiesWithValidRatings = (similarityData, transposedData, itemIndex, userIndex, count = 2) => {
+        // Map over similarities to get the index, value, and if the item has been rated
         const similarities = similarityData.map((row, index) => ({
             index,
-            value: row[userIndex],   // Nilai similaritas
-            diff: Math.abs(row[userIndex] - 1),  // Jarak absolut dari 1
-            hasRated: transposedData[index][itemIndex] !== 0  // Cek apakah user telah memberikan rating
+            value: row[userIndex],   // The similarity value
+            hasRated: transposedData[index][itemIndex] !== 0  // Check if the user has rated the item
         }));
 
-        // Sort by proximity to 1 (ascending) and filter users who have rated the item (rating is not 0)
+        // Filter only rated items and sort by the highest similarity value
         const validSimilarities = similarities
-            .filter(item => item.hasRated)  // Hanya simpan user yang telah memberikan rating
-            .sort((a, b) => b.value - a.value);  // Urutkan berdasarkan nilai tertinggi
+            .filter(item => item.hasRated)  // Keep only items that have been rated
+            .sort((a, b) => b.value - a.value);  // Sort by similarity value in descending order
 
-        return validSimilarities.slice(0, count);  // Kembalikan top 'count' similaritas
+        // Return the top 'count' similarities
+        return validSimilarities.slice(0, count);
     };
 
 
@@ -709,7 +731,8 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
                                     {result['mean-centered'].map((row, rowIndex) => {
                                         const OriginalValue = transposedData[rowIndex][selectedUserIndexMean]; // Get original value (dataOnly)
                                         const IsZero = OriginalValue === 0; // Check if the rating is 0
-                                        const isTopSimilarity = topSimilaritiesItem.some(top => top.index === rowIndex && !IsZero); // Check if this user is in the top 2 similarities and has rated the item
+                                        const isTopSimilarity = topSimilaritiesItem.some(top => top.index === rowIndex && !IsZero); // Check if this user is in the top similarities and has rated the item
+
                                         return (
                                             <tr key={rowIndex}>
                                                 <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
@@ -719,6 +742,7 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
                                             </tr>
                                         );
                                     })}
+
                                     </tbody>
                                 </table>
 
@@ -741,12 +765,13 @@ export function ItemBasedPrediciton({opsional, similaritas}) {
                                             return (
                                                 <tr key={colIndex}>
                                                     <td className="border border-black px-4 py-2 bg-gray-200">{colIndex + 1}</td>
-                                                    <td className={`border border-black px-4 py-2 text-center ${row[selectedUserIndex] === 1 ? 'bg-red-200' : ''} ${isTopSimilarity ? 'bg-green-200' : ''}`}>
+                                                    <td className={`border border-black px-4 py-2 text-center  ${isTopSimilarity ? 'bg-green-200' : ''}`}>
                                                         {row[selectedUserIndex]?.toFixed(4) || 'N/A'} {/* Display similarity value */}
                                                     </td>
                                                 </tr>
                                             );
                                         })}
+
                                         </tbody>
                                     </table>
                                 ) : (

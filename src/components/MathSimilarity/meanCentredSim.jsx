@@ -132,7 +132,7 @@ export function MeanCenteredSimUserBased({opsional, similaritas}){
                             <div className='flex flex-row justify-center m-3'>
                                 {/*tabel data rating */}
                                 <div>
-                                    <h2 className='font-semibold'>Data Rating</h2>
+                                    <h2 className='font-semibold'>Data Rating (r)</h2>
                                     <table className="border border-black mt-4 mr-3">
                                         <thead>
                                         <tr className="bg-gray-200">
@@ -168,7 +168,7 @@ export function MeanCenteredSimUserBased({opsional, similaritas}){
                                 </div>
 
                                 <div>
-                                    <h2 className='font-semibold'>Hasil Mean Rating</h2>
+                                    <h2 className='font-semibold'>Hasil Mean Rating (μ)</h2>
                                     <table className="borDder border-black mt-4 ml-3">
                                         <thead>
                                         <tr className=" bg-gray-200">
@@ -275,7 +275,7 @@ export function MeanCenteredSimUserBased({opsional, similaritas}){
 //ITEM-BASED
 
 const meanCenterdRatingItemBased = [
-    `\\[ S_{ui} = r_{ui} -\\mu_{i}  \\forall i \\in \\left\\{1...m\\right\\}  \\]`
+    `\\[ S_{ui} = r_{ui} -\\mu_{i}  \\ \\ \\  \\forall i \\in \\left\\{1...m\\right\\}  \\]`
 ]
 
 const DetailRumusMeanCenItemBased = [
@@ -391,7 +391,7 @@ export function MeanCenteredSimItemBased({opsional, similaritas}) {
                             <div className='flex flex-row justify-center m-3'>
                                 {/*tabel data rating */}
                                 <div>
-                                    <h2 className='font-semibold'>Data Rating</h2>
+                                    <h2 className='font-semibold'>Data Rating (r)</h2>
                                     <table className="border border-black mt-4 mr-3">
                                         <thead>
                                         <tr className="bg-gray-200">
@@ -427,7 +427,7 @@ export function MeanCenteredSimItemBased({opsional, similaritas}) {
                                 </div>
 
                                 <div>
-                                    <h2 className='font-semibold'>Hasil Mean Rating</h2>
+                                    <h2 className='font-semibold'>Hasil Mean Rating (μ)</h2>
                                     <table className="borDder border-black mt-4 ml-3">
                                         <thead>
                                         <tr className=" bg-gray-200">

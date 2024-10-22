@@ -10,7 +10,10 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DetailPageBox, {HasilPerhitunganSimilaritas} from "../detailPageView/DetailPage";
 import NavbarMenu from "../../components/Navbar";
+
+import FormMeasure from "../../components/form/FormMeasure";
 import {Form_createTbl} from "../../components/form/form_createTbl";
+import VidioTutorialModal from "../../components/modal/VidioTutorialModal";
 
 function Practice() {
     const [isDescriptionVisible, setDescriptionVisible] = useState(false);
@@ -41,6 +44,8 @@ function Practice() {
               <h1 className='text-5xl font-bold font-poppins py-10 '>Practice Fungsi Similaritas</h1>
               <p className='font-sm font-poppins'>Pada Page Practice ini pengguna bisa  berexplorasi dan ingin melakukan experiment tentang perhitungan Fungsi Similaritas untuk pemahaman yang lebih lanjut.</p>
           </section>
+
+          <VidioTutorialModal/>
 
           <section className='max-w-4xl mx-auto text-center py-10'>
               <h1 className='text-4xl font-bold font-poppins py-10 '>Langkah-langkah</h1>
@@ -77,14 +82,16 @@ function Practice() {
                   </div>
                   <h1 className='text-2xl font-bold font-poppins py-5 ml-3'>Buat Tabel Matrix:</h1>
               </div>
-              <Form_createTbl/>
+              {/*<Form_createTbl/>*/}
+              <FormMeasure/>
+
           </section>
 
 
-          <section className='max-w-4xl mx-auto text-center py-5'>
-              <h1 className='text-2xl font-bold font-poppins py-10 '>Hasil Tabel Matrix </h1>
-              <TabelView/>
-          </section>
+          {/*<section className='max-w-4xl mx-auto text-center py-5'>*/}
+          {/*    <h1 className='text-2xl font-bold font-poppins py-10 '>Hasil Tabel Matrix </h1>*/}
+          {/*    <TabelView/>*/}
+          {/*</section>*/}
 
           <section className='max-w-6xl mx-auto text-center py-5'>
               <h1 className='text-2xl font-semibold font-poppins py-10 underline underline-offset-1 '>Pilih Metode Sistem Rekomendasi dan

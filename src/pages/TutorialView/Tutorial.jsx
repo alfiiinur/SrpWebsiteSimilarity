@@ -63,19 +63,23 @@ function Tutorial() {
 
     const scrollToSection = (ref) => {
         if (ref.current) {
+            console.log('Scrolling to section:', ref.current);
             ref.current.scrollIntoView({ behavior: 'smooth' });
         } else {
-            console.error('Reference not found:', ref); // Logging reference errors
+            console.error('Reference not found:', ref);
         }
     };
 
+
+
     useEffect(() => {
         if (meanRef.current) {
-            console.log('Mean ref is ready:', meanRef.current);
+            console.log('meanRef is available:', meanRef.current);
         } else {
-            console.log('Mean ref not ready yet');
+            console.error('meanRef is not available yet.');
         }
-    }, []);
+    }, [meanRef]);
+
 
 
     return (

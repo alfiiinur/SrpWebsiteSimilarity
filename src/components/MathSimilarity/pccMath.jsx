@@ -86,6 +86,11 @@ export function PearsonSimUserBased({opsional, similaritas}) {
         return <MathJaxComponent math={expression} />;
     };
 
+    const SimilaritasIndexS = ({ rowIndex, colIndex }) => {
+        const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(s_{${rowIndex + 1}i}\\right)\\left(s_{${colIndex + 1}i}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(s_{${rowIndex + 1}i} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(s_{${colIndex + 1}i} \\right)^{2}}} \\]`;
+        return <MathJaxComponent math={expression} />;
+    };
+
     const SimilaritasIndexNonZero = ({ rowIndex, colIndex, dataOnly }) => {
         const nonZeroIndexesRow = dataOnly[rowIndex]
             .map((value, index) => (value !== 0 ? index + 1 : null))
@@ -222,7 +227,8 @@ export function PearsonSimUserBased({opsional, similaritas}) {
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
                             <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Fungsi Similaritas</h2>
 
-                            <h2 className='font-semibold text-md'>Data Mean-Centered Yang Dipilih Selain 0</h2>
+                            <h2 className='font-semibold text-md'>Data Mean-Centered (s) Yang Dipilih Selain 0</h2>
+
                             <div className="overflow-x-auto"> {/* Tambahkan ini untuk responsivitas tabel */}
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
@@ -270,6 +276,7 @@ export function PearsonSimUserBased({opsional, similaritas}) {
                                     {selectedUserIndex ? (
                                         <>
                                             <SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />
+                                            <SimilaritasIndexS rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />
                                             <SimilaritasIndexNonZero rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} dataOnly={dataOnly} />
                                         </>
                                     ) : (
@@ -349,7 +356,7 @@ export function PearsonSimUserBased({opsional, similaritas}) {
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -578,7 +585,7 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
                                     <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">U/I</th>
+                                        <th className="border border-black px-4 py-2">I/U</th>
                                         {Array.from({length: numberOfColumnsCen}, (_, index) => (
                                             <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                                         ))}
@@ -646,7 +653,7 @@ export function PearsonSimItemBased({opsional, similaritas}) {
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndexItem[0]+1} dan {selectedUserIndexItem[1]+1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"

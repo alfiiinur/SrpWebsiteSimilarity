@@ -162,7 +162,7 @@ export const TabelRatingData = ({ opsional }) => {
                             r<sub className={'italic'}>{selectedData.user}{selectedData.itemIndex + 1}</sub> = {selectedData.value}
                         </p>
                         <p className='my-2 font-medium text-md text-black'>
-                            User {selectedData.user}, Item {selectedData.itemIndex + 1} = {selectedData.value}
+                            Rating dari user(u) {selectedData.user} untuk item(i) {selectedData.itemIndex + 1} adalah {selectedData.value}
                         </p>
                         <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded" onClick={closeModal}>
                             Tutup
@@ -176,16 +176,18 @@ export const TabelRatingData = ({ opsional }) => {
 
                 <div className="flex items-start justify-start space-x-6">
                     {/* Left Column */}
-                    <div className="w-1/2   space-y-2">
-                        <p><strong>m</strong>: {user}</p>
-                        <p><strong>n</strong>: {item}</p>
+                    <div className="w-1/2   space-y-2 text-start">
+                        <p><strong>m</strong> : {user}</p>
+                        <p><strong>n</strong> : {item}</p>
+                        <p><strong>R</strong> : <em>R ∈ R<sup> {user}×{item}</sup></em>
+                        </p>
                     </div>
 
                     {/* Right Column */}
-                    <div className="w-1/2 space-y-2">
-                        <div className="flex justify-between ">
-                            <div className="w-1/2 mx-1">
-                                <h2> Data User (U)</h2>
+                    <div className="w-1/2 space-y-2 text-start ">
+                    <div className="flex justify-between ">
+                            <div className="w-1/2 mx-1 ">
+                                <h2 className='font-medium my-2'> Data Himpunan User (U)</h2>
                                 <select value={selectedUser !== null ? selectedUser : ''} onChange={handleUserChange}
                                         className="border border-gray-400 rounded w-full">
                                     <option value="">Select User</option>
@@ -194,37 +196,63 @@ export const TabelRatingData = ({ opsional }) => {
                                     ))}
                                 </select>
                                 {selectedUser !== null && (
-                                    <p>
-                                        <strong className="italic">Ratings:</strong> {dataOnly[selectedUser]
-                                        .filter(value => value !== 0) // Filter out values that are 0
-                                        .join(', ')
-                                    }
-                                    </p>
+                                    <div>
+                                        <p>
+                                            <strong className="italic">U<sub>{selectedUser + 1}</sub> : </strong>
+                                            {'{' +
+                                            dataOnly[selectedUser]
+                                                .map((value, index) => value !== 0 ? index + 1 : null)
+                                                .filter(index => index !== null)
+                                                .join(', ') +
+                                            '}'}
+                                        </p>
+                                        <p>
+                                            <strong className="italic">r<sub>{selectedUser + 1}*</sub> :
+                                            </strong> {dataOnly[selectedUser]
+                                            .filter(value => value !== 0) // Filter out values that are 0
+                                            .join(', ')
+                                        }
+                                        </p>
+
+                                    </div>
+
                                 )}
                             </div>
 
-                            <div className="w-1/2 mx-1">
-                                <h2> Data Item (I)</h2>
-                                <select value={selectedItem !== null ? selectedItem : ''} onChange={handleItemChange}
-                                        className="border border-gray-400 rounded w-full">
-                                    <option value="">Select Item</option>
-                                    {Array.from({length: item}, (_, index) => (
+                        <div className="w-1/2 mx-1">
+                            <h2 className='font-medium my-2'> Data Himpunan Item (I)</h2>
+                            <select value={selectedItem !== null ? selectedItem : ''} onChange={handleItemChange}
+                                    className="border border-gray-400 rounded w-full">
+                                <option value="">Select Item</option>
+                                {Array.from({length: item}, (_, index) => (
                                         <option key={index} value={index}>{`Item ${index + 1}`}</option>
                                     ))}
                                 </select>
                                 {selectedItem !== null && (
-                                    <p>
-                                        <strong className="italic">Ratings:</strong>
-                                        {dataOnly
-                                            .map(row => row[selectedItem])
-                                            .filter(value => value !== 0) // Filter out the values that are 0
-                                            .join(', ')
-                                        }
-                                    </p>
+                                    <div>
+                                        <p>
+                                            <strong className="italic">I<sub>{selectedItem + 1} </sub> : </strong>
+                                            {'{' +
+                                                dataOnly[selectedItem]
+                                                    .map((value, index) => value !== 0 ? index + 1 : null)
+                                                    .filter(index => index !== null)
+                                                    .join(', ') +
+                                                '}'}
+                                        </p>
+                                        <p>
+                                            <strong className="italic">r<sub>{selectedItem + 1}* </sub> : </strong>
+                                            {dataOnly
+                                                .map(row => row[selectedItem])
+                                                .filter(value => value !== 0) // Filter out the values that are 0
+                                                .join(', ')
+                                            }
+                                        </p>
+                                    </div>
+
                                 )}
                             </div>
 
-                        </div>
+                    </div>
                     </div>
 
                 </div>
@@ -246,27 +274,31 @@ export const NotationCard = () => {
             <h2 className="text-xl font-semibold mb-4 text-center underline underline-1">Notasi dan Penjelasan</h2>
             <div className="flex space-x-6">
                 {/* Left Column */}
-                <div className="w-1/2 space-y-2 font-poppins">
+                <div className="w-1/2 space-y-2 font-poppins text-start">
                     <p><strong>m</strong>: jumlah <span className="italic">user</span></p>
                     <p><strong>n</strong>: jumlah <span className="italic">item</span></p>
                     <p><strong>U</strong>: himpunan <span className="italic">user</span></p>
                     <p><strong>I</strong>: himpunan <span className="italic">item</span></p>
                     <p><strong>I<sub>u</sub></strong>: himpunan <span className="italic">item</span> yang telah diberi
                         rating oleh <span className="italic">user</span> <em>u</em></p>
-                    <p><strong>R</strong>: matriks <span className="italic">item</span> dimana <em>R ∈ R<sup> m×n</sup></em>
-                    </p>
-                    <p><strong>r<sub>uj</sub></strong>: rating <span className="italic">user</span>
-                        <em>u</em> terhadap <span className="italic">item</span> <em>j</em></p>
+                    {/*<p><strong>R</strong>: matriks <span className="italic">item</span> dimana <em>R ∈ R<sup> m×n</sup></em>*/}
+                    {/*</p>*/}
+                    {/*<p><strong>r<sub>uj</sub></strong>: rating <span className="italic">user</span>*/}
+                    {/*    <em> u</em> terhadap <span className="italic">item</span> <em>j</em></p>*/}
                 </div>
 
                 {/* Right Column */}
-                <div className="w-1/2 space-y-2 font-poppins">
-                    <p><strong>I<sub>u</sub></strong>: himpunan <span className="italic">item</span> yang belum diberi
-                        rating oleh <span className="italic">user</span> <em>u</em></p>
-                    <p><strong>r<sub>uj</sub></strong>: prediksi rating <span
-                        className="italic">user</span> (target) <em>u</em> terhadap <span className="italic">item</span>
-                        <em>j</em></p>
-                    <p><strong>l</strong>: jumlah <span className="italic">item</span> tetangga terdekat</p>
+                <div className="w-1/2 space-y-2 font-poppins text-start">
+                    <p><strong>R</strong>: matriks <span className="italic">item</span> dimana <em>R ∈ R<sup> m×n</sup></em>
+                    </p>
+                    <p><strong>r<sub>uj</sub></strong>: rating <span className="italic">user</span>
+                        <em> u</em> terhadap <span className="italic">item</span> <em>j</em></p>
+                    {/*<p><strong>î<sub>u</sub></strong>: himpunan <span className="italic">item</span> yang belum diberi*/}
+                    {/*    rating oleh <span className="italic">user</span> <em>u</em></p>*/}
+                    {/*<p><strong>r<sub>uj</sub></strong>: prediksi rating <span*/}
+                    {/*    className="italic">user</span> (target) <em>u</em> terhadap <span className="italic">item</span>*/}
+                    {/*    <em>j</em></p>*/}
+                    {/*<p><strong>l</strong>: jumlah <span className="italic">item</span> tetangga terdekat</p>*/}
                     {/*<p><strong>Y<sub>u(j)</sub></strong>: himpunan sejumlah <em>l</em> <span*/}
                     {/*    className="italic">item</span> yang telah diberi rating <span*/}
                     {/*    className="italic">user</span> target <em>u</em>, yang telah merupakan tetangga terdekat*/}
@@ -279,11 +311,11 @@ export const NotationCard = () => {
 
             {/* Dropdown Button */}
             <button
-                className="mt-6 w-full bg-cyan-500 text-white px-4 py-3 rounded-lg flex justify-center items-center"
+                className="mt-6 w-full bg-card_blue_primary text-white px-4 py-3 rounded-lg flex justify-center items-center font-poppins font-semibold"
                 onClick={toggleDropdown}
             >
-                <FaChevronDown className="mr-2" />
-                {isOpen ? 'Sembunyikan Data Rating Matrix' : 'Lihat Detail Data Rating Matrix'}
+                <FaChevronDown className="mr-2 " />
+                {isOpen ? 'Sembunyikan Data Matrik Rating ' : 'Lihat Detail Matrik Rating'}
             </button>
 
             {/* Dropdown Card */}

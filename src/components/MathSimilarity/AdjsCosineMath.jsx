@@ -225,7 +225,7 @@ export function AdjustedCosineUserBased({opsional, similaritas}){
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -436,7 +436,7 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
                                     <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">U/I</th>
+                                        <th className="border border-black px-4 py-2">I/U</th>
                                         {Array.from({length: numberOfColumnsCenItemAdj}, (_, index) => (
                                             <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                                         ))}
@@ -504,7 +504,7 @@ export function AdjustedCosineItemBased({opsional, similaritas}) {
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil mean dari adalah
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
