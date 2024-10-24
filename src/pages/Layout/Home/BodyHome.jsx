@@ -1,3 +1,5 @@
+
+
 const BodyHome = ({ children, header, subheader, idName, hirarki = "1", type = "grid" }) => {
 
     const HeaderElement = ({ heading, children }) => {
@@ -5,19 +7,16 @@ const BodyHome = ({ children, header, subheader, idName, hirarki = "1", type = "
         switch (heading) {
             case "1":
                 return <h1 className={NameClass}>{children}</h1>
-                break;
             case "2":
                 return <h2 className={NameClass}>{children}</h2>
-                break;
             case "3":
                 return <h3 className={NameClass}>{children}</h3>
-                break;
             case "4":
                 return <h4 className={NameClass}>{children}</h4>
-                break;
             case "5":
                 return <h5 className={NameClass}>{children}</h5>
-                break;
+            default:
+                return;
         }
     }
 
@@ -26,7 +25,7 @@ const BodyHome = ({ children, header, subheader, idName, hirarki = "1", type = "
      * @param {string} typeOf Type of this Element  
      */
     const SubHeaderElement = ({ typeOf, children }) => {
-        return (<p className={'text-md font-poppins ' + (typeOf == "space" ? "my-10" : "")}>{children}</p>)
+        return (<p className={'text-md font-poppins ' + (typeOf === "space" ? "my-10" : "")}>{children}</p>)
     }
 
     /**
@@ -39,16 +38,12 @@ const BodyHome = ({ children, header, subheader, idName, hirarki = "1", type = "
                 return <div className='grid grid-cols-1 my-20 md:grid-cols-2 gap-8'>
                     {children}
                 </div>
-                break;
             case "casual":
                 return <p className={'font-sm font-poppins'}>{children}</p>
-                break
             case "space":
                 return <div className={'space-y-4'}>{children}</div>
-                break
             default:
                 return
-                break;
         }
     }
 

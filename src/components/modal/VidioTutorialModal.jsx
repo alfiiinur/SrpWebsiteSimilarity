@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import React from 'react';
 import GifTut from '../../assets/vidioAsset/vidioTUT.gif'
 import InfoIcon from '@mui/icons-material/Info';
 

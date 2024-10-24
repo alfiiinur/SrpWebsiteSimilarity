@@ -34,13 +34,8 @@ export function PearsonSimUserBased({ opsional, similaritas }) {
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-    const [selectedExpression, setSelectedExpression] = useState(null);
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
-        // const expressionIndex = SimilaritasIndex(rowIndex, colIndex)
-        // const expressionIndexNonZero = SimilaritasIndexNonZero(rowIndex, colIndex)
-        // const expressionValue = SimilaritasValue(rowIndex, colIndex)
-        // setSelectedExpression([expressionIndex, expressionIndexNonZero, expressionValue]);
         setSelectedMean(value); // Simpan nilai mean yang ditekan
         setSelectedUserIndex([rowIndex, colIndex])
         setShowModal(true); // Tampilkan modal
@@ -51,35 +46,6 @@ export function PearsonSimUserBased({ opsional, similaritas }) {
         setSelectedMean(null); // Reset nilai mean yang dipilih
         setSelectedUserIndex(null)
     };
-
-
-    // rumus perhtiungan manual
-
-    // const SimilaritasIndex = (rowIndex, colIndex) => {
-    //    return `\\[ Sim(${rowIndex+1},${colIndex+1}) = \\frac{\\sum_{i\\in I_{${rowIndex+1}} \\cap I_{${colIndex+1}}} \\left(r_{${rowIndex+1}i} - \\overline{r_{${rowIndex+1}}}\\right)\\left(r_{${colIndex+1}i}-\\overline{r_{${rowIndex+1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex+1}} \\cap I_{${colIndex+1}}} \\left(r_{${colIndex+1}i} - \\overline{r_{${rowIndex+1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex+1}} \\cap I_{${colIndex+1}}} \\left(r_{${rowIndex+1}i} - \\overline{r_{${rowIndex+1}}} \\right)^{2}}} \\]`
-    // }
-    //
-    // const SimilaritasIndexNonZero = (rowIndex, colIndex) => {
-    //     // Ambil semua indeks kolom dengan nilai selain 0 dari data rating asli untuk user pertama (rowIndex)
-    //     const nonZeroIndexesRow = dataOnly[rowIndex]
-    //         .map((value, index) => value !== 0 ? index + 1 : null) // Hanya simpan indeks non-zero
-    //         .filter(index => index !== null);
-    //
-    //     // Ambil semua indeks kolom dengan nilai selain 0 dari data rating asli untuk user kedua (colIndex)
-    //     const nonZeroIndexesCol = dataOnly[colIndex]
-    //         .map((value, index) => value !== 0 ? index + 1 : null) // Hanya simpan indeks non-zero
-    //         .filter(index => index !== null);
-    //
-    //     // Format MathJax dengan indeks yang tidak nol
-    //     return `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesRow.join(', ')} \\right\\},
-    //         I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol.join(', ')} \\right\\} \\text{ maka : }
-    //         I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index)).join(', ')} \\right\\}\\]`;
-    // };
-    //
-    //
-    // const SimilaritasValue = (rowIndex, colIndex) => {
-    //     return `\\[ Sim(${rowIndex+1},${colIndex+1}) = \\frac{\\sum_{i\\in I_{${rowIndex+1}} \\cap I_{${colIndex+1}}} \\left(r_{${rowIndex+1}i} - \\overline{r_{${rowIndex+1}}}\\right)\\left(r_{${colIndex+1}i}-\\overline{r_{${rowIndex+1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex+1}} \\cap I_{${colIndex+1}}} \\left(r_{${colIndex+1}i} - \\overline{r_{${rowIndex+1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex+1}} \\cap I_{${colIndex+1}}} \\left(r_{${rowIndex+1}i} - \\overline{r_{${rowIndex+1}}} \\right)^{2}}} \\]`
-    // }
 
     const SimilaritasIndex = ({ rowIndex, colIndex }) => {
         const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}}\\right)\\left(r_{${colIndex + 1}i}-\\overline{r_{${rowIndex + 1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${colIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}} \\]`;
@@ -113,35 +79,6 @@ export function PearsonSimUserBased({ opsional, similaritas }) {
         );
     };
 
-    // FITUR TAMBAHAN
-    // const SimilaritasIndexFilter = ({ rowIndex, colIndex }) => {
-    //     const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}}\\right)\\left(r_{${colIndex + 1}i}-\\overline{r_{${rowIndex + 1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${colIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}} \\]`;
-    //     return <MathJaxComponent math={expression} />;
-    // };
-    //
-    // const SimilaritasIndexNonZeroFilter = ({ rowIndex, colIndex, dataOnly }) => {
-    //     const nonZeroIndexesRow = dataOnly[rowIndex]
-    //         .map((value, index) => (value !== 0 ? index + 1 : null))
-    //         .filter(index => index !== null);
-    //
-    //     const nonZeroIndexesCol = dataOnly[colIndex]
-    //         .map((value, index) => (value !== 0 ? index + 1 : null))
-    //         .filter(index => index !== null);
-    //
-    //     const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
-    //
-    //     const expression = `\\[
-    //      Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(s_{${rowIndex + 1}i} \\right)\\left(s_{${colIndex + 1}i} \\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(s_{${colIndex + 1}i} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(s_{${rowIndex + 1}i} \\right)^{2}}}
-    //
-    //      I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\} \\]`;
-    //
-    //     return (
-    //         <>
-    //             <MathJaxComponent math={expression} />
-    //         </>
-    //     );
-    // };
-
     const SimilaritasValue = ({ rowIndex, colIndex, dataOnly }) => {
         // Ambil index yang di-filter dari SimilaritasIndexNonZero
         const nonZeroIndexesRow = dataOnly[rowIndex]
@@ -173,17 +110,12 @@ export function PearsonSimUserBased({ opsional, similaritas }) {
         return validValues.reduce((sum, value) => sum + value, 0) / validValues.length;
     };
 
-
-
-
-
-
     const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
+    const [data] = useState(initialData);
     // get only data
-    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const [dataOnly] = useState(initialData.data);
 
-    const { result, error } = AllSimilaritas(data, similaritas);
+    const { result } = AllSimilaritas(data, similaritas);
 
     const RenderUserTabelSimilarity = () => {
         if (!result || !result['similarity']) return null;
@@ -367,17 +299,13 @@ export function PearsonSimItemBased({ opsional, similaritas }) {
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndexItem, setSelectedUserIndexItem] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-    const [selectedExpression, setSelectedExpression] = useState(null);
 
     const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
+    const [data] = useState(initialData);
     // get only data
-    const [dataOnly, setDataOnly] = useState(initialData.data);
-    const transposedData = dataOnly[0].map((_, colIndex) =>
-        dataOnly.map(row => row[colIndex])
-    );
+    const [dataOnly] = useState(initialData.data);
 
-    const { result, error } = AllSimilaritas(data, similaritas);
+    const { result } = AllSimilaritas(data, similaritas);
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
         setSelectedMean(value); // Simpan nilai mean yang ditekan
@@ -418,33 +346,6 @@ export function PearsonSimItemBased({ opsional, similaritas }) {
             </>
         );
     };
-
-
-    // const SimilaritasValue = ({ rowIndex, colIndex, dataOnly }) => {
-    //     // Ambil index yang di-filter dari SimilaritasIndexNonZero
-    //     const nonZeroIndexesRow = dataOnly.map((row, index) => (row[colIndex] !== 0 ? index + 1 : null))
-    //         .filter(index => index !== null); // +1 untuk 1-based indexing
-    //
-    //     const nonZeroIndexesCol = dataOnly.map((row, index) => (row[rowIndex] !== 0 ? index + 1 : null))
-    //         .filter(index => index !== null);
-    //
-    //     // Cari intersection
-    //     const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
-    //
-    //
-    //     const numberOfColumnsCen = result['mean-centered'][0].length; // Ambil jumlah kolom dari baris pertama
-    //     if (!result || !result['mean-centered']) return null;
-    //
-    //
-    //     // Ambil mean-centered value dari data untuk rowIndex dan colIndex
-    //     const meanCenteredRow = intersection.map(i => numberOfColumnsCen[rowIndex][i]  );
-    //     const meanCenteredCol = intersection.map(i => numberOfColumnsCen[colIndex][i] );
-    //
-    //     // Buat expression untuk MathJax (hanya menampilkan nilai mean-centered)
-    //     const expression = `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${meanCenteredRow.map((val, idx) => `(${val.toFixed(2)} \\times ${meanCenteredCol[idx].toFixed(2)})`).join(' + ')}}{${meanCenteredRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)}) +  (${meanCenteredCol[idx].toFixed(2)})}`).join(' \\times ')}} \\]`;
-    //
-    //     return <MathJaxComponent math={expression} />;
-    // };
 
     const SimilaritasValue = ({ rowIndex, colIndex, dataOnly }) => {
         // Ambil index yang di-filter dari SimilaritasIndexNonZero

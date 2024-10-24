@@ -16,7 +16,7 @@ export function BhattacharyyaViewUserBased(){
         <div>
             <MeanMeasureUserBased opsional={1} similaritas={getBC}/>
             <MeanCenteredSimUserBased opsional={1} similaritas={getBC}/>
-            <BhattacharyyaUserBased opsional={1} similaritas={getBC}/>
+            <BhattacharyyaUserBased   opsional={1} similaritas={getBC}/>
             <UserBasedPredicition opsional={1} similaritas={getBC} />
         </div>
     )

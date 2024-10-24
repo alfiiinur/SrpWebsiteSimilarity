@@ -1,44 +1,11 @@
 import React from 'react';
-import { useState } from 'react';
 import ImageAs from '../../assets/images/lear.png';
 import { AccordionMeasure } from "../../components/AccordionMeasure";
-import LayoutHome from '../Layout/LayoutHome.jsx';
-import CardHome from '../../components/Card/CardHome.jsx';
-import CardAnggotaHome from '../../components/Card/CardAnggotaHome.jsx';
-import HeaderHome from '../Layout/HeaderHome.jsx';
-import BodyHome from '../Layout/BodyHome.jsx';
-
-
-
-// const ScrollButton = () => {
-//     const [isHovered, setIsHovered] = useState(false);
-
-//     const scrollToSection = () => {
-//         const section = document.getElementById("belajar");
-//         if (section) {
-//             section.scrollIntoView({ behavior: 'smooth' });
-//         }
-//     };
-
-//     return (
-//         <div className='flex justify-center gap-4 mt-20 mb-8'>
-//             <a
-//                 href='#'
-//                 onClick={scrollToSection}
-//                 onMouseEnter={() => setIsHovered(true)}
-//                 onMouseLeave={() => setIsHovered(false)}
-//                 className='font-bold font-poppins bg-yellow-btn-primary text-white px-6 py-3 rounded-full shadow-md hover:bg-yellow-btn-primary flex items-center'
-//             >
-//                 Mulai Sekarang
-//                 {isHovered ? (
-//                     <ArrowDownwardIcon className="ml-2 text-lg transition-transform" />
-//                 ) : (
-//                     <ArrowForwardIcon className="ml-2 text-lg transition-transform" />
-//                 )}
-//             </a>
-//         </div>
-//     )
-// }
+import LayoutHome from '../Layout/Home/LayoutHome.jsx';
+import CardHome from '../../components/Card/Home/CardHome.jsx';
+import CardAnggotaHome from '../../components/Card/Home/CardAnggotaHome.jsx';
+import HeaderHome from '../Layout/Home/HeaderHome.jsx';
+import BodyHome from '../Layout/Home/BodyHome.jsx';
 
 
 
@@ -79,7 +46,7 @@ const Home = () => {
                     bgColor={"bg-card_blue_primary"}
                     Heading={"Tutorial Fungsi Similaritas"}
                     buttonName={"Tutorial Now"}
-                    anchor={"/TutorialView/Tutorial"}
+                    anchor={"/Tutorial"}
                 > Untuk belajar dan
                     mengenali cara perhitungan Fungsi Similaritas untuk yang baru ingin belajar terkait sistem
                     rekomendasi.</CardHome>
@@ -89,7 +56,7 @@ const Home = () => {
                     bgColor={"bg-card_green_primary"}
                     Heading={"Practice Fungsi Similaritas"}
                     buttonName={"Practice Now"}
-                    anchor={"/PracticeView/practice"}
+                    anchor={"/practice"}
                 > Untuk eksplorasi dan ingin
                     melakukan experiment tentang perhitungan Fungsi Similaritas untuk pemahaman yang lebih
                     lanjut </CardHome>

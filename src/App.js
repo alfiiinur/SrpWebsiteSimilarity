@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import Tutorial from './pages/TutorialView/Tutorial';
-import Practice from './pages/PracticeView/Practice';
+import Tutorial from './pages/Tutorial/Tutorial';
+import Practice from './pages/Practice/Practice';
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
         <div className="container mx-auto p-4">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/TutorialView/tutorial" element={<Tutorial />} />
-            <Route path="/PracticeView/practice" element={<Practice />} />
+            <Route path="/tutorial" element={<Tutorial />} />
+            <Route path="/practice" element={<Practice />} />
           </Routes>
         </div>
       </div>
