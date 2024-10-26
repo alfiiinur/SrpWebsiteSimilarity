@@ -74,3 +74,7 @@ export const makeSparsity = (panjang, lebar, sparsityPercent, rangeData) => {
     }
     return result
 }
+
+export const transposeMatrix = data => {
+    return data[0].map((col, i) => data.map(row => row[i]))
+}

@@ -21,14 +21,6 @@ const DetailRumusSimUserBased = [
     `\\[ r_{vi} = \\text{Nilai rating pada user v pada item yang sama} \\]`,
 ];
 
-
-
-
-
-
-
-
-
 export function PearsonSimUserBased({ opsional, similaritas }) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
@@ -291,7 +283,6 @@ const DetailRumusSimItemBased = [
     `\\[ \\overline{r_{j}} = \\text{Rata-rata nilai rating pada item j yang telah merating} \\]`,
     `\\[ r_{ui} = \\text{Nilai rating pada user u terhadap item i } \\]`,
     `\\[ r_{uj} = \\text{Nilai rating pada user v terhadap item j} \\]`,
-
 ]
 
 export function PearsonSimItemBased({ opsional, similaritas }) {

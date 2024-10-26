@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import mathjaxConfig from "../../mathjax-config";
 import MathJaxComponent from "../../MathJaxComponent";
-import {MathJaxContext} from "better-react-mathjax";
-import {FunctionMeasureDropdown} from "./DropdownFunction/FunctionMeasureDropdown";
-import {AllSimilaritas, getInitialData} from "../../api/getDataSet";
+import { MathJaxContext } from "better-react-mathjax";
+import { FunctionMeasureDropdown } from "./DropdownFunction/FunctionMeasureDropdown";
+import { AllSimilaritas, getInitialData } from "../../api/getDataSet";
 
 
 
@@ -22,12 +22,12 @@ const DetailRumusSimCosineUserBased = [
 
 ]
 
-export function CosineMathUserBased({opsional, similaritas}){
+export function CosineMathUserBased({ opsional, similaritas }) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-    const [selectedExpression, setSelectedExpression] = useState(null);
+    // const [selectedExpression, setSelectedExpression] = useState(null);
 
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
@@ -111,10 +111,10 @@ export function CosineMathUserBased({opsional, similaritas}){
 
 
     const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
-    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const [data] = useState(initialData);
+    const [dataOnly] = useState(initialData.data);
 
-    const { result, error } = AllSimilaritas(data, similaritas);
+    const { result } = AllSimilaritas(data, similaritas);
 
     const RenderUserTabelSimiliartas = () => {
 
@@ -127,31 +127,30 @@ export function CosineMathUserBased({opsional, similaritas}){
             <div className='flex justify-center mt-4'>
                 <table className="border border-black mt-4">
                     <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-black px-4 py-2">U/U</th>
-                        {Array.from({ length: numberOfColumnsSim }, (_, index) => (
-                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {result['similarity'].map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                            {row.map((value, colIndex) => (
-                                <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
-                                    value === 1 ? 'bg-red-200' : ''
-                                }`}
-                                    onClick= {() => handleMeanClick(value, rowIndex, colIndex)}
-                                >
-                                    {value.toFixed(4)} {/* Format desimal */}
-                                </td>
+                        <tr className="bg-gray-200">
+                            <th className="border border-black px-4 py-2">U/U</th>
+                            {Array.from({ length: numberOfColumnsSim }, (_, index) => (
+                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                             ))}
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                        {result['similarity'].map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                {row.map((value, colIndex) => (
+                                    <td key={colIndex} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''
+                                        }`}
+                                        onClick={() => handleMeanClick(value, rowIndex, colIndex)}
+                                    >
+                                        {value.toFixed(4)} {/* Format desimal */}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-            {/*    show modal*/}
+                {/*    show modal*/}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
@@ -162,39 +161,38 @@ export function CosineMathUserBased({opsional, similaritas}){
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">U/I</th>
-                                        {Array.from({length: dataOnly[0].length}, (_, index) => (
-                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                                        ))}
-                                    </tr>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">U/I</th>
+                                            {Array.from({ length: dataOnly[0].length }, (_, index) => (
+                                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                            ))}
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {dataOnly.map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {dataOnly.map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
-                                            {row.map((value, colIndex) => {
-                                                const OriginalValue = dataOnly[rowIndex][colIndex];
-                                                const IsZero = OriginalValue === 0;
+                                                {row.map((value, colIndex) => {
+                                                    const OriginalValue = dataOnly[rowIndex][colIndex];
+                                                    const IsZero = OriginalValue === 0;
 
-                                                return (
-                                                    <td key={colIndex}
-                                                        className={`border border-black px-4 py-2 text-center 
+                                                    return (
+                                                        <td key={colIndex}
+                                                            className={`border border-black px-4 py-2 text-center 
                                                             ${IsZero ? 'text-red-500' : ''} 
-                                                            ${
-                                                            !IsZero &&
-                                                            (selectedUserIndex.includes(rowIndex))
-                                                                ? 'bg-green-200'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {value.toFixed(1)} {/* Format desimal */}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
+                                                            ${!IsZero &&
+                                                                    (selectedUserIndex.includes(rowIndex))
+                                                                    ? 'bg-green-200'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {value.toFixed(1)} {/* Format desimal */}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -205,10 +203,10 @@ export function CosineMathUserBased({opsional, similaritas}){
                                     {selectedUserIndex ? (
                                         <>
                                             <SimilaritasIndex rowIndex={selectedUserIndex[0]}
-                                                              colIndex={selectedUserIndex[1]}/>
+                                                colIndex={selectedUserIndex[1]} />
                                             <SimilaritasIndexNonZero rowIndex={selectedUserIndex[0]}
-                                                                     colIndex={selectedUserIndex[1]}
-                                                                     dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndex[1]}
+                                                dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
@@ -224,14 +222,14 @@ export function CosineMathUserBased({opsional, similaritas}){
                                         <>
                                             {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
                                             <SimilaritasValueDa rowIndex={selectedUserIndex[0]}
-                                                              colIndex={selectedUserIndex[1]} dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndex[1]} dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
                                     )}
                                 </div>
                             </MathJaxContext>
-                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0]+1} dan {selectedUserIndex[1]+1}
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara user {selectedUserIndex[0] + 1} dan {selectedUserIndex[1] + 1}
                                 = {selectedMean.toFixed(4)}</p>
                             <button
                                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -249,7 +247,7 @@ export function CosineMathUserBased({opsional, similaritas}){
     return (
         <div>
             <div className="flex items-center">
-                <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
+                <div className="border-l-4 border-card_blue_primary h-10 mr-4" />
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Koefisien Korelasi Vector
                     Cosine User-Based</h1>
@@ -258,16 +256,16 @@ export function CosineMathUserBased({opsional, similaritas}){
                 <div className='flex justify-start items-start flex-col px-10'>
 
                     {cosineUserBased.map((math, index) => (
-                        <MathJaxComponent key={index} math={math}/>
+                        <MathJaxComponent key={index} math={math} />
                     ))}
                 </div>
             </MathJaxContext>
-            <FunctionMeasureDropdown DetailRumus={DetailRumusSimCosineUserBased}/>
+            <FunctionMeasureDropdown DetailRumus={DetailRumusSimCosineUserBased} />
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Fungsi Similaritas User-Based</h1>
                 {/*    call api */}
-                <RenderUserTabelSimiliartas/>
+                <RenderUserTabelSimiliartas />
             </div>
         </div>
     )
@@ -287,12 +285,12 @@ const DetailRumusSimCosineItemBased = [
 
 ]
 
-export function CosineMathItemBased({opsional, similaritas}) {
+export function CosineMathItemBased({ opsional, similaritas }) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndexItem, setSelectedUserIndexItem] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-    const [selectedExpression, setSelectedExpression] = useState(null);
+    // const [selectedExpression, setSelectedExpression] = useState(null);
 
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
@@ -309,13 +307,13 @@ export function CosineMathItemBased({opsional, similaritas}) {
 
 
     const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
-    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const [data] = useState(initialData);
+    const [dataOnly] = useState(initialData.data);
     const transposedData = dataOnly[0].map((_, colIndex) =>
         dataOnly.map(row => row[colIndex])
     );
 
-    const {result, error} = AllSimilaritas(data, similaritas);
+    const { result } = AllSimilaritas(data, similaritas);
 
 
     const SimilaritasIndexItem = ({ rowIndex, colIndex }) => {
@@ -347,7 +345,7 @@ export function CosineMathItemBased({opsional, similaritas}) {
         );
     };
 
-// Utility function to transpose the matrix
+    // Utility function to transpose the matrix
     const transposeMatrix = (matrix) => {
         return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
     };
@@ -415,29 +413,28 @@ export function CosineMathItemBased({opsional, similaritas}) {
             <div className='flex justify-center mt-4'>
                 <table className="border border-black mt-4">
                     <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-black px-4 py-2">U/U</th>
-                        {Array.from({length: numberOfColumnsSimItem}, (_, index) => (
-                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {result['similarity'].map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                            {row.map((value, colIndex) => (
-                                <td key={colIndex}
-                                    className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${
-                                        value === 1 ? 'bg-red-200' : ''
-                                    }`}
-                                    onClick={() => handleMeanClick(value, rowIndex, colIndex)}
-                                >
-                                    {value.toFixed(4)} {/* Format desimal */}
-                                </td>
+                        <tr className="bg-gray-200">
+                            <th className="border border-black px-4 py-2">U/U</th>
+                            {Array.from({ length: numberOfColumnsSimItem }, (_, index) => (
+                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
                             ))}
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                        {result['similarity'].map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                {row.map((value, colIndex) => (
+                                    <td key={colIndex}
+                                        className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''
+                                            }`}
+                                        onClick={() => handleMeanClick(value, rowIndex, colIndex)}
+                                    >
+                                        {value.toFixed(4)} {/* Format desimal */}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 {showModal && (
@@ -450,39 +447,38 @@ export function CosineMathItemBased({opsional, similaritas}) {
                                 <table
                                     className="border border-black mt-4 mx-auto text-center"> {/* Tambahkan mx-auto dan text-center */}
                                     <thead>
-                                    <tr className="bg-gray-200">
-                                        <th className="border border-black px-4 py-2">I/U</th>
-                                        {Array.from({length: transposedData[0].length}, (_, index) => (
-                                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                                        ))}
-                                    </tr>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-black px-4 py-2">I/U</th>
+                                            {Array.from({ length: transposedData[0].length }, (_, index) => (
+                                                <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                                            ))}
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {transposedData.map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {transposedData.map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
 
-                                            {row.map((value, colIndex) => {
-                                                const OriginalValue = transposedData[rowIndex][colIndex];
-                                                const IsZero = OriginalValue === 0;
+                                                {row.map((value, colIndex) => {
+                                                    const OriginalValue = transposedData[rowIndex][colIndex];
+                                                    const IsZero = OriginalValue === 0;
 
-                                                return (
-                                                    <td key={colIndex}
-                                                        className={`border border-black px-4 py-2 text-center 
+                                                    return (
+                                                        <td key={colIndex}
+                                                            className={`border border-black px-4 py-2 text-center 
                                                             ${IsZero ? 'text-red-500' : ''} 
-                                                            ${
-                                                            !IsZero &&
-                                                            (selectedUserIndexItem.includes(rowIndex))
-                                                                ? 'bg-green-200'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {value.toFixed(1)} {/* Format desimal */}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
+                                                            ${!IsZero &&
+                                                                    (selectedUserIndexItem.includes(rowIndex))
+                                                                    ? 'bg-green-200'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {value.toFixed(1)} {/* Format desimal */}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -493,10 +489,10 @@ export function CosineMathItemBased({opsional, similaritas}) {
                                     {selectedUserIndexItem ? (
                                         <>
                                             <SimilaritasIndexItem rowIndex={selectedUserIndexItem[0]}
-                                                                  colIndex={selectedUserIndexItem[1]}/>
+                                                colIndex={selectedUserIndexItem[1]} />
                                             <SimilaritasIndexNonZeroItem rowIndex={selectedUserIndexItem[0]}
-                                                                         colIndex={selectedUserIndexItem[1]}
-                                                                         dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndexItem[1]}
+                                                dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
@@ -512,8 +508,8 @@ export function CosineMathItemBased({opsional, similaritas}) {
                                         <>
                                             {/*<SimilaritasIndex rowIndex={selectedUserIndex[0]} colIndex={selectedUserIndex[1]} />*/}
                                             <SimilaritasValueItem rowIndex={selectedUserIndexItem[0]}
-                                                                  colIndex={selectedUserIndexItem[1]}
-                                                                  dataOnly={dataOnly}/>
+                                                colIndex={selectedUserIndexItem[1]}
+                                                dataOnly={dataOnly} />
                                         </>
                                     ) : (
                                         <p>No expression selected.</p>
@@ -521,7 +517,7 @@ export function CosineMathItemBased({opsional, similaritas}) {
                                 </div>
                             </MathJaxContext>
 
-                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndexItem[0]+1} dan {selectedUserIndexItem[1]+1}
+                            <p className="text-xl font-bold text-gray-700">Hasil Similaritas antara item {selectedUserIndexItem[0] + 1} dan {selectedUserIndexItem[1] + 1}
                                 = {selectedMean.toFixed(4)}</p>
 
                             <button
@@ -541,7 +537,7 @@ export function CosineMathItemBased({opsional, similaritas}) {
         <div>
 
             <div className="flex items-center">
-                <div className="border-l-4 border-card_blue_primary h-10 mr-4"/>
+                <div className="border-l-4 border-card_blue_primary h-10 mr-4" />
                 {/* Vertical Line */}
                 <h1 className='font-poppins font-semibold text-black'>Mencari Vector Cosine
                     Item-Based</h1>
@@ -550,16 +546,16 @@ export function CosineMathItemBased({opsional, similaritas}) {
                 <div className='flex justify-start items-start flex-col px-10'>
 
                     {cosineExpresionItemBased.map((math, index) => (
-                        <MathJaxComponent key={index} math={math}/>
+                        <MathJaxComponent key={index} math={math} />
                     ))}
                 </div>
             </MathJaxContext>
-            <FunctionMeasureDropdown DetailRumus={DetailRumusSimCosineItemBased}/>
+            <FunctionMeasureDropdown DetailRumus={DetailRumusSimCosineItemBased} />
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Fungsi Similaritas Item-Based</h1>
                 {/*    call api */}
-                <RenderItemTabelSimiliartas/>
+                <RenderItemTabelSimiliartas />
             </div>
         </div>
     )

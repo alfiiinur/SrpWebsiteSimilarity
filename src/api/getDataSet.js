@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getACosine, getCosine, getPearsonPC } from './api';
 
 export const getInitialData = (opsional) => ({
     data: [
@@ -12,6 +13,20 @@ export const getInitialData = (opsional) => ({
     opsional: opsional
 });
 
+const handleSimilarityFunction = similarity => {
+    switch (similarity) {
+        case "Pearson Coreallation Coeficient (PCC)":
+            return getPearsonPC
+
+        case "Vectore Cosine":
+            return getCosine
+        case "Adjusted Vector Cosine":
+            return getACosine
+        default:
+            return
+    }
+}
+
 export const AllSimilaritas = (data, similaritas) => {
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
@@ -19,7 +34,8 @@ export const AllSimilaritas = (data, similaritas) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await similaritas(data);
+                const callSimilaritas = handleSimilarityFunction(similaritas)
+                const response = await callSimilaritas(data);
                 setResult(response.data);
                 setError(null);
             } catch (err) {

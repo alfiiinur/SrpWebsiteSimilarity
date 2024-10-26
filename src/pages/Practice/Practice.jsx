@@ -3,7 +3,7 @@ import CardSteps from "../../components/Card/Main/CardSteps.jsx"
 import { DropdownMethodBased, DropdownSimilarityMeasure } from "../../components/Form/form_Practice";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DetailPageBox, { HasilPerhitunganSimilaritas } from "../detailPageView/DetailPage";
+import DetailPageBox, { HasilPerhitunganSimilaritas } from "../detailPageView/DetailPageBox.jsx";
 import Navigator from '../../components/Navigate/Navigator';
 
 import FormMeasure from "../../components/Form/FormMeasure";

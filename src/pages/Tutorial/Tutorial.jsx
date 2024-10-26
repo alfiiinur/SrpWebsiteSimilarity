@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import TabelView, { NotationCard } from "../../components/Tabel_Data";
 import CardSteps from "../../components/Card/Main/CardSteps.jsx";
-import { DropdownMethodBased, DropdownSimilarityMeasure } from "../../components/Form/form_Tutorial";
+import DropdownMethodBased from '../../components/Form/Tutorial/DropdownMethodBased.jsx';
+import DropdownSimilarityMeasure from '../../components/Form/Tutorial/DropdownSimilarityMeasure.jsx';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DetailPageBox from "../detailPageView/DetailPage";
+import DetailPageBox from "../detailPageView/DetailPageBox.jsx";
 import Navigator from '../../components/Navigate/Navigator';
 import VideoTutorialModal from '../../components/modal/VidioTutorialModal';
 import BodyTutorial from '../Layout/Tutorial/BodyTutorial.jsx';
@@ -12,6 +13,22 @@ import FormLayoutTutorial from '../Layout/Tutorial/FormTutorial.jsx';
 
 function Tutorial() {
 
+    const form = [
+        {
+            header: "Pilih Metode Sistem Rekomendasi",
+            element: <DropdownMethodBased
+                onChange={(method) => {
+                    setSelectedMethod(method);
+                }} />
+        },
+        {
+            header: "Pilih Fungsi Similaritas",
+            element: <DropdownSimilarityMeasure
+                onChange={(similaritas) => {
+                    setSelectedSimilarity(similaritas);
+                }} />
+        },
+    ]
     const [isDescriptionVisible, setDescriptionVisible] = useState(false);
 
     const toggleDescription = () => {
@@ -71,22 +88,7 @@ function Tutorial() {
             </BodyTutorial>
 
             <FormLayoutTutorial
-                data={[
-                    {
-                        header: "Pilih Metode Sistem Rekomendasi",
-                        element: <DropdownMethodBased
-                            onChange={(method) => {
-                                setSelectedMethod(method);
-                            }} />
-                    },
-                    {
-                        header: "Pilih Fungsi Similaritas",
-                        element: <DropdownSimilarityMeasure
-                            onChange={(similaritas) => {
-                                setSelectedSimilarity(similaritas);
-                            }} />
-                    },
-                ]}
+                data={form}
             />
 
 

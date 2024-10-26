@@ -7,9 +7,8 @@ const API_URL = "http://localhost:8000";
 
 // GET API PPC
 export const getPearsonPC = async (data) => {
-    const respone = await axios.post(`${API_URL}/pearson`, data)
-    console.log(respone.data)
-    return respone.data;
+    const response = await axios.post(`${API_URL}/pearson`, data)
+    return response.data;
 }
 
 

@@ -31,7 +31,14 @@ export default function DetailPageBox({ method, similaritas }) {
         if (method === 'User-Based') {
             switch (similaritas) {
                 case 'Pearson Coreallation Coeficient (PCC)':
-                    return <PearsonViewPageUserBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi} />;
+                    return <PearsonViewPageUserBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
 
                 case 'Vectore Cosine':
                     return CosineViewPageUserBased();
@@ -47,7 +54,14 @@ export default function DetailPageBox({ method, similaritas }) {
         } else if (method === 'Item-Based') {
             switch (similaritas) {
                 case 'Pearson Coreallation Coeficient (PCC)':
-                    return <PearsonViewPageItemBased meanRef={meanRef} meanCenteredRef={meanCenteredRef} fungsiSimilaritas={fungsiSimilaritas} prediksi={prediksi} />;
+                    return <PearsonViewPageItemBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Vectore Cosine':
                     return CosineViewPageItemBased();
                 case 'Adjusted Vector Cosine':

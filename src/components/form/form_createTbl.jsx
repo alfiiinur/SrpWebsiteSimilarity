@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import TuneIcon from '@mui/icons-material/Tune';
 import PercentIcon from "@mui/icons-material/Percent";
+import { Input } from '@headlessui/react';
 
 export function Form_createTbl() {
     const [panjang, setPanjang] = useState(0);
@@ -41,7 +42,7 @@ export function Form_createTbl() {
                 <div className="flex flex-col">
                     <label htmlFor="input1" className="mb-5 text-2xl text-start font-poppins font-semibold text-gray-900">User:</label>
                     <div className="outline outline-1 inline-flex items-center rounded-md bg-yellow-primary px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300">
-                        <input
+                        <Input
                             id="input1"
                             name="input1"
                             type="number"
@@ -71,8 +72,8 @@ export function Form_createTbl() {
                 {/* Tombol Random Size */}
                 <div className="flex flex-col mt-12 justify-center items-center">
                     <button type="button" onClick={handleRandomGenerate}
-                            className="bg-purple-btn-primary text-white font-semibold px-3 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none flex items-center">
-                        <TuneIcon className="mr-2"/>
+                        className="bg-purple-btn-primary text-white font-semibold px-3 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none flex items-center">
+                        <TuneIcon className="mr-2" />
                         Generate Random
                     </button>
                 </div>
@@ -100,12 +101,12 @@ export function Form_createTbl() {
                                 onChange={handleSetSparsity}
                             />
                             <div className="flex items-center">
-                                <PercentIcon className="h-5 text-gray-500"/>
+                                <PercentIcon className="h-5 text-gray-500" />
                             </div>
                         </div>
                         <button type="button" onClick={handleRandomGenerate}
-                                className="w-30 ml-5 bg-purple-btn-primary text-white font-semibold px-3 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none flex items-center">
-                            <TuneIcon className="mr-2"/>
+                            className="w-30 ml-5 bg-purple-btn-primary text-white font-semibold px-3 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none flex items-center">
+                            <TuneIcon className="mr-2" />
                             Generate Random
                         </button>
                     </form>
