@@ -1,30 +1,35 @@
 import React from 'react'
-import {MeanMeasureItemBased, MeanMeasureUserBased} from "../MathSimilarity/meanMeasure";
-import {MeanCenteredSimItemBased, MeanCenteredSimUserBased} from "../MathSimilarity/meanCentredSim";
-import {ItemBasedPrediciton, UserBasedPredicition} from "../MathSimilarity/PredicitionMath";
-import {CosineMathItemBased, CosineMathUserBased} from "../MathSimilarity/cosineMath";
-import {getCosine} from "../../api/api";
+import { MeanMeasureItemBased, MeanMeasureUserBased } from "../MathSimilarity/meanMeasure";
+import { MeanCenteredSimItemBased, MeanCenteredSimUserBased } from "../MathSimilarity/meanCentredSim";
+import { ItemBasedPrediciton, UserBasedPredicition } from "../MathSimilarity/PredicitionMath";
+import SimilarityMeasure from '../MathSimilarity/Pearson/SimilarityMeasure';
 
 
-export function CosineViewPageUserBased(){
-    return(
+export function CosineViewPageUserBased({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
+    return (
         <div>
-            <MeanMeasureUserBased opsional={1} similaritas={getCosine}/>
-            <MeanCenteredSimUserBased opsional={1} similaritas={getCosine}/>
-            <CosineMathUserBased opsional={1} similaritas={getCosine}/>
-            <UserBasedPredicition opsional={1} similaritas={getCosine}/>
+            <MeanMeasureUserBased ref={meanRef} opsional={opsional} similaritas={similarity} />
+            <MeanCenteredSimUserBased
+                ref={meanCenteredRef}
+                opsional={"user-based"}
+                similaritas={similarity}
+            />
+            {/* <CosineMathUserBased opsional={1} similaritas={similarity}/> */}
+            <SimilarityMeasure ref={fungsiSimilaritas} opsional={opsional} similarity={similarity} />
+            <UserBasedPredicition ref={prediksi} opsional={opsional} similaritas={similarity} />
         </div>
     )
 }
 
 
-export function CosineViewPageItemBased(){
-    return(
+export function CosineViewPageItemBased({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
+    return (
         <div>
-            <MeanMeasureItemBased opsional={0} similaritas={getCosine}/>
-            <MeanCenteredSimItemBased opsional={0} similaritas={getCosine}/>
-            <CosineMathItemBased opsional={0} similaritas={getCosine}/>
-            <ItemBasedPrediciton opsional={0} similaritas={getCosine}/>
+            <MeanMeasureItemBased ref={meanRef} opsional={opsional} similaritas={similarity} />
+            <MeanCenteredSimItemBased ref={meanCenteredRef} opsional={opsional} similaritas={similarity} />
+            {/* <CosineMathItemBased opsional={0} similaritas={similarity}/> */}
+            <SimilarityMeasure ref={fungsiSimilaritas} opsional={opsional} similarity={similarity} />
+            <ItemBasedPrediciton ref={prediksi} opsional={opsional} similaritas={similarity} />
         </div>
     )
 }

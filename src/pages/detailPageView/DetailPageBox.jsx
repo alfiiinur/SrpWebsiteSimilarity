@@ -3,7 +3,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {
-    PearsonViewPage,
     PearsonViewPageItemBased,
     PearsonViewPageUserBased
 } from "../../components/viewMath/PearsonViewPage";
@@ -40,12 +39,33 @@ export default function DetailPageBox({ method, similaritas }) {
                         similarity={similaritas}
                     />;
 
-                case 'Vectore Cosine':
-                    return CosineViewPageUserBased();
+                case 'Vector Cosine':
+                    return <CosineViewPageUserBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Adjusted Vector Cosine':
-                    return AdjustedCosineViewPageUserBased();
+                    return <AdjustedCosineViewPageUserBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Bhattacharyya Coefficient Similarity (BC)':
-                    return BhattacharyyaViewUserBased();
+                    return <BhattacharyyaViewUserBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Kullback-Leibler Distance (KL)':
                     return KullbackViewPageUserBased();
                 default:
@@ -62,12 +82,33 @@ export default function DetailPageBox({ method, similaritas }) {
                         opsional={method.toLowerCase()}
                         similarity={similaritas}
                     />;
-                case 'Vectore Cosine':
-                    return CosineViewPageItemBased();
+                case 'Vector Cosine':
+                    return <CosineViewPageItemBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Adjusted Vector Cosine':
-                    return AdjustedCosineViewPageItemBased();
+                    return <AdjustedCosineViewPageItemBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Bhattacharyya Coefficient Similarity (BC)':
-                    return BhattacharyyaViewItemBased();
+                    return <BhattacharyyaViewItemBased
+                        meanRef={meanRef}
+                        meanCenteredRef={meanCenteredRef}
+                        fungsiSimilaritas={fungsiSimilaritas}
+                        prediksi={prediksi}
+                        opsional={method.toLowerCase()}
+                        similarity={similaritas}
+                    />;
                 case 'Kullback-Leibler Distance (KL)':
                     return KullbackViewPageItemBased();
                 default:

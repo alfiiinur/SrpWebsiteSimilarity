@@ -3,7 +3,7 @@ import { MathJaxContext, MathJax } from "better-react-mathjax";
 import mathjaxConfig from "../../../mathjax-config";
 import { FunctionMeasureDropdown } from "../DropdownFunction/FunctionMeasureDropdown.jsx";
 import { AllSimilaritas, getInitialData } from "../../../api/getDataSet.js";
-import { FormulaSimilarity, getFormulaSimilarity } from './Formula/FormulaPearson.jsx';
+import { getFormulaSimilarity } from './Formula/FormulaSimilarity.jsx';
 import ModalSimilarity from './ModalSimilarityMeasure.jsx';
 
 
@@ -64,7 +64,9 @@ export default function SimilarityMeasure({ opsional, similarity }, ref) {
     const [dataOnly] = useState(initialData.data);
 
     const { result } = AllSimilaritas(data, similarity);
+
     const FormulaSimilarity = getFormulaSimilarity(similarity, opsional)
+
 
     const handleMeanClick = (value, rowIndex, colIndex) => {
         setSelectedMean(value); // Simpan nilai mean yang ditekan

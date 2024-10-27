@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getACosine, getCosine, getPearsonPC } from './api';
+import { getACosine, getBC, getCosine, getPearsonPC } from './api';
 
 export const getInitialData = (opsional) => ({
     data: [
@@ -18,10 +18,12 @@ const handleSimilarityFunction = similarity => {
         case "Pearson Coreallation Coeficient (PCC)":
             return getPearsonPC
 
-        case "Vectore Cosine":
+        case "Vector Cosine":
             return getCosine
         case "Adjusted Vector Cosine":
             return getACosine
+        case "Bhattacharyya Coefficient Similarity (BC)":
+            return getBC
         default:
             return
     }

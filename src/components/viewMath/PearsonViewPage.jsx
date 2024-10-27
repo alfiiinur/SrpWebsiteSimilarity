@@ -1,10 +1,8 @@
 import React, { forwardRef } from 'react';
 import { MeanCenteredSimItemBased, MeanCenteredSimUserBased } from "../MathSimilarity/meanCentredSim";
 import { MeanMeasureItemBased, MeanMeasureUserBased } from "../MathSimilarity/meanMeasure";
-import { PearsonSimItemBased, PearsonSimUserBased } from "../MathSimilarity/pccMath";
 import { ItemBasedPrediciton, UserBasedPredicition } from "../MathSimilarity/PredicitionMath";
 import SimilarityMeasure from '../MathSimilarity/Pearson/SimilarityMeasure';
-import { getPearsonPC } from "../../api/api";
 
 
 

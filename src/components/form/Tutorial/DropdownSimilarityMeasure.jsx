@@ -42,10 +42,10 @@ const DropdownSimilarityMeasure = ({ onChange }) => {
                         <Menu.Item>
                             {({ active }) => (
                                 <button
-                                    onClick={() => handleChange('Vectore Cosine')}
+                                    onClick={() => handleChange('Vector Cosine')}
                                     className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
                                 >
-                                    Vectore Cosine
+                                    Vector Cosine
                                 </button>
                             )}
                         </Menu.Item>
