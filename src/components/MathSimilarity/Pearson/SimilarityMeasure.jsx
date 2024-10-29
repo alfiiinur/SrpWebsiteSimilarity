@@ -60,7 +60,7 @@ export default function SimilarityMeasure({ opsional, similarity }, ref) {
 
     const initialData = getInitialData(opsional);
     const [data] = useState(initialData);
-
+    // get only data
     const [dataOnly] = useState(initialData.data);
 
     const { result } = AllSimilaritas(data, similarity);
@@ -84,7 +84,6 @@ export default function SimilarityMeasure({ opsional, similarity }, ref) {
         if (!result || !result['similarity']) return null;
         const numberOfColumnsSim = result['similarity'][0].length;
 
-        const numberOfColumnsCen = result['mean-centered'][0].length;
         if (!result || !result['mean-centered']) return null;
 
         return (
@@ -116,7 +115,6 @@ export default function SimilarityMeasure({ opsional, similarity }, ref) {
                     <ModalSimilarity
                         similarity={similarity}
                         opsional={opsional}
-                        numberOfColumnsCen={numberOfColumnsCen}
                         close={closeModal}
                         selectedIndex={selectedIndex}
                         selectedMean={selectedMean}

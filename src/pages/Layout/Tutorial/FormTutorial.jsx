@@ -12,7 +12,6 @@ const FieldForm = ({ increment, children, header }) => {
 }
 
 const FormLayoutTutorial = ({ data }) => {
-
     return (
         <section className='max-w-6xl mx-auto text-center py-5'>
             <h1 className='text-2xl font-semibold font-poppins py-10 underline underline-offset-1 '>Pilih Metode

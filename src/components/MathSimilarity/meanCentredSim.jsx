@@ -18,7 +18,6 @@ const DetailRumusMeanCenUserBased = [
     `\\[ S_{ui} = \\text{Rata-rata pada user u} \\] `,
     `\\[ r_{ui} = \\text{Rating user u terhadap item i} \\]`,
     `\\[ \\mu_{i} = \\text{Rata-rata pada user u} \\] `,
-
 ]
 
 export function MeanCenteredSimUserBased({ opsional, similaritas }) {
@@ -366,7 +365,6 @@ export function MeanCenteredSimItemBased({ opsional, similaritas }) {
                                 <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                 {row.map((value, colIndex) => {
                                     const OriginalValue = dataOnly[colIndex][rowIndex];
-                                    console.log("dataOnly", dataOnly, "dataOnly[colIndex]", colIndex, "dataOnly[colIndex][rowIndex]", rowIndex)
                                     const IsZero = OriginalValue === 0;
                                     return (
                                         <td key={colIndex}

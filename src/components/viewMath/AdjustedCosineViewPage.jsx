@@ -1,17 +1,18 @@
 import React from 'react'
-import { MeanMeasureItemBased, MeanMeasureUserBased } from "../MathSimilarity/meanMeasure";
 import { MeanCenteredSimItemBased } from "../MathSimilarity/meanCentredSim";
 import SimilarityMeasure from '../MathSimilarity/Pearson/SimilarityMeasure';
 import { UserBasedPredicition } from '../MathSimilarity/PredicitionMath';
 import { ItemBasedPrediciton } from "../MathSimilarity/PredicitionMath";
+import { MeanMeasure } from '../MathSimilarity/Pearson/Mean/MeanMeasure';
 
 
 
 
-export function AdjustedCosineViewPageUserBased({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
+export function AdjustedCosineViewPageUserBased({ meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
     return (
         <div>
-            <MeanMeasureItemBased ref={meanRef} opsional={opsional} similaritas={similarity} />
+            {/* <MeanMeasureItemBased ref={meanRef} opsional={opsional} similaritas={similarity} /> */}
+            <MeanMeasure opsional={opsional} similaritas={similarity} />
             <MeanCenteredSimItemBased
                 ref={meanCenteredRef}
                 opsional={"user-based"}
@@ -26,10 +27,11 @@ export function AdjustedCosineViewPageUserBased({ meanRef, meanCenteredRef, fung
 }
 
 
-export function AdjustedCosineViewPageItemBased({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
+export function AdjustedCosineViewPageItemBased({ meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
     return (
         <div>
-            <MeanMeasureUserBased ref={meanRef} opsional={opsional} similaritas={similarity} />
+            {/* <MeanMeasureUserBased ref={meanRef} opsional={opsional} similaritas={similarity} /> */}
+            <MeanMeasure opsional={opsional} similaritas={similarity} />
             <MeanCenteredSimItemBased ref={meanCenteredRef} opsional={opsional} similaritas={similarity} />
             {/*<MeanCenteredSimUserBased opsional={0} similaritas={getACosine}/>*/}
             {/* <AdjustedCosineItemBased opsional={0} similaritas={getACosine}/> */}

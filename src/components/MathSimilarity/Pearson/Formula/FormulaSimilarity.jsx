@@ -5,19 +5,16 @@ export const getFormulaSimilarity = (similarity, opsional) => {
                 case "user-based":
                     return {
                         formula:
-                            `\\[ PCC(u,v) = \\frac{\\sum_{i\\in I_{uv}} \\left(r_{ui} - \\overline{r_{u}}\\right)\\left(r_{vi}-\\overline{r_{u}}\\right)}{\\sqrt{\\sum_{i\\in I_{ui}} \\left(r_{ui} - \\overline{r_{u}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{vi}} \\left(r_{vi} - \\overline{r_{v}} \\right)^{2}}} \\]`,
+                            `\\[ PCC(u,v) = \\frac{\\sum_{i\\in I_{uv}} s_{ui} s_{vi}}{\\sqrt{\\sum_{i\\in I_{ui}} s_{ui}^{2}}\\sqrt{\\sum_{i\\in I_{vi}} s_{vi}^{2}}} \\]`,
                         detail_formula:
                             [
-                                `\\[ I_{uv} = \\text{Kumpulan item yang telah di rating oleh user u dan v} \\]`,
-                                `\\[ \\overline{r_{u}}  = \\text{Rata-rata nilai rating yang diberikan oleh user u pada seluruh item i} \\]`,
-                                `\\[ \\overline{r_{v}} = \\text{Rata-rata nilai rating yang diberikan oleh user v pada seluruh item i} \\]`,
-                                `\\[ r_{ui} = \\text{Nilai rating pada user u pada item yang sama} \\]`,
-                                `\\[ r_{vi} = \\text{Nilai rating pada user v pada item yang sama} \\]`,
+                                `\\[ I_{uv} = \\text{Kumpulan item yang telah dinilai oleh user u dan v} \\]`,
+                                `\\[ s_{ui} = \\text{Nilai mean-centered dari rating item i yang telah dinilai oleh user u } \\]`
                             ]
                     }
                 case "item-based":
                     return {
-                        formula: `\\[ PCC(i,j) = \\frac{\\sum_{i\\in U_{ij}} \\left(r_{ui} - \\overline{r_{i}}\\right)\\left(r_{uj}-\\overline{r_{j}}\\right)}{\\sqrt{\\sum_{u\\in U_{ij}} \\left(r_{ui} - \\overline{r_{i}} \\right)^{2}}\\sqrt{\\sum_{u\\in U_{ij}} \\left(r_{uj} - \\overline{r_{j}} \\right)^{2}}} \\]`,
+                        formula: `\\[ PCC(i,j) = \\frac{\\sum_{u\\in U_{ij}} s_{ui} s_{uj}}{\\sqrt{\\sum_{u\\in U_{ij}} s^{2}_{ui}}\\sqrt{\\sum_{u\\in U_{ij}} s^{2}_{uj}}} \\]`,
                         detail_formula: [
                             `\\[ U_{ij} = \\text{Kumpulan user yang telah merating pada item yang sama user u dan v} \\]`,
                             `\\[ \\overline{r_{i}}  = \\text{Rata-rata nilai rating pada item i yang telah merating} \\]`,
@@ -98,7 +95,6 @@ export const getFormulaSimilarity = (similarity, opsional) => {
                                 `\\[ Su_{i} = \\text{Rata-rata pada user u} \\] `,
                                 `\\[ r_{ui} = \\text{Rating user u terhadap item i} \\]`,
                                 `\\[ \\mu_{i} = \\text{Rata-rata pada user u} \\] `,
-
                             ]
                     }
                 case "item-based":
@@ -136,9 +132,9 @@ export const FormulaSimilarityIndex = (rowIndex, colIndex, opsional, similarity)
         case "Pearson Coreallation Coeficient (PCC)":
             switch (opsional) {
                 case "user-based":
-                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
+                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${rowIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
                 case "item-based":
-                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} \\left(r_{u${rowIndex + 1}} - \\overline{r_{${rowIndex + 1}}}\\right)\\left(r_{u${colIndex + 1}}-\\overline{r_{${colIndex + 1}}}\\right)}{\\sqrt{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${rowIndex + 1}}} \\left(r_{u${colIndex + 1}} - \\overline{r_{${colIndex + 1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}} \\]`
+                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
                 default:
                     return
             }
@@ -155,10 +151,10 @@ export const FormulaSimilarityIndex = (rowIndex, colIndex, opsional, similarity)
         case "Adjusted Vector Cosine":
             switch (opsional) {
                 case "user-based":
-                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}}\\right)\\left(r_{${colIndex + 1}i}-\\overline{r_{${rowIndex + 1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${colIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}} \\]`
+                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
 
                 case "item-based":
-                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}}\\right)\\left(r_{${colIndex + 1}i}-\\overline{r_{${rowIndex + 1}}}\\right)}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${colIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} \\left(r_{${rowIndex + 1}i} - \\overline{r_{${rowIndex + 1}}} \\right)^{2}}} \\]`
+                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
                 default:
                     return
             }
@@ -174,41 +170,70 @@ export const FormulaSimilarityNonZero = (rowIndex, colIndex, similarity, opsiona
         case "Pearson Coreallation Coeficient (PCC)":
             switch (opsional) {
                 case "user-based":
-                    return `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
-            U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
-            U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`
+                    return {
+                        FormulaWithoutValue: `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+            I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
+            I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`, FormulaWithValue: `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.map(val => `i_{${val}}`)} \\right\\}, 
+            I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.map(val => `i_{${val}}`)} \\right\\} \\text{ maka : }
+            I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.map(val => `i_{${val}}`)} \\right\\}\\]`
+                    }
 
                 case "item-based":
-                    return `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
-            I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
-            I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`
+                    return {
+                        FormulaWithoutValue: `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+            U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
+            U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`,
+                        FormulaWithValue: `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.map(val => `u_{${val}}`)} \\right\\}, 
+            U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.map(val => `u_{${val}}`)} \\right\\} \\text{ maka : }
+            U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.map(val => `u_{${val}}`)} \\right\\}\\]`
+                    }
                 default:
                     return
             }
         case "Vector Cosine":
             switch (opsional) {
                 case "user-based":
-                    return `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+                    return {
+                        FormulaWithoutValue: `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
             I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
-            I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`
+            I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`,
+                        FormulaWithValue: `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.map(val => `i_{${val}}`)} \\right\\}, 
+            I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.map(val => `i_{${val}}`)} \\right\\} \\text{ maka : }
+            I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.map(val => `i_{${val}}`)} \\right\\}\\]`
+                    }
 
                 case "item-based":
-                    return `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+                    return {
+                        FormulaWithoutValue: `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
             U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
-            U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`
+            U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`,
+                        FormulaWithValue: `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.map(val => `u_{${val}}`)} \\right\\}, 
+            U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.map(val => `u_{${val}}`)} \\right\\} \\text{ maka : }
+            U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.map(val => `u_{${val}}`)} \\right\\}\\]`
+                    }
                 default:
                     return
             }
         case "Adjusted Vector Cosine":
             switch (opsional) {
                 case "user-based":
-                    return `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
-        I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
-        I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`
+                    return {
+                        FormulaWithoutValue: `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+        U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
+        U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`,
+                        FormulaWithValue: `\\[ U_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.map(val => `u_{${val}}`)} \\right\\}, 
+        U_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.map(val => `u_{${val}}`)} \\right\\} \\text{ maka : }
+        U_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.map(val => `u_{${val}}`)} \\right\\}\\]`
+                    }
                 case "item-based":
-                    return `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
+                    return {
+                        FormulaWithoutValue: `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.join(', ')} \\right\\}, 
         I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.join(', ')} \\right\\} \\text{ maka : }
-        I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`
+        I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.join(', ')} \\right\\}\\]`,
+                        FormulaWithValue: `\\[ I_{${rowIndex + 1}} = \\left\\{ ${nonZeroIndexesCol1.map(val => `i_{${val}}`)} \\right\\}, 
+        I_{${colIndex + 1}} = \\left\\{ ${nonZeroIndexesCol2.map(val => `i_{${val}}`)} \\right\\} \\text{ maka : }
+        I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}} = \\left\\{ ${intersection.map(val => `i_{${val}}`)} \\right\\}\\]`
+                    }
                 default:
                     return
             }
@@ -218,11 +243,19 @@ export const FormulaSimilarityNonZero = (rowIndex, colIndex, similarity, opsiona
 }
 
 export const FormulaSimilarityValue = (rowIndex, colIndex, dataSimilarityRow, dataSimilarityCol, similarity) => {
+    console.log(`
+        rowIndex : ${rowIndex}, 
+        colIndex : ${colIndex}, 
+        dataSimilarityRow : ${dataSimilarityRow}, 
+        dataSimilarityCol : ${dataSimilarityCol}, 
+        similarity : ${similarity}
+        `)
+
     switch (similarity) {
         case "Pearson Coreallation Coeficient (PCC)":
             return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(1)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(2)})^2`).join(' + ')}}} \\newline \\]`
         case "Vector Cosine":
-            return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(1)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(2)})^2`).join(' + ')}}} \\newline \\]`
+            return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(0)} \\times ${dataSimilarityCol[idx].toFixed(0)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(0)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(0)})^2`).join(' + ')}}} \\newline \\]`
         case "Adjusted Vector Cosine":
             return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{${dataSimilarityRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)})^2 +  (${dataSimilarityCol[idx].toFixed(2)})^2}`).join(' \\times ')}} \\]`
         case "Bhattacharyya Coefficient Similarity (BC)":

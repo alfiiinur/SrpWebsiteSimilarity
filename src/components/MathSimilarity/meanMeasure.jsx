@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { MathJaxContext } from "better-react-mathjax";
 import mathjaxConfig from "../../mathjax-config";
 import MathJaxComponent from "../../MathJaxComponent";
@@ -34,8 +34,6 @@ const DetailRumusMeanUserBased = [
 
 export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) => {
 
-
-
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedUserIndex, setSelectedUserIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
@@ -56,11 +54,11 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
 
 
     const initialData = getInitialData(opsional);
-    const [data, setData] = useState(initialData);
+    const [data] = useState(initialData);
     // get only data
-    const [dataOnly, setDataOnly] = useState(initialData.data);
+    const [dataOnly] = useState(initialData.data);
 
-    const { result, error } = AllSimilaritas(data, similaritas);
+    const { result } = AllSimilaritas(data, similaritas);
 
 
 
@@ -71,9 +69,7 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
     };
 
     const MeanRumusIndex = () => {
-        return data2.map((userData, index) => {
-
-
+        return data2.map((_, index) => {
             return `\\[ \\mu_{${index + 1}} = \\frac{\\sum_{i\\in I_{${index + 1}}} r_{${index + 1}i}}{\\left|I_{${index + 1}}\\right|} \\ \\ \\   \\forall ${index + 1}\\in\\left\\{1...${getUserCount()}\\right\\} \\]`;
         });
     };
@@ -169,7 +165,6 @@ export const MeanMeasureUserBased = forwardRef(({ opsional, similaritas }, ref) 
                                             <tr key={rowIndex}>
                                                 <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                                 {row.map((value, colIndex) => {
-                                                    const isSelected = selectedUserIndex.row === colIndex;
 
                                                     const cellClass = value === 0
                                                         ? 'border border-black px-4 py-2 text-center bg-red-200'
@@ -356,7 +351,7 @@ export function MeanMeasureItemBased({ opsional, similaritas }) {
 
     const meanExpressionsValues = MeanHasil();
 
-    const RenderItemTableMean = () => {
+    const RenderTableMean = () => {
         if (!result || !result['mean-list']) {
             return <p>Loading or no data available...</p>;  // Tambahkan penanganan error atau loading
         }
@@ -408,8 +403,6 @@ export function MeanMeasureItemBased({ opsional, similaritas }) {
                                             <tr key={rowIndex}>
                                                 <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                                 {row.map((value, colIndex) => {
-                                                    const isSelected = selectedUserIndex.row === colIndex;
-
                                                     const cellClass = value === 0
                                                         ? 'border border-black px-4 py-2 text-center bg-red-200'
                                                         : 'border border-black px-4 py-2 text-center';
@@ -495,7 +488,7 @@ export function MeanMeasureItemBased({ opsional, similaritas }) {
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
                     Mean Item-Based</h1>
                 {/*    call api */}
-                <RenderItemTableMean />
+                <RenderTableMean />
             </div>
         </div>
     )

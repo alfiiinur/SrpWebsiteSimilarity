@@ -15,11 +15,19 @@ import { KullbackViewPageItemBased, KullbackViewPageUserBased } from "../../comp
 import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
 import { BhattacharyyaViewItemBased, BhattacharyyaViewUserBased } from "../../components/viewMath/BhattacharyyaViewPage";
 import TabelView from "../../components/Tabel_Data";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { AllSimilaritas, getInitialData } from '../../api/getDataSet';
 
 
 export default function DetailPageBox({ method, similaritas }) {
-    // const { meanRef, meanCenteredRef, fungsiSimilaritas, prediksi } = refs;
+
+
+    const initialData = getInitialData(method.toLowerCase())
+    const [data] = useState(initialData)
+    const [dataOnly] = useState(initialData.data)
+
+    const { result } = AllSimilaritas(data, similaritas)
+
 
     const meanRef = useRef(null);
     const meanCenteredRef = useRef(null);

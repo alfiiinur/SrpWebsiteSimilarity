@@ -86,7 +86,6 @@ function Tutorial() {
                 <TabelView />
                 <NotationCard />
             </BodyTutorial>
-
             <FormLayoutTutorial
                 data={form}
             />

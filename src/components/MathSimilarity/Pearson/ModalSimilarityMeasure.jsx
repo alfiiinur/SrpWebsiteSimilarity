@@ -16,24 +16,34 @@ const SimilarityIndex = ({ rowIndex, colIndex, similarity, opsional }) => {
 
 const SimilarityValue = ({ rowIndex, colIndex, data, dataOnly, similarity, selectedMean, opsional }) => {
     const dataModify = opsional === "item-based" ? transposeMatrix(dataOnly) : dataOnly
+    // const dataModify = transposeMatrix(dataOnly)
 
     const nonZeroIndexesRow = dataModify[rowIndex].map((row, index) => (row !== 0 ? index : null)).filter(index => index !== null);
+    // console.log("dataModify[rowIndex]", dataModify[rowIndex], "nonZeroIndexesRow", nonZeroIndexesRow);
     const nonZeroIndexesCol = dataModify[colIndex].map((row, index) => (row !== 0 ? index : null)).filter(index => index !== null);
+    // console.log("dataModify[colIndex]", dataModify[colIndex], "nonZeroIndexesCol", nonZeroIndexesCol);
 
     const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
+    // console.log("intersection", intersection);
 
-    const dataSimilarity = similarity !== "Vector Cosine" ? data['mean-centered'] : dataModify
+    const dataSimilarity = similarity !== "Vector Cosine" ? (
+        opsional === "user-based" ? transposeMatrix(data['mean-centered']) : data["mean-centered"]
+    ) : dataModify
 
     if (!dataSimilarity || dataSimilarity.length === 0) return null;
 
+    // console.log("dataSimilarityRow", dataSimilarity, rowIndex, colIndex);
     const dataSimilarityRow = intersection.map(i => {
         return dataSimilarity[rowIndex][i]
     });
+    // console.log("dataSimilarityRow", dataSimilarity[rowIndex]);
+
 
     const dataSimilarityCol = intersection.map(i => {
 
         return dataSimilarity[colIndex][i]
     });
+    // console.log("dataSimilarityCol", dataSimilarity[colIndex]);
 
     if (!dataSimilarityRow || !dataSimilarityCol) return null;
 
@@ -74,7 +84,7 @@ const SimilarityIndexNonZero = ({ rowIndex, colIndex, dataOnly, similarity, opsi
     // Cari intersection antara kedua kolom
     const intersection = nonZeroIndexesCol1.filter(index => nonZeroIndexesCol2.includes(index));
 
-    const expression = FormulaSimilarityNonZero(
+    const { FormulaWithValue, FormulaWithoutValue } = FormulaSimilarityNonZero(
         rowIndex,
         colIndex,
         similarity,
@@ -87,17 +97,29 @@ const SimilarityIndexNonZero = ({ rowIndex, colIndex, dataOnly, similarity, opsi
     return (
         <>
             <MathJax>
-                {expression}
+                {FormulaWithValue}
+                {FormulaWithoutValue}
             </MathJax>
         </>
     );
 };
 
-const ModalSimilarity = ({ data, numberOfColumnsCen, close, selectedIndex, selectedMean, dataOnly, similarity, opsional }) => {
+const ModalSimilarity = ({ data, close, selectedIndex, selectedMean, dataOnly, similarity, opsional }) => {
 
-    const dataModify = (similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? data["mean-centered"] : (
-        opsional === "user-based" ? dataOnly : transposeMatrix(dataOnly)
+    // const dataModify = (similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? (
+    //     opsional === "item-based"
+    //         ? transposeMatrix(data["mean-centered"])
+    //         : data["mean-centered"]
+    // ) : (
+    //     opsional === "user-based" ? dataOnly : transposeMatrix(dataOnly)
+    // )
+    const dataModify = (similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? (
+        (similarity === "Adjusted Vector Cosine" || opsional === "item-based") ? transposeMatrix(data["mean-centered"]) : data["mean-centered"]
+    ) : (
+        dataOnly
     )
+
+    const numberOfColumnsCen = dataOnly[0].length;
 
     return (<div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
         <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
@@ -109,12 +131,12 @@ const ModalSimilarity = ({ data, numberOfColumnsCen, close, selectedIndex, selec
                     className="border border-black mt-4 mx-auto text-center">
                     <thead>
                         <tr className="bg-gray-200">
-                            <th className="border border-black px-4 py-2">{(similarity !== "Adjusted Vector Cosine" && opsional === "user-based") ? "U/I" : "I/U"}</th>
+                            <th className="border border-black px-4 py-2">U/I</th>
                             {Array.from({ length: numberOfColumnsCen }, (_, index) => (
                                 <th key={index} className="border border-black px-4 py-2">
                                     <MathJaxContext options={mathjaxConfig}>
                                         <MathJax>
-                                            {`\\[ ${(similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? "s" : "r"}_{${opsional === "user-based" ? `*${index + 1}` : `${index + 1}*`}} \\]`}
+                                            {`\\[ i_{${index + 1}} \\]`}
                                         </MathJax>
                                     </MathJaxContext>
                                 </th>
@@ -127,24 +149,25 @@ const ModalSimilarity = ({ data, numberOfColumnsCen, close, selectedIndex, selec
                                 <td className="border border-black px-4 py-2 bg-gray-200">
                                     <MathJaxContext options={mathjaxConfig}>
                                         <MathJax>
-                                            {`\\[ ${(similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? "s" : "r"}_{${opsional === "user-based" ? `${rowIndex + 1}*` : `*${rowIndex + 1}`}} \\]`}
+                                            {`\\[ u_{${rowIndex + 1}} \\]`}
                                         </MathJax>
                                     </MathJaxContext>
                                 </td>
                                 {row.map((value, colIndex) => {
-                                    const IsZero = dataOnly[(similarity !== "Adjusted Vector Cosine" && opsional === "user-based") ? rowIndex : colIndex][(similarity !== "Adjusted Vector Cosine" && opsional === "user-based") ? colIndex : rowIndex] === 0
+                                    const IsZero = dataOnly[rowIndex][colIndex] === 0
+
                                     return (
                                         <td key={colIndex}
                                             className={`border border-black px-4 py-2 text-center
                                                 ${(IsZero) ? 'text-red-500' : ''} 
                                                 ${!(IsZero) &&
-                                                    (selectedIndex.includes(rowIndex))
+                                                    (selectedIndex.includes(opsional === "item-based" ? colIndex : rowIndex))
                                                     ? 'bg-green-200'
                                                     : ''
                                                 }`
                                             }
                                         >
-                                            {value.toFixed(1)}
+                                            {value.toFixed(similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)" ? 2 : 0)}
                                         </td>
                                     );
                                 })}

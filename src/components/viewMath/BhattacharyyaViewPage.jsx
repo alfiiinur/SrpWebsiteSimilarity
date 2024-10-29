@@ -1,9 +1,8 @@
 import React from 'react'
 import { ItemBasedPrediciton, UserBasedPredicition } from "../MathSimilarity/PredicitionMath";
-import { MeanMeasureItemBased, MeanMeasureUserBased } from "../MathSimilarity/meanMeasure";
 import { MeanCenteredSimItemBased, MeanCenteredSimUserBased } from "../MathSimilarity/meanCentredSim";
 import SimilarityMeasure from '../MathSimilarity/Pearson/SimilarityMeasure';
-
+import { MeanMeasure } from '../MathSimilarity/Pearson/Mean/MeanMeasure';
 
 
 //user-based
@@ -13,7 +12,8 @@ import SimilarityMeasure from '../MathSimilarity/Pearson/SimilarityMeasure';
 export function BhattacharyyaViewUserBased({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
     return (
         <div>
-            <MeanMeasureUserBased ref={meanRef} opsional={opsional} similaritas={similarity} />
+            {/* <MeanMeasureUserBased ref={meanRef} opsional={opsional} similaritas={similarity} /> */}
+            <MeanMeasure opsional={opsional} similaritas={similarity} />
             <MeanCenteredSimUserBased
                 ref={meanCenteredRef}
                 opsional={"user-based"}
@@ -35,7 +35,8 @@ export function BhattacharyyaViewUserBased({ meanRef, meanCenteredRef, fungsiSim
 export function BhattacharyyaViewItemBased({ meanRef, meanCenteredRef, fungsiSimilaritas, prediksi, similarity, opsional }) {
     return (
         <div>
-            <MeanMeasureItemBased ref={meanRef} opsional={opsional} similaritas={similarity} />
+            {/* <MeanMeasureItemBased ref={meanRef} opsional={opsional} similaritas={similarity} /> */}
+            <MeanMeasure opsional={opsional} similaritas={similarity} />
             <MeanCenteredSimItemBased ref={meanCenteredRef} opsional={opsional} similaritas={similarity} />
             {/*<MeanCenteredSimUserBased opsional={0} similaritas={getACosine}/>*/}
             {/* <AdjustedCosineItemBased opsional={0} similaritas={getACosine}/> */}
