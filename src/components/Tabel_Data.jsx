@@ -1,8 +1,9 @@
 // src/App.js
-import React, {useState} from 'react';
-import {FaChevronDown} from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaChevronDown } from "react-icons/fa";
 import TabelViewDataStatis from "./tabelData/TabelStatis";
-import {AllSimilaritas, getInitialData} from "../api/getDataSet";
+import { AllSimilaritas, getInitialData } from "../api/getDataSet";
+import MathJaxComponent from '../MathJaxComponent';
 
 function TabelView() {
     const data = [
@@ -19,32 +20,32 @@ function TabelView() {
         <div className="flex flex-col items-center justify-center">
             <table className="min-w-full border-collapse border border-black">
                 <thead>
-                <tr>
-                    {headers.map((header, index) => (
-                        <th key={index} className="border border-black px-4 py-2 bg-yellow-btn-primary">
-                            {header}
-                        </th>
-                    ))}
-                </tr>
+                    <tr>
+                        {headers.map((header, index) => (
+                            <th key={index} className="border border-black px-4 py-2 bg-yellow-btn-primary">
+                                {header}
+                            </th>
+                        ))}
+                    </tr>
                 </thead>
                 <tbody>
-                {data.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {row.map((cell, colIndex) => {
-                            // Menentukan kelas berdasarkan nilai sel
-                            const isFirstColumn = colIndex === 0; // Mengecek apakah kolom pertama
-                            const cellClass = cell === '?' || cell === ''
-                                ? 'border border-black px-4 py-2 text-center bg-red-500'
-                                : `border border-black px-4 py-2 text-center ${isFirstColumn ? 'bg-blue-200' : ''}`; // Warnai kolom pertama
+                    {data.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {row.map((cell, colIndex) => {
+                                // Menentukan kelas berdasarkan nilai sel
+                                const isFirstColumn = colIndex === 0; // Mengecek apakah kolom pertama
+                                const cellClass = cell === '?' || cell === ''
+                                    ? 'border border-black px-4 py-2 text-center bg-red-500'
+                                    : `border border-black px-4 py-2 text-center ${isFirstColumn ? 'bg-blue-200' : ''}`; // Warnai kolom pertama
 
-                            return (
-                                <td key={colIndex} className={cellClass}>
-                                    {cell}
-                                </td>
-                            );
-                        })}
-                    </tr>
-                ))}
+                                return (
+                                    <td key={colIndex} className={cellClass}>
+                                        {cell}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
             <div className="mt-4 text-left">
@@ -122,34 +123,34 @@ export const TabelRatingData = ({ opsional }) => {
         <div className='flex flex-col mb-5 font-poppins'>
             <table className="border border-black mt-4 mr-3 text-center">
                 <thead>
-                <tr className="bg-card_blue_primary">
-                    <th className="border border-black px-4 py-2">U/I</th>
-                    {Array.from({ length: item }, (_, index) => (
-                        <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
-                    ))}
-                </tr>
+                    <tr className="bg-card_blue_primary">
+                        <th className="border border-black px-4 py-2">U/I</th>
+                        {Array.from({ length: item }, (_, index) => (
+                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                        ))}
+                    </tr>
                 </thead>
                 <tbody>
-                {dataOnly.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                        {row.map((value, colIndex) => {
-                            const cellClass = value === 0
-                                ? 'border border-black px-4 py-2 text-center bg-red-200'
-                                : 'border border-black px-4 py-2 text-center hover:bg-card_green_primary cursor-pointer';
+                    {dataOnly.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                            {row.map((value, colIndex) => {
+                                const cellClass = value === 0
+                                    ? 'border border-black px-4 py-2 text-center bg-red-200'
+                                    : 'border border-black px-4 py-2 text-center hover:bg-card_green_primary cursor-pointer';
 
-                            return (
-                                <td
-                                    key={colIndex}
-                                    className={cellClass}
-                                    onClick={() => handleCellClick(rowIndex, colIndex, value)} // Handle cell click
-                                >
-                                    {value.toFixed ? value.toFixed(0) : value}
-                                </td>
-                            );
-                        })}
-                    </tr>
-                ))}
+                                return (
+                                    <td
+                                        key={colIndex}
+                                        className={cellClass}
+                                        onClick={() => handleCellClick(rowIndex, colIndex, value)} // Handle cell click
+                                    >
+                                        {value.toFixed ? value.toFixed(0) : value}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
@@ -185,13 +186,13 @@ export const TabelRatingData = ({ opsional }) => {
 
                     {/* Right Column */}
                     <div className="w-1/2 space-y-2 text-start ">
-                    <div className="flex justify-between ">
+                        <div className="flex justify-between ">
                             <div className="w-1/2 mx-1 ">
                                 <h2 className='font-medium my-2'> Data Himpunan User (U)</h2>
                                 <select value={selectedUser !== null ? selectedUser : ''} onChange={handleUserChange}
-                                        className="border border-gray-400 rounded w-full">
+                                    className="border border-gray-400 rounded w-full">
                                     <option value="">Select User</option>
-                                    {Array.from({length: user}, (_, index) => (
+                                    {Array.from({ length: user }, (_, index) => (
                                         <option key={index} value={index}>{`User ${index + 1}`}</option>
                                     ))}
                                 </select>
@@ -200,18 +201,18 @@ export const TabelRatingData = ({ opsional }) => {
                                         <p>
                                             <strong className="italic">U<sub>{selectedUser + 1}</sub> : </strong>
                                             {'{' +
-                                            dataOnly[selectedUser]
-                                                .map((value, index) => value !== 0 ? index + 1 : null)
-                                                .filter(index => index !== null)
-                                                .join(', ') +
-                                            '}'}
+                                                dataOnly[selectedUser]
+                                                    .map((value, index) => value !== 0 ? index + 1 : null)
+                                                    .filter(index => index !== null)
+                                                    .join(', ') +
+                                                '}'}
                                         </p>
                                         <p>
                                             <strong className="italic">r<sub>{selectedUser + 1}*</sub> :
                                             </strong> {dataOnly[selectedUser]
-                                            .filter(value => value !== 0) // Filter out values that are 0
-                                            .join(', ')
-                                        }
+                                                .filter(value => value !== 0) // Filter out values that are 0
+                                                .join(', ')
+                                            }
                                         </p>
 
                                     </div>
@@ -219,12 +220,12 @@ export const TabelRatingData = ({ opsional }) => {
                                 )}
                             </div>
 
-                        <div className="w-1/2 mx-1">
-                            <h2 className='font-medium my-2'> Data Himpunan Item (I)</h2>
-                            <select value={selectedItem !== null ? selectedItem : ''} onChange={handleItemChange}
+                            <div className="w-1/2 mx-1">
+                                <h2 className='font-medium my-2'> Data Himpunan Item (I)</h2>
+                                <select value={selectedItem !== null ? selectedItem : ''} onChange={handleItemChange}
                                     className="border border-gray-400 rounded w-full">
-                                <option value="">Select Item</option>
-                                {Array.from({length: item}, (_, index) => (
+                                    <option value="">Select Item</option>
+                                    {Array.from({ length: item }, (_, index) => (
                                         <option key={index} value={index}>{`Item ${index + 1}`}</option>
                                     ))}
                                 </select>
@@ -252,7 +253,7 @@ export const TabelRatingData = ({ opsional }) => {
                                 )}
                             </div>
 
-                    </div>
+                        </div>
                     </div>
 
                 </div>
@@ -275,16 +276,12 @@ export const NotationCard = () => {
             <div className="flex space-x-6">
                 {/* Left Column */}
                 <div className="w-1/2 space-y-2 font-poppins text-start">
-                    <p><strong>m</strong>: jumlah <span className="italic">user</span></p>
+                    <span><MathJaxComponent>{`\\[ m = \\ jumlah \\ user \\]`}</MathJaxComponent></span>
                     <p><strong>n</strong>: jumlah <span className="italic">item</span></p>
                     <p><strong>U</strong>: himpunan <span className="italic">user</span></p>
                     <p><strong>I</strong>: himpunan <span className="italic">item</span></p>
                     <p><strong>I<sub>u</sub></strong>: himpunan <span className="italic">item</span> yang telah diberi
                         rating oleh <span className="italic">user</span> <em>u</em></p>
-                    {/*<p><strong>R</strong>: matriks <span className="italic">item</span> dimana <em>R ∈ R<sup> m×n</sup></em>*/}
-                    {/*</p>*/}
-                    {/*<p><strong>r<sub>uj</sub></strong>: rating <span className="italic">user</span>*/}
-                    {/*    <em> u</em> terhadap <span className="italic">item</span> <em>j</em></p>*/}
                 </div>
 
                 {/* Right Column */}
@@ -293,19 +290,6 @@ export const NotationCard = () => {
                     </p>
                     <p><strong>r<sub>uj</sub></strong>: rating <span className="italic">user</span>
                         <em> u</em> terhadap <span className="italic">item</span> <em>j</em></p>
-                    {/*<p><strong>î<sub>u</sub></strong>: himpunan <span className="italic">item</span> yang belum diberi*/}
-                    {/*    rating oleh <span className="italic">user</span> <em>u</em></p>*/}
-                    {/*<p><strong>r<sub>uj</sub></strong>: prediksi rating <span*/}
-                    {/*    className="italic">user</span> (target) <em>u</em> terhadap <span className="italic">item</span>*/}
-                    {/*    <em>j</em></p>*/}
-                    {/*<p><strong>l</strong>: jumlah <span className="italic">item</span> tetangga terdekat</p>*/}
-                    {/*<p><strong>Y<sub>u(j)</sub></strong>: himpunan sejumlah <em>l</em> <span*/}
-                    {/*    className="italic">item</span> yang telah diberi rating <span*/}
-                    {/*    className="italic">user</span> target <em>u</em>, yang telah merupakan tetangga terdekat*/}
-                    {/*    (atau <span className="italic">similar</span> dengan) <span className="italic">item</span>*/}
-                    {/*    <em>j</em>. <em>Catatan: |X<sub>u(j)</sub>| ≤ k</em></p>*/}
-                    {/*<p><strong>TopN<sub>u</sub></strong>: rekomendasi <span className="italic">top-N</span> <span*/}
-                    {/*    className="italic">item</span> untuk <span className="italic">user</span> (target) <em>u</em></p>*/}
                 </div>
             </div>
 
@@ -321,7 +305,7 @@ export const NotationCard = () => {
             {/* Dropdown Card */}
             {isOpen && (
                 <div className="mt-4 bg-gray-100 shadow rounded-lg p-4">
-                    <TabelRatingData opsional={1}/>
+                    <TabelRatingData opsional={1} />
 
 
                 </div>

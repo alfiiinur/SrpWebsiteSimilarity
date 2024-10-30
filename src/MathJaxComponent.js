@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
-import {MathJax, MathJaxContext} from 'better-react-mathjax';
+import React from 'react';
+import { MathJax, MathJaxContext } from 'better-react-mathjax';
+import mathjaxConfig from './mathjax-config';
 
-const MathJaxComponent = ({ math }) => {
+const MathJaxComponent = ({ children }) => {
     return (
-        <MathJax>
-            {math}
-        </MathJax>
+        <MathJaxContext options={mathjaxConfig}>
+            <MathJax>
+                {children}
+            </MathJax>
+        </MathJaxContext>
     );
 };
 

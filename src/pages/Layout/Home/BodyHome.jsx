@@ -35,7 +35,7 @@ const BodyHome = ({ children, header, subheader, idName, hirarki = "1", type = "
     const BodyContainElement = ({ typeOf, children }) => {
         switch (typeOf) {
             case "grid":
-                return <div className='grid grid-cols-1 my-20 md:grid-cols-2 gap-8'>
+                return <div className='flex my-20 gap-8'>
                     {children}
                 </div>
             case "casual":

@@ -1,5 +1,5 @@
 export const getFormulaMeanCentered = (similarity, opsional) => {
-    opsionalModify = similarity !== "Adjusted Vector Cosine" ? (
+    const opsionalModify = similarity !== "Adjusted Vector Cosine" ? (
         opsional === "item-based" ? "user-based" : "item-based"
     ) : opsional
 
@@ -25,4 +25,15 @@ export const getFormulaMeanCentered = (similarity, opsional) => {
         default:
             return;
     }
+}
+
+export const getFormulaMeanCenteredIndex = (rowIndex, colIndex) => {
+    return `\\[ S_{${rowIndex + 1}${colIndex + 1}} = r_{${rowIndex + 1}${colIndex + 1}} -\\mu_{${rowIndex + 1}} \\]`
+}
+
+export const getFormulaMeanCenteredValue = (rowIndex, colIndex, data, result) => {
+    const selectedValue = rowIndex !== null && colIndex !== null ? data[rowIndex][colIndex] : null
+    const selectedMeanValue = rowIndex !== null ? result['mean-list'][rowIndex] : null
+
+    return `\\[ S_{${rowIndex + 1}${colIndex + 1}} = ${selectedValue} - ${selectedMeanValue} \\]`
 }

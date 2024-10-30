@@ -11,7 +11,6 @@ import {
     AdjustedCosineViewPageItemBased,
     AdjustedCosineViewPageUserBased
 } from "../../components/viewMath/AdjustedCosineViewPage";
-import { KullbackViewPageItemBased, KullbackViewPageUserBased } from "../../components/viewMath/KullbackLViewPage";
 import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
 import { BhattacharyyaViewItemBased, BhattacharyyaViewUserBased } from "../../components/viewMath/BhattacharyyaViewPage";
 import TabelView from "../../components/Tabel_Data";
@@ -20,14 +19,6 @@ import { AllSimilaritas, getInitialData } from '../../api/getDataSet';
 
 
 export default function DetailPageBox({ method, similaritas }) {
-
-
-    const initialData = getInitialData(method.toLowerCase())
-    const [data] = useState(initialData)
-    const [dataOnly] = useState(initialData.data)
-
-    const { result } = AllSimilaritas(data, similaritas)
-
 
     const meanRef = useRef(null);
     const meanCenteredRef = useRef(null);
@@ -74,8 +65,6 @@ export default function DetailPageBox({ method, similaritas }) {
                         opsional={method.toLowerCase()}
                         similarity={similaritas}
                     />;
-                case 'Kullback-Leibler Distance (KL)':
-                    return KullbackViewPageUserBased();
                 default:
                     return <p>Pilih Fungsi Similiartias untuk user-based.</p>;
             }
@@ -117,8 +106,6 @@ export default function DetailPageBox({ method, similaritas }) {
                         opsional={method.toLowerCase()}
                         similarity={similaritas}
                     />;
-                case 'Kullback-Leibler Distance (KL)':
-                    return KullbackViewPageItemBased();
                 default:
                     return <p>Pilih Fungsi Similiartias untuk Item-Based.</p>;
             }
