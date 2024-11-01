@@ -493,26 +493,6 @@ export function ItemBasedPrediciton({ opsional, similaritas }) {
 
     const [selectedExpression, setSelectedExpression] = useState([]);
 
-
-    // Function to find top `count` similarities closest to 1 where the user has a valid rating
-    // const findTopSimilaritiesWithValidRatings = (similarityData, transposedData, itemIndex, userIndex, count = 2) => {
-    //
-    //     // Ambil semua similaritas dan cek apakah user telah memberikan rating pada item tersebut
-    //     const similarities = similarityData.map((row, index) => ({
-    //         index,
-    //         value: row[userIndex],   // Nilai similaritas
-    //         diff: Math.abs(row[userIndex] - 1),  // Jarak absolut dari 1
-    //         hasRated: transposedData[index][itemIndex] !== 0  // Cek apakah user telah memberikan rating
-    //     }));
-    //
-    //     // Sort by proximity to 1 (ascending) and filter users who have rated the item (rating is not 0)
-    //     const validSimilarities = similarities
-    //         .filter(item => item.hasRated)  // Hanya simpan user yang telah memberikan rating
-    //         .sort((a, b) => b.value - a.value);  // Urutkan berdasarkan nilai tertinggi
-    //
-    //     return validSimilarities.slice(0, count);  // Kembalikan top 'count' similaritas
-    // };
-
     const findTopSimilaritiesWithValidRatings = (similarityData, transposedData, itemIndex, userIndex, count = 2) => {
         // Map over similarities to get the index, value, and if the item has been rated
         const similarities = similarityData.map((row, index) => ({

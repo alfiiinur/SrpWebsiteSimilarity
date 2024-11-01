@@ -19,13 +19,24 @@ function Practice() {
 
     const [selectedMethod, setSelectedMethod] = useState('');
     const [selectedSimilarity, setSelectedSimilarity] = useState('');
+    const [data, setData] = useState([])
 
     const handleMethodChange = (method) => {
         setSelectedMethod(method);
+        setDescriptionVisible(false)
     };
+
+    const handleTurnDescription = (condition) => {
+        setDescriptionVisible(condition)
+    }
 
     const handleSimilarityChange = (similaritas) => {
         setSelectedSimilarity(similaritas);
+        setDescriptionVisible(false)
+    };
+
+    const handleDataChange = (data) => {
+        setData(data)
     };
 
     return (
@@ -75,8 +86,10 @@ function Practice() {
                     </div>
                     <h1 className='text-2xl font-bold font-poppins py-5 ml-3'>Buat Tabel Matrix:</h1>
                 </div>
-                {/*<Form_createTbl/>*/}
-                <FormMeasure />
+                <FormMeasure
+                    onDataChange={handleDataChange}
+                    onDescriptionChange={handleTurnDescription}
+                />
 
             </section>
 
@@ -121,7 +134,7 @@ function Practice() {
                     <section className='max-w-4xl mx-auto text-center my-10 py-10'>
                         <h1 className='text-4xl font-semibold font-poppins m-10'>Hasil dan Pembahasan :</h1>
 
-                        <DetailPageBox method={selectedMethod} similaritas={selectedSimilarity} />
+                        <DetailPageBox method={selectedMethod} similarity={selectedSimilarity} data={data} />
                         <HasilPerhitunganSimilaritas />
                     </section>
                 )}

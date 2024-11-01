@@ -4,7 +4,7 @@ import { MathJax, MathJaxContext } from "better-react-mathjax";
 import mathjaxConfig from "../../../../mathjax-config";
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
-const ModalMeanCenteredMeasure = ({ selectedIndex, selectedValue, dataOnly, result, opsional, close }) => {
+const ModalMeanCenteredMeasure = ({ similarity, selectedIndex, selectedValue, dataOnly, result, opsional, close }) => {
 
     const dataModify = opsional === "item-based" ? transposeMatrix(dataOnly) : dataOnly
 
@@ -18,7 +18,7 @@ const ModalMeanCenteredMeasure = ({ selectedIndex, selectedValue, dataOnly, resu
     }
 
     const MeanCenteredValue = ({ rowIndex, colIndex, data, result }) => {
-        const expression = getFormulaMeanCenteredValue(rowIndex, colIndex, data, result)
+        const expression = getFormulaMeanCenteredValue(rowIndex, colIndex, data, result, opsional)
         return (
             <MathJax>
                 {expression}
@@ -52,7 +52,7 @@ const ModalMeanCenteredMeasure = ({ selectedIndex, selectedValue, dataOnly, resu
                                 <tr key={rowIndex}>
                                     <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                     {row.map((value, colIndex) => {
-                                        const isSelected = selectedIndex[0] === colIndex && selectedIndex[1] === rowIndex;
+                                        const isSelected = (opsional === "item-based" ? (selectedIndex[0] === rowIndex && selectedIndex[1] === colIndex) : (selectedIndex[0] === colIndex && selectedIndex[1] === rowIndex));
                                         const cellClass = value === 0
                                             ? 'border border-black px-4 py-2 text-center text-red-500'
                                             : 'border border-black px-4 py-2 text-center';
@@ -85,7 +85,7 @@ const ModalMeanCenteredMeasure = ({ selectedIndex, selectedValue, dataOnly, resu
                                 <tr key={index}>
                                     <td className="border border-black px-4 py-2 ">{index + 1}</td>
                                     <td className={`border border-black px-4 py-2 text-center
-                                         ${selectedIndex[0] === index ? 'bg-yellow-200' : ''}`}>
+                                         ${selectedIndex[opsional === "user-based" ? 0 : 1] === index ? 'bg-yellow-200' : ''}`}>
                                         <div className='text-center'
                                         >
                                             {mean}

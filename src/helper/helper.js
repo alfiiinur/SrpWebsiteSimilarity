@@ -54,7 +54,7 @@ export const sparsityIndexDeterminate = (data, sparsityPersen) => {
     for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < data[i].length; j++) {
             if (resultIndex[i][j] === null) {
-                resultIndex[i][j] = "?";
+                resultIndex[i][j] = 0;
             }
         }
     }
@@ -67,8 +67,8 @@ export const makeSparsity = (panjang, lebar, sparsityPercent, rangeData) => {
     const sparsityIndex = sparsityIndexDeterminate(result, sparsityPercent)
     for (let i = 0; i < result.length; i++) {
         for (let j = 0; j < result[i].length; j++) {
-            if (sparsityIndex[i][j] !== "?") {
-                result[i][j] = "?"
+            if (sparsityIndex[i][j] !== 0) {
+                result[i][j] = 0
             }
         }
     }
@@ -76,5 +76,10 @@ export const makeSparsity = (panjang, lebar, sparsityPercent, rangeData) => {
 }
 
 export const transposeMatrix = data => {
-    return data[0].map((col, i) => data.map(row => row[i]))
+
+    return data[0].map((col, i) => {
+        console.log(col);
+
+        return data.map(row => row[i])
+    })
 }

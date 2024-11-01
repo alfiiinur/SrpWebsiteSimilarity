@@ -2,119 +2,60 @@ import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import {
-    PearsonViewPageItemBased,
-    PearsonViewPageUserBased
-} from "../../components/viewMath/PearsonViewPage";
-import { CosineViewPageItemBased, CosineViewPageUserBased } from "../../components/viewMath/CosineViewPage";
-import {
-    AdjustedCosineViewPageItemBased,
-    AdjustedCosineViewPageUserBased
-} from "../../components/viewMath/AdjustedCosineViewPage";
 import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
-import { BhattacharyyaViewItemBased, BhattacharyyaViewUserBased } from "../../components/viewMath/BhattacharyyaViewPage";
 import TabelView from "../../components/Tabel_Data";
 import { useRef, useState } from "react";
 import { AllSimilaritas, getInitialData } from '../../api/getDataSet';
+import MeanMeasure from '../../components/MathSimilarity/Pearson/Mean/MeanMeasure';
+import MeanCenteredMeasure from '../../components/MathSimilarity/Pearson/MeanCentered/MeanCenteredMeasure';
+import SimilarityMeasure from '../../components/MathSimilarity/Pearson/SimilarityMeasure';
+import PredictionMeasure from '../../components/MathSimilarity/Pearson/Prediction/PredictionMeasure';
 
 
-export default function DetailPageBox({ method, similaritas }) {
-
-    const meanRef = useRef(null);
-    const meanCenteredRef = useRef(null);
+export default function DetailPageBox({ method, similarity, data }) {
     const fungsiSimilaritas = useRef(null);
-    const prediksi = useRef(null);
+
+
 
     const renderContent = () => {
-        if (method === 'User-Based') {
-            switch (similaritas) {
-                case 'Pearson Coreallation Coeficient (PCC)':
-                    return <PearsonViewPageUserBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-
-                case 'Vector Cosine':
-                    return <CosineViewPageUserBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                case 'Adjusted Vector Cosine':
-                    return <AdjustedCosineViewPageUserBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                case 'Bhattacharyya Coefficient Similarity (BC)':
-                    return <BhattacharyyaViewUserBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                default:
-                    return <p>Pilih Fungsi Similiartias untuk user-based.</p>;
-            }
-        } else if (method === 'Item-Based') {
-            switch (similaritas) {
-                case 'Pearson Coreallation Coeficient (PCC)':
-                    return <PearsonViewPageItemBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                case 'Vector Cosine':
-                    return <CosineViewPageItemBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                case 'Adjusted Vector Cosine':
-                    return <AdjustedCosineViewPageItemBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                case 'Bhattacharyya Coefficient Similarity (BC)':
-                    return <BhattacharyyaViewItemBased
-                        meanRef={meanRef}
-                        meanCenteredRef={meanCenteredRef}
-                        fungsiSimilaritas={fungsiSimilaritas}
-                        prediksi={prediksi}
-                        opsional={method.toLowerCase()}
-                        similarity={similaritas}
-                    />;
-                default:
-                    return <p>Pilih Fungsi Similiartias untuk Item-Based.</p>;
-            }
+        if (!method) {
+            return <p>Pilih Fungsi Similarity untuk {method}.</p>;
+        } else if (!similarity) {
+            return (<p className='flex items-center text-xl font-semibold font-poppins text-red-600 '>
+                <SdCardAlertIcon className='mr-2' /> {/* Adjust margin as needed */}
+                Silakan pilih metode dan fungsi similarity terlebih dahulu.
+            </p>);
+        } else if (data.length === 0) {
+            return (
+                <p>Silakan isi data terlebih dahulu.</p>);
         }
-        // Add more conditions as needed
-        return <p className='flex items-center text-xl font-semibold font-poppins text-red-600 '>
-            <SdCardAlertIcon className='mr-2' /> {/* Adjust margin as needed */}
-            Silahkan pilih metode dan fungsi similaritas terlebih dahulu.
-        </p>;
+
+        const initialData = getInitialData(data, method.toLowerCase());
+        return (
+            <div>
+                <MeanMeasure
+                    opsional={method.toLowerCase()}
+                    similarity={similarity}
+                    initialData={initialData}
+                />
+                <MeanCenteredMeasure
+                    opsional={method.toLowerCase()}
+                    similarity={similarity}
+                    initialData={initialData}
+                />
+                <SimilarityMeasure
+                    ref={fungsiSimilaritas}
+                    opsional={method.toLowerCase()}
+                    similarity={similarity}
+                    initialData={initialData}
+                />
+                <PredictionMeasure
+                    opsional={method.toLowerCase()}
+                    similarity={similarity}
+                    initialData={initialData}
+                />
+            </div>
+        )
     };
 
 
@@ -139,7 +80,7 @@ export default function DetailPageBox({ method, similaritas }) {
                 >
                     <section className='max-w-4xl mx-auto text-center'>
                         <h1 className='text-2xl font-bold font-poppins py-5'>Langkah-Langkah {method} dan
-                            Metode {similaritas}</h1>
+                            Metode {similarity}</h1>
                         <p className='text-sm px-10 py-5 font-sm font-poppins'>
                             {/* Tempat untuk ganti-ganti similarity untuk sesuai metode yang di submit */}
                             {renderContent()}

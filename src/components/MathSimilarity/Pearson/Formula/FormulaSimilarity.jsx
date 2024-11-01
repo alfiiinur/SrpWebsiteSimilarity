@@ -1,6 +1,6 @@
 export const getFormulaSimilarity = (similarity, opsional) => {
     switch (similarity) {
-        case "Pearson Coreallation Coeficient (PCC)":
+        case "Pearson Corelation Coefficient (PCC)":
             switch (opsional) {
                 case "user-based":
                     return {
@@ -129,12 +129,12 @@ export const getFormulaSimilarity = (similarity, opsional) => {
 export const FormulaSimilarityIndex = (rowIndex, colIndex, opsional, similarity) => {
 
     switch (similarity) {
-        case "Pearson Coreallation Coeficient (PCC)":
+        case "Pearson Corelation Coefficient (PCC)":
             switch (opsional) {
                 case "user-based":
-                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${rowIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
+                    return `\\[ PCC(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in I_{${rowIndex + 1}} \\cap I_{${rowIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
                 case "item-based":
-                    return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
+                    return `\\[ PCC(${rowIndex + 1},${colIndex + 1}) = \\frac{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i} s_{${colIndex + 1}i}}{\\sqrt{\\sum_{u\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${rowIndex + 1}i}^{2}}\\sqrt{\\sum_{i\\in U_{${rowIndex + 1}} \\cap U_{${colIndex + 1}}} s_{${colIndex + 1}i}^{2}}} \\]`
                 default:
                     return
             }
@@ -159,7 +159,12 @@ export const FormulaSimilarityIndex = (rowIndex, colIndex, opsional, similarity)
                     return
             }
         case "Bhattacharyya Coefficient Similarity (BC)":
-            return
+            const ratings = [1, 2, 3, 4, 5]; // Daftar rating
+            const sumTerms = ratings.map(rating =>
+                `\\sqrt{P\\left(r_{${opsional === "user-based" ? `${rowIndex + 1}*` : `*${rowIndex + 1}`} }= ${rating}\\right)\\times P\\left(r_{${colIndex + 1}}= ${rating}\\right)}`
+            ).join(' + '); // Menggabungkan dengan tanda tambah
+
+            return `\\[  BC(${rowIndex + 1},${colIndex + 1}) =  ${sumTerms} \\]`
         default:
             return
     }
@@ -167,7 +172,7 @@ export const FormulaSimilarityIndex = (rowIndex, colIndex, opsional, similarity)
 
 export const FormulaSimilarityNonZero = (rowIndex, colIndex, similarity, opsional, nonZeroIndexesCol1, nonZeroIndexesCol2, intersection) => {
     switch (similarity) {
-        case "Pearson Coreallation Coeficient (PCC)":
+        case "Pearson Corelation Coefficient (PCC)":
             switch (opsional) {
                 case "user-based":
                     return {
@@ -242,26 +247,81 @@ export const FormulaSimilarityNonZero = (rowIndex, colIndex, similarity, opsiona
     }
 }
 
-export const FormulaSimilarityValue = (rowIndex, colIndex, dataSimilarityRow, dataSimilarityCol, similarity) => {
-    console.log(`
-        rowIndex : ${rowIndex}, 
-        colIndex : ${colIndex}, 
-        dataSimilarityRow : ${dataSimilarityRow}, 
-        dataSimilarityCol : ${dataSimilarityCol}, 
-        similarity : ${similarity}
-        `)
+export const FormulaSimilarityValue = (rowIndex, colIndex, dataSimilarityRow, dataSimilarityCol, selectedMean, similarity) => {
 
     switch (similarity) {
-        case "Pearson Coreallation Coeficient (PCC)":
-            return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(1)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(2)})^2`).join(' + ')}}} \\newline \\]`
+        case "Pearson Corelation Coefficient (PCC)":
+            return {
+                formula: `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(1)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(2)})^2`).join(' + ')}}} \\newline \\]`,
+                result_formula: `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = ${selectedMean.toFixed(4)} \\]`
+            }
         case "Vector Cosine":
-            return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(0)} \\times ${dataSimilarityCol[idx].toFixed(0)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(0)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(0)})^2`).join(' + ')}}} \\newline \\]`
+            return {
+                formula: `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(0)} \\times ${dataSimilarityCol[idx].toFixed(0)})`).join(' + ')}}{\\sqrt{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(0)})^2`).join(' + ')}} \\times \\sqrt{${dataSimilarityCol.map((val, idx) => `(${val.toFixed(0)})^2`).join(' + ')}}} \\newline \\]`,
+                result_formula: `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = ${selectedMean.toFixed(4)} \\]`
+            }
         case "Adjusted Vector Cosine":
-            return `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{${dataSimilarityRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)})^2 +  (${dataSimilarityCol[idx].toFixed(2)})^2}`).join(' \\times ')}} \\]`
+            return {
+                formula: `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = \\frac{${dataSimilarityRow.map((val, idx) => `(${val.toFixed(2)} \\times ${dataSimilarityCol[idx].toFixed(2)})`).join(' + ')}}{${dataSimilarityRow.map((val, idx) => `\\sqrt{(${val.toFixed(2)})^2 +  (${dataSimilarityCol[idx].toFixed(2)})^2}`).join(' \\times ')}} \\]`,
+                result_formula: `\\[ Sim(${rowIndex + 1},${colIndex + 1}) = ${selectedMean.toFixed(4)} \\]`
+            }
         case "Bhattacharyya Coefficient Similarity (BC)":
-            return
+            const ratings = [1, 2, 3, 4, 5]; // Daftar rating
+            const sumTerms = ratings.map(rating => {
+                const rowProb = dataSimilarityRow[rating - 1] || 0;
+                const colProb = dataSimilarityCol[rating - 1] || 0;
+
+                return `\\sqrt{\\left(${rowProb.toFixed(2)}\\right)\\times \\left(${colProb.toFixed(2)}\\right)}`;
+            }).join(' + ')
+
+            const productTerms = ratings.map(rating => {
+                const rowProb = dataSimilarityRow[rating - 1] || 0;
+                const colProb = dataSimilarityCol[rating - 1] || 0;
+                const product = Math.sqrt(rowProb * colProb);
+
+                return `{\\left(${product.toFixed(2)}\\right)}`;
+            }).join(' + ')
+
+
+            return {
+                formula: `\\[  BC(${rowIndex + 1},${colIndex + 1}) = ${sumTerms} \\]`,
+                result_formula: `\\[  BC(${rowIndex + 1},${colIndex + 1}) = ${productTerms} \\]`,
+            };
         default:
             return
 
     }
 }
+
+export const IndexProbability = (rowIndex, colIndex) => {
+    const ratings = [1, 2, 3, 4, 5];
+    const sumTerms = ratings.map(rating =>
+        `\\sqrt{P\\left(r_{${rowIndex + 1}}= ${rating}\\right)\\times P\\left(r_{${colIndex + 1}}= ${rating}\\right)}`
+    ).join(' + '); // Menggabungkan dengan tanda tambah
+
+    return `\\[  BC(${rowIndex + 1},${colIndex + 1}) =  ${sumTerms} \\]`;
+}
+
+const IndexValueProbability = (rowIndex, colIndex, dataSimilarityRow, dataSimilarityCol) => {
+    const ratings = [1, 2, 3, 4, 5]; // Daftar rating
+    const sumTerms = ratings.map(rating => {
+        const rowProb = dataSimilarityRow[rating - 1] || 0;
+        const colProb = dataSimilarityCol[rating - 1] || 0;
+
+        return `\\sqrt{\\left(${rowProb}\\right)\\times \\left(${colProb}\\right)}`;
+    }).join(' + ')
+
+    const productTerms = ratings.map(rating => {
+        const rowProb = dataSimilarityRow[rating - 1] || 0;
+        const colProb = dataSimilarityCol[rating - 1] || 0;
+        const product = Math.sqrt(rowProb * colProb);
+
+        return `{\\left(${product.toFixed(4)}\\right)}`;
+    }).join(' + ')
+
+
+    return {
+        FormulaWithoutValue: `\\[  BC(${rowIndex + 1},${colIndex + 1}) = ${sumTerms} \\]`,
+        FormulaWithValue: `\\[  BC(${rowIndex + 1},${colIndex + 1}) = ${productTerms} \\]`,
+    };
+};

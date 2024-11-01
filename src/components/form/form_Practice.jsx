@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
-import {Menu, MenuButton} from "@headlessui/react";
-import {ChevronDownIcon} from "@heroicons/react/20/solid";
+import { Menu, MenuButton } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
-export function DropdownMethodBased({onChange}) {
+export function DropdownMethodBased({ onChange }) {
 
     const [selectMetode, setSelectMetode] = useState('Pilih Metode')
 
@@ -58,12 +58,12 @@ export function DropdownMethodBased({onChange}) {
 
 
 
-export function DropdownSimilarityMeasure({onChange}) {
+export function DropdownSimilarityMeasure({ onChange }) {
 
-    const [selectSimiliarty, setSelectSimiliarity] = useState('Pilih Fungsi Similaritas')
+    const [selectSimilarity, setSelectSimilarity] = useState('Pilih Fungsi Similaritas')
 
     const handleChange = (method) => {
-        setSelectSimiliarity(method)
+        setSelectSimilarity(method)
         onChange(method)
     }
 
@@ -73,8 +73,8 @@ export function DropdownSimilarityMeasure({onChange}) {
                 <div>
                     <MenuButton
                         className=" outline outline-1 inline-flex w-full justify-center gap-x-1.5 rounded-md bg-yellow-primary px-3 py-2 text-sm font-semibold font-poppins text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50">
-                        {selectSimiliarty}
-                        <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400"/>
+                        {selectSimilarity}
+                        <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
                     </MenuButton>
                 </div>
 
@@ -84,28 +84,28 @@ export function DropdownSimilarityMeasure({onChange}) {
                 >
                     <div className="py-1">
                         <Menu.Item>
-                            {({active}) => (
+                            {({ active }) => (
                                 <button
-                                    onClick={() => handleChange('Pearson Coreallation Coeficient (PCC)')}
+                                    onClick={() => handleChange('Pearson Corelation Coefficient (PCC)')}
                                     className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
                                 >
-                                    Pearson Coreallation Coeficient (PCC)
+                                    Pearson Corelation Coefficient (PCC)
                                 </button>
                             )}
 
                         </Menu.Item>
                         <Menu.Item>
-                            {({active}) => (
+                            {({ active }) => (
                                 <button
-                                    onClick={() => handleChange('Vectore Cosine')}
+                                    onClick={() => handleChange('Vector Cosine')}
                                     className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
                                 >
-                                    Vectore Cosine
+                                    Vector Cosine
                                 </button>
                             )}
                         </Menu.Item>
                         <Menu.Item>
-                            {({active}) => (
+                            {({ active }) => (
                                 <button
                                     onClick={() => handleChange('Adjusted Vector Cosine')}
                                     className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
@@ -115,7 +115,7 @@ export function DropdownSimilarityMeasure({onChange}) {
                             )}
                         </Menu.Item>
                         <Menu.Item>
-                            {({active}) => (
+                            {({ active }) => (
                                 <button
                                     onClick={() => handleChange('Bhattacharyya Coefficient Similarity (BC)')}
                                     className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}

@@ -35,7 +35,7 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
 
     const { result } = AllSimilaritas(data, similarity);
 
-    const dataModify = opsional === "item-based" ? transposeMatrix(dataOnly) : dataOnly
+    const dataModify = similarity === "Adjusted Vector Cosine" ? transposeMatrix(dataOnly) : transposeMatrix(opsional === "user-based" ? dataOnly : transposeMatrix(dataOnly))
 
     const RenderTabelMeanCentered = () => {
         if (!result || !result['mean-centered']) return null;
@@ -58,6 +58,14 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
                             <tr key={rowIndex}>
                                 <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                 {row.map((value, colIndex) => {
+                                    console.log(`
+                                        Data ${dataModify},
+                                        Mean-centered ${result["mean-centered"]} 
+                                        dataModify[rowIndex][colIndex] , ${dataModify[rowIndex][colIndex]}
+                                        rowIndex , ${rowIndex}
+                                        colIndex , ${colIndex}
+                                        `);
+
                                     const OriginalValue = dataModify[rowIndex][colIndex];
 
 
@@ -65,7 +73,7 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
                                     return (
                                         <td key={colIndex}
                                             className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${IsZero ? 'bg-red-200' : ''}`}
-                                            onClick={() => handleMeanClick(value, colIndex, rowIndex)}
+                                            onClick={() => handleMeanClick(value, rowIndex, colIndex)}
                                         >
                                             {value.toFixed(1)}
                                         </td>
@@ -77,6 +85,7 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
                 </table>
                 {showModal && (
                     <ModalMeanCenteredMeasure
+                        similarity={similarity}
                         selectedIndex={selectedIndex}
                         selectedValue={selectedValue}
                         dataOnly={dataOnly}

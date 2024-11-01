@@ -276,7 +276,7 @@ export const NotationCard = () => {
             <div className="flex space-x-6">
                 {/* Left Column */}
                 <div className="w-1/2 space-y-2 font-poppins text-start">
-                    <span><MathJaxComponent>{`\\[ m = \\ jumlah \\ user \\]`}</MathJaxComponent></span>
+                    <span className='' ><MathJaxComponent>{`\\[ m = \\ jumlah \\ user \\]`}</MathJaxComponent></span>
                     <p><strong>n</strong>: jumlah <span className="italic">item</span></p>
                     <p><strong>U</strong>: himpunan <span className="italic">user</span></p>
                     <p><strong>I</strong>: himpunan <span className="italic">item</span></p>

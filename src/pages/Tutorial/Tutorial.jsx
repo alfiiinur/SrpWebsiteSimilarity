@@ -11,7 +11,7 @@ import VideoTutorialModal from '../../components/modal/VidioTutorialModal';
 import BodyTutorial from '../Layout/Tutorial/BodyTutorial.jsx';
 import FormLayoutTutorial from '../Layout/Tutorial/FormTutorial.jsx';
 
-function Tutorial() {
+const Tutorial = () => {
 
     const form = [
         {
@@ -105,7 +105,7 @@ function Tutorial() {
                             subheader={""}
                         >
                             <DetailPageBox method={selectedMethod}
-                                similaritas={selectedSimilarity}
+                                similarity={selectedSimilarity}
                             />
                         </BodyTutorial>
                     </div>

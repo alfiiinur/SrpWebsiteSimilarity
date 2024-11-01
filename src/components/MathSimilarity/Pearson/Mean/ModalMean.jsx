@@ -49,6 +49,7 @@ const ModalMean = ({ opsional, data, selectedIndex, selectedMean, close, meanRum
                         {meanRumusIdx[selectedIndex]?.length > 0 ? (
                             <div className="text-center">
                                 <MathJax >
+                                    {/* {meanRumusIdx[selectedIndex]} */}
                                     {meanRumusIdx[selectedIndex]}
                                 </MathJax>
                             </div>

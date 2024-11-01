@@ -52,13 +52,12 @@ const TdTableSimilarity = ({ onClick, children, value, key }) => {
         </td>)
 }
 
-export default function SimilarityMeasure({ opsional, similarity }, ref) {
+export default function SimilarityMeasure({ opsional, similarity, initialData }, ref) {
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
     const [selectedIndex, setSelectedIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
 
-    const initialData = getInitialData(opsional);
     const [data] = useState(initialData);
     // get only data
     const [dataOnly] = useState(initialData.data);

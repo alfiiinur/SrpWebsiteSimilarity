@@ -1,13 +1,15 @@
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 import mathjaxConfig from "../../../mathjax-config";
-import { FormulaSimilarityIndex, FormulaSimilarityNonZero, FormulaSimilarityValue } from "./Formula/FormulaSimilarity";
+import { FormulaSimilarityIndex, FormulaSimilarityNonZero, FormulaSimilarityValue, getFormulaSimilarity } from "./Formula/FormulaSimilarity";
 import { transposeMatrix } from "../../../helper/helper";
+import { Input } from "@headlessui/react";
 
 const SimilarityIndex = ({ rowIndex, colIndex, similarity, opsional }) => {
     const expression = FormulaSimilarityIndex(rowIndex, colIndex, opsional, similarity)
     return (
         <>
             <MathJax>
+                {getFormulaSimilarity(similarity, opsional).formula}
                 {expression}
             </MathJax>
         </>
@@ -19,47 +21,43 @@ const SimilarityValue = ({ rowIndex, colIndex, data, dataOnly, similarity, selec
     // const dataModify = transposeMatrix(dataOnly)
 
     const nonZeroIndexesRow = dataModify[rowIndex].map((row, index) => (row !== 0 ? index : null)).filter(index => index !== null);
-    // console.log("dataModify[rowIndex]", dataModify[rowIndex], "nonZeroIndexesRow", nonZeroIndexesRow);
+    console.log("dataModify[rowIndex]", dataModify[rowIndex], "nonZeroIndexesRow", nonZeroIndexesRow);
     const nonZeroIndexesCol = dataModify[colIndex].map((row, index) => (row !== 0 ? index : null)).filter(index => index !== null);
-    // console.log("dataModify[colIndex]", dataModify[colIndex], "nonZeroIndexesCol", nonZeroIndexesCol);
 
     const intersection = nonZeroIndexesRow.filter(index => nonZeroIndexesCol.includes(index));
-    // console.log("intersection", intersection);
+    console.log("intersection", intersection);
 
     const dataSimilarity = similarity !== "Vector Cosine" ? (
-        opsional === "user-based" ? transposeMatrix(data['mean-centered']) : data["mean-centered"]
+        similarity === "Bhattacharyya Coefficient Similarity (BC)" ? data["probability"] :
+            (data["mean-centered"])
     ) : dataModify
 
     if (!dataSimilarity || dataSimilarity.length === 0) return null;
 
-    // console.log("dataSimilarityRow", dataSimilarity, rowIndex, colIndex);
-    const dataSimilarityRow = intersection.map(i => {
+    const dataSimilarityRow = (similarity === "Bhattacharyya Coefficient Similarity (BC)" ? data['probability'][rowIndex + 1] : (intersection.map(i => {
         return dataSimilarity[rowIndex][i]
-    });
-    // console.log("dataSimilarityRow", dataSimilarity[rowIndex]);
+    })))
 
-
-    const dataSimilarityCol = intersection.map(i => {
-
+    const dataSimilarityCol = (similarity === "Bhattacharyya Coefficient Similarity (BC)" ? data['probability'][rowIndex + 1] : (intersection.map(i => {
         return dataSimilarity[colIndex][i]
-    });
-    // console.log("dataSimilarityCol", dataSimilarity[colIndex]);
+    })))
 
     if (!dataSimilarityRow || !dataSimilarityCol) return null;
 
-    const expression = FormulaSimilarityValue(
+    const { formula, result_formula } = FormulaSimilarityValue(
         rowIndex,
         colIndex,
         dataSimilarityRow,
         dataSimilarityCol,
+        selectedMean,
         similarity,
     )
 
     return (
         <>
             <MathJax>
-                {expression}
-                {`\\[ Sim(${rowIndex + 1},${colIndex + 1}) = ${selectedMean.toFixed(4)} \\]`}
+                {formula}
+                {result_formula}
             </MathJax>
         </>)
 }
@@ -106,13 +104,6 @@ const SimilarityIndexNonZero = ({ rowIndex, colIndex, dataOnly, similarity, opsi
 
 const ModalSimilarity = ({ data, close, selectedIndex, selectedMean, dataOnly, similarity, opsional }) => {
 
-    // const dataModify = (similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? (
-    //     opsional === "item-based"
-    //         ? transposeMatrix(data["mean-centered"])
-    //         : data["mean-centered"]
-    // ) : (
-    //     opsional === "user-based" ? dataOnly : transposeMatrix(dataOnly)
-    // )
     const dataModify = (similarity !== "Vector Cosine" && similarity !== "Bhattacharyya Coefficient Similarity (BC)") ? (
         (similarity === "Adjusted Vector Cosine" || opsional === "item-based") ? transposeMatrix(data["mean-centered"]) : data["mean-centered"]
     ) : (
@@ -188,12 +179,13 @@ const ModalSimilarity = ({ data, close, selectedIndex, selectedMean, dataOnly, s
                                 opsional={opsional}
                                 similarity={similarity}
                             />
-                            <SimilarityIndexNonZero
-                                rowIndex={selectedIndex[0]}
-                                colIndex={selectedIndex[1]}
-                                similarity={similarity}
-                                opsional={opsional}
-                                dataOnly={dataOnly} />
+                            {similarity !== "Bhattacharyya Coefficient Similarity (BC)" ? (
+                                <SimilarityIndexNonZero
+                                    rowIndex={selectedIndex[0]}
+                                    colIndex={selectedIndex[1]}
+                                    similarity={similarity}
+                                    opsional={opsional}
+                                    dataOnly={dataOnly} />) : ""}
                         </>
                     ) : (
                         <p>No expression selected.</p>

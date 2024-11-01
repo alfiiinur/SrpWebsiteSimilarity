@@ -5,7 +5,7 @@ import * as helper from "../../helper/helper.js"
 import PercentIcon from "@mui/icons-material/Percent";
 import TuneIcon from "@mui/icons-material/Tune";
 
-export default function FormMeasure() {
+export default function FormMeasure({ onDataChange, onDescriptionChange }) {
     const [n, setN] = useState(0);
     const [m, setM] = useState(0);
     const [sparsity, setSparsity] = useState(0);
@@ -30,7 +30,9 @@ export default function FormMeasure() {
     const submitHandler = (e) => {
         e.preventDefault();
         const result = helper.makeSparsity(n, m, sparsity, range);
-        setData(result);
+        setData(result)
+        onDataChange(result)
+        onDescriptionChange(false)
     };
 
     return (
@@ -117,7 +119,7 @@ export default function FormMeasure() {
             </div>
 
 
-            {data.length > 0 && <TableMatrix Data={data} />
+            {data.length > 0 && <TableMatrix Data={data} onDataChange={onDataChange} onDescriptionChange={onDescriptionChange} />
             }
         </>
     );

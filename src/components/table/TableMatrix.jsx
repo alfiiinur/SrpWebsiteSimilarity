@@ -1,31 +1,37 @@
 import React, { useState } from "react";
-import {NotationCard} from "../Tabel_Data";
+import { NotationCard } from "../Tabel_Data";
 
 function InputList({ children, change }) {
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+
+        if (/^\d*\.?\d*$/.test(value)) {
+            change(e)
+        }
+    };
     return (
         <input
-            disabled={children === "?"}
             type="text"
             placeholder={children}
-            onChange={change}
+            onChange={handleInputChange}
             value={children === "?" ? "" : children}
             className={`w-full px-4 py-2 text-center ${children === "?" ? 'bg-red-200 text-black' : 'bg-transparent text-black'}`}
         />
     );
 }
 
-export default function TableMatrix({ Data }) {
-    const [data, setData] = useState(Data);
+export default function TableMatrix({ Data, onDataChange, onDescriptionChange }) {
+    const [data, setData] = useState(Data)
 
     const changeData = (i, j, value) => {
-        setTimeout(() => {
-            let currentData = [...data];
-            if (!currentData[i]) {
-                currentData[i] = [];
-            }
-            currentData[i][j] = Number(value);
-            setData(currentData);
-        }, 1000);
+        let currentData = [...data];
+        if (!currentData[i]) {
+            currentData[i] = [];
+        }
+        currentData[i][j] = Number(value);
+        setData(currentData);
+        onDataChange(currentData);
+        onDescriptionChange(false);
     };
 
     return (
@@ -34,24 +40,24 @@ export default function TableMatrix({ Data }) {
             <div className="flex justify-center items-center min-h-[40vh]">
                 <table className="min-w-full max-w-4xl border-collapse border border-black text-black font-poppins">
                     <thead>
-                    <tr>
-                        <th className="border border-black px-4 py-2 text-center bg-card_green_primary">U/I</th>
-                        {Data[0].map((_, index) => (
-                            <th key={index} className="border border-black px-4 py-2 bg-yellow-btn-primary">{index + 1}</th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {Data.map((value, i) => (
-                        <tr key={i}>
-                            <td className="border border-black px-4 py-2 text-center bg-blue-200">{i + 1}</td>
-                            {value.map((value1, j) => (
-                                <td key={j} className="border border-black text-center text-black bg-transparent">
-                                    <InputList change={(e) => changeData(i, j, e.target.value)}>{value1}</InputList>
-                                </td>
+                        <tr>
+                            <th className="border border-black px-4 py-2 text-center bg-card_green_primary">U/I</th>
+                            {Data[0].map((_, index) => (
+                                <th key={index} className="border border-black px-4 py-2 bg-yellow-btn-primary">{index + 1}</th>
                             ))}
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                        {Data.map((value, i) => (
+                            <tr key={i}>
+                                <td className="border border-black px-4 py-2 text-center bg-blue-200">{i + 1}</td>
+                                {value.map((value1, j) => (
+                                    <td key={j} className="border border-black text-center text-black bg-transparent">
+                                        <InputList change={(e) => changeData(i, j, e.target.value)}>{value1 === 0 ? "?" : value1}</InputList>
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -74,7 +80,7 @@ export default function TableMatrix({ Data }) {
                     </li>
                 </ul>
             </div>
-            <NotationCard/>
+            <NotationCard />
         </div>
     );
 }

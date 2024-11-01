@@ -31,7 +31,7 @@ const DropdownSimilarityMeasure = ({ onChange }) => {
                         <Menu.Item>
                             {({ active }) => (
                                 <button
-                                    onClick={() => handleChange('Pearson Coreallation Coeficient (PCC)')}
+                                    onClick={() => handleChange('Pearson Corelation Coefficient (PCC)')}
                                     className={`block w-full text-left px-4 py-2 text-sm ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'}`}
                                 >
                                     Pearson Coreallation Coeficient (PCC)

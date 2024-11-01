@@ -5,30 +5,29 @@ import React, { useState } from 'react'
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 import mathjaxConfig from "../../../../mathjax-config";
 import { FunctionMeasureDropdown } from "../../DropdownFunction/FunctionMeasureDropdown";
-import { AllSimilaritas, getInitialData } from "../../../../api/getDataSet";
+import { AllSimilaritas } from "../../../../api/getDataSet";
 
 
-export function MeanMeasure({ opsional, similaritas }) {
+export default function MeanMeasure({ opsional, similarity, initialData }) {
 
-    const initialData = getInitialData(opsional);
     const [data] = useState(initialData);
-    // get only data
+
     const [dataOnly] = useState(initialData.data);
 
-    const { result } = AllSimilaritas(data, similaritas);
+    const { result } = AllSimilaritas(data, similarity);
 
-
-    const dataModify = opsional === "item-based" ? transposeMatrix(dataOnly) : dataOnly
+    const opsionalModify = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? "item-based" : "user-based") : opsional
+    const dataModify = similarity === "Adjusted Vector Cosine" ? (opsional === "item-based" ? dataOnly : transposeMatrix(dataOnly)) : (opsional === "item-based" ? transposeMatrix(dataOnly) : dataOnly)
 
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
-    const [selectedIndex, setselectedIndex] = useState(null); // State untuk menyimpan user yang dipilih
+    const [selectedIndex, setSelectedIndex] = useState(null); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
 
 
     const handleMeanClick = (mean, index) => {
         setSelectedMean(mean); // Simpan nilai mean yang ditekan
-        setselectedIndex(index)
+        setSelectedIndex(index)
         setShowModal(true); // Tampilkan modal
     };
 
@@ -37,13 +36,13 @@ export function MeanMeasure({ opsional, similaritas }) {
         setSelectedMean(null); // Reset nilai mean yang dipilih
     };
 
-    const meanFormula = getFormulaMean(opsional)
+    const meanFormula = getFormulaMean(opsionalModify, similarity)
 
-    const meanRumusIdx = getFormulaMeanIndex(opsional, dataModify)
+    const meanRumusIdx = getFormulaMeanIndex(opsionalModify, dataModify, similarity)
 
-    const meanIndexExp = getFormulaMeanExpression(opsional, dataModify)
+    const meanIndexExp = getFormulaMeanExpression(opsionalModify, dataModify, similarity)
 
-    const meanExpressionsValues = getFormulaMeanValue(opsional, dataModify)
+    const meanExpressionsValues = getFormulaMeanValue(opsionalModify, dataModify, similarity)
 
     const RenderItemTableMean = () => {
         if (!result || !result['mean-list']) {
@@ -67,7 +66,7 @@ export function MeanMeasure({ opsional, similaritas }) {
                                     <div className="text-center cursor-pointer"
                                         onClick={() => handleMeanClick(mean, index)}
                                     >
-                                        {mean}
+                                        {mean.toFixed(2)}
                                     </div>
                                 </td>
                             </tr>
@@ -77,7 +76,7 @@ export function MeanMeasure({ opsional, similaritas }) {
                 {/* Modal Card */}
                 {showModal && (
                     <ModalMean
-                        opsional={opsional}
+                        opsional={opsionalModify}
                         data={dataModify}
                         meanRumusIdx={meanRumusIdx}
                         meanIndexExp={meanIndexExp}
@@ -112,7 +111,7 @@ export function MeanMeasure({ opsional, similaritas }) {
 
             <div className=' px-10 py-5'>
                 <h1 className='text-xl font-semibold font-poppins underline underline-offset-8 decoration-4 decoration-card_blue_primary'>Hasil
-                    Mean {opsional}</h1>
+                    Mean {opsionalModify}</h1>
                 {/*    call api */}
                 <RenderItemTableMean />
             </div>

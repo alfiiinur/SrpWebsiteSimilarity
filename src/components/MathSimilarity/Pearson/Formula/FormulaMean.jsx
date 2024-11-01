@@ -22,6 +22,7 @@ export const getFormulaMean = (opsional) => {
 }
 
 export const getFormulaMeanIndex = (opsional, data) => {
+
     switch (opsional) {
         case "user-based":
             return data.map((_, index) => {
