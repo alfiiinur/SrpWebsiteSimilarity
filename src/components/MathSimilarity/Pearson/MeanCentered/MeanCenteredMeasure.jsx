@@ -35,12 +35,12 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
 
     const { result } = AllSimilaritas(data, similarity);
 
-    const dataModify = similarity === "Adjusted Vector Cosine" ? transposeMatrix(dataOnly) : transposeMatrix(opsional === "user-based" ? dataOnly : transposeMatrix(dataOnly))
+    const dataModify = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? (dataOnly) : transposeMatrix(dataOnly)) : (opsional === "user-based" ? dataOnly : transposeMatrix(dataOnly))
 
     const RenderTabelMeanCentered = () => {
         if (!result || !result['mean-centered']) return null;
-
-        const numberOfColumns = result['mean-centered'][0].length; // Ambil jumlah kolom dari baris pertama
+        const resultModify = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? transposeMatrix(dataOnly) : (dataOnly)) : (opsional === "user-based" ? result['mean-centered'] : transposeMatrix(result['mean-centered']))
+        const numberOfColumns = resultModify[0].length; // Ambil jumlah kolom dari baris pertama
 
         return (
             <div className='flex justify-center mt-4'>
@@ -54,19 +54,11 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {result['mean-centered'].map((row, rowIndex) => (
+                        {resultModify.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                                 <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                 {row.map((value, colIndex) => {
-                                    console.log(`
-                                        Data ${dataModify},
-                                        Mean-centered ${result["mean-centered"]} 
-                                        dataModify[rowIndex][colIndex] , ${dataModify[rowIndex][colIndex]}
-                                        rowIndex , ${rowIndex}
-                                        colIndex , ${colIndex}
-                                        `);
-
-                                    const OriginalValue = dataModify[rowIndex][colIndex];
+                                    const OriginalValue = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? dataModify[colIndex][rowIndex] : dataModify[rowIndex][colIndex]) : (opsional === "user-based" ? dataModify[rowIndex][colIndex] : dataModify[colIndex][rowIndex])
 
 
                                     const IsZero = OriginalValue === 0;
@@ -75,7 +67,7 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
                                             className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${IsZero ? 'bg-red-200' : ''}`}
                                             onClick={() => handleMeanClick(value, rowIndex, colIndex)}
                                         >
-                                            {value.toFixed(1)}
+                                            {value.toFixed(2)}
                                         </td>
                                     )
                                 })}
@@ -90,7 +82,7 @@ const MeanCenteredMeasure = ({ opsional, similarity, initialData }) => {
                         selectedValue={selectedValue}
                         dataOnly={dataOnly}
                         result={result}
-                        opsional={opsional}
+                        opsional={similarity === "Adjusted Vector Cosine" ? (opsional === "item-based" ? "user-based" : "item-based") : opsional}
                         close={closeModal}
                     />
 

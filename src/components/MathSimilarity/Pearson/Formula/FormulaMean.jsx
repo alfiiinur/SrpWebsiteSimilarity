@@ -56,9 +56,6 @@ export const getFormulaMeanExpression = (opsional, data) => {
 }
 
 export const getFormulaMeanValue = (opsional, data) => {
-    console.log(`
-        opsional,${opsional}
-        data,${data}`);
 
     switch (opsional) {
         case "user-based":

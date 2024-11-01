@@ -25,13 +25,21 @@ export function PredictionMeasure({ opsional, similarity, initialData }) {
     const [topSimilarities, setTopSimilarities] = useState([]);
 
     const findTopSimilaritiesWithValidRatings = (similarityData, dataModify, itemIndex, userIndex, count = 2) => {
-        const similarities = similarityData.map((row, index) => ({
-            index,
-            value: row[userIndex],
-            hasRated: dataModify[index][itemIndex] !== 0
-        }));
+        const similarities = similarityData.map((row, index) => {
+            console.log("dataModify", dataModify);
+
+            console.log("dataModify", opsional === "item-based" ? transposeMatrix(dataModify)[userIndex][index] : dataModify[index][itemIndex], (opsional === "item-based" ? dataModify[itemIndex][index] : dataModify[index][itemIndex]) !== 0, "&&", index === itemIndex, "=", index === itemIndex ? false : (opsional === "item-based" ? dataModify[itemIndex][index] : dataModify[index][itemIndex]) !== 0, index, itemIndex);
+            return ({
+                index,
+                value: row[opsional === "user-based" ? userIndex : itemIndex],
+                hasRated: index === itemIndex ? false : (opsional === "item-based" ? transposeMatrix(dataModify)[userIndex][index] : dataModify[index][itemIndex]) !== 0
+            })
+        });
+        console.log("similarities", similarities);
+
 
         const validSimilarities = similarities.filter(item => item.hasRated).sort((a, b) => b.value - a.value)
+        console.log("validSimilarities", validSimilarities);
 
         return validSimilarities.slice(0, count)
     };
@@ -56,17 +64,6 @@ export function PredictionMeasure({ opsional, similarity, initialData }) {
     const RenderTabelPrediksi = () => {
         if (!result || !result['prediction']) return null;
 
-        console.log(` <ModalPredictionMeasure
-            opsional=${opsional}
-            similarity=${similarity}
-            topSimilarities=${topSimilarities}
-            selectedIndex=${selectedIndex}
-            data=${dataModify}
-            result=${result}
-            close=${closeModal}
-            selectedValue=${selectedValue}
-        />`)
-
         return (
             <div className='flex justify-center mt-4'>
                 <table className="border border-black mt-4">
@@ -83,7 +80,6 @@ export function PredictionMeasure({ opsional, similarity, initialData }) {
                         <tr key={rowIndex}>
                             <td className="border border-black px-4 py-2 bg-blue-200">{rowIndex + 1}</td>
                             {row.map((value, colIndex) => {
-                                console.log(row);
                                 const IsZero = dataOnly[rowIndex][colIndex] === 0;
                                 return (
                                     <td key={colIndex}

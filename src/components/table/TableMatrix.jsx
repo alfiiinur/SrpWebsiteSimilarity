@@ -5,7 +5,7 @@ function InputList({ children, change }) {
     const handleInputChange = (e) => {
         const value = e.target.value;
 
-        if (/^\d*\.?\d*$/.test(value)) {
+        if (/^\d*\.?\d*$/.test(value) && Number(value) <= 5) {
             change(e)
         }
     };
@@ -28,7 +28,9 @@ export default function TableMatrix({ Data, onDataChange, onDescriptionChange })
         if (!currentData[i]) {
             currentData[i] = [];
         }
-        currentData[i][j] = Number(value);
+        currentData[i][j] = value;
+        console.log(currentData);
+
         setData(currentData);
         onDataChange(currentData);
         onDescriptionChange(false);
@@ -36,7 +38,7 @@ export default function TableMatrix({ Data, onDataChange, onDescriptionChange })
 
     return (
         <div className="flex flex-col justify-center">
-            <h1 className='text-2xl font-bold font-poppins py-10'>Hasil Tabel Matrix</h1>
+            <h1 className='text-2xl font-bold font-poppins py-10'>Hasil Tabel Matriks</h1>
             <div className="flex justify-center items-center min-h-[40vh]">
                 <table className="min-w-full max-w-4xl border-collapse border border-black text-black font-poppins">
                     <thead>
@@ -53,7 +55,7 @@ export default function TableMatrix({ Data, onDataChange, onDescriptionChange })
                                 <td className="border border-black px-4 py-2 text-center bg-blue-200">{i + 1}</td>
                                 {value.map((value1, j) => (
                                     <td key={j} className="border border-black text-center text-black bg-transparent">
-                                        <InputList change={(e) => changeData(i, j, e.target.value)}>{value1 === 0 ? "?" : value1}</InputList>
+                                        <InputList change={e => changeData(i, j, Number(e.target.value))}>{value1 === 0 ? "?" : value1}</InputList>
                                     </td>
                                 ))}
                             </tr>
@@ -68,15 +70,15 @@ export default function TableMatrix({ Data, onDataChange, onDescriptionChange })
                         <div className="w-10 h-5 bg-red-500 border border-black mr-2 flex items-center justify-center text-white">
                             ?
                         </div>
-                        Cell berwarna merah menandakan data rating yang tidak diketahui atau Data Sparsity
+                        menunjukkan data rating yang tidak diketahui atau Data Sparsity
                     </li>
                     <li className="flex items-center">
                         <div className="w-10 h-5 bg-blue-200 border border-black mr-2"></div>
-                        Menandakan User yang telah memberikan nilai
+                        Menunjukkan sel user
                     </li>
                     <li className="flex items-center">
                         <div className="w-10 h-5 bg-yellow-btn-primary border border-black mr-2"></div>
-                        Menandakan Item yang telah di berikan rating oleh user
+                        Menunjukkan sel item
                     </li>
                 </ul>
             </div>

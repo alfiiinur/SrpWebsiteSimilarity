@@ -84,7 +84,7 @@ function Practice() {
                     <div
                         className='w-10 h-10 font-poppins rounded-full bg-green-500 text-white flex items-center justify-center text-lg'>1
                     </div>
-                    <h1 className='text-2xl font-bold font-poppins py-5 ml-3'>Buat Tabel Matrix:</h1>
+                    <h1 className='text-2xl font-bold font-poppins py-5 ml-3'>Buat Tabel Rating:</h1>
                 </div>
                 <FormMeasure
                     onDataChange={handleDataChange}
@@ -95,7 +95,7 @@ function Practice() {
 
             <section className='max-w-6xl mx-auto text-center py-5'>
                 <h1 className='text-2xl font-semibold font-poppins py-10 underline underline-offset-1 '>Pilih Metode Sistem Rekomendasi dan
-                    Fungsi Similaritas</h1>
+                    Fungsi Similarity</h1>
                 <div className='flex justify-around'>
 
                     <div className='flex flex-col items-center'>
@@ -115,7 +115,7 @@ function Practice() {
                             <div
                                 className='w-10 h-10 font-poppins rounded-full bg-green-500 text-white flex items-center justify-center text-lg'>4
                             </div>
-                            <h1 className='text-2xl font-bold font-poppins py-10 px-3'>Pilih Fungsi Similaritas</h1>
+                            <h1 className='text-2xl font-bold font-poppins py-10 px-3'>Pilih Fungsi Similarity</h1>
                         </div>
                         <DropdownSimilarityMeasure onChange={handleSimilarityChange} />
                     </div>
@@ -126,7 +126,7 @@ function Practice() {
             <section className='max-w-4xl mx-auto text-center my-10 py-10 '>
                 <button onClick={toggleDescription}
                     className=" w-70 font-semibold font-poppins bg-card_green_primary border-2 border-black text-center text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-md">
-                    Cek Hasil Perhitungan Similaritas
+                    Cek Hasil Perhitungan Similarity
                     {isDescriptionVisible ? <ExpandLessIcon className="ml-2 text-lg" /> :
                         <ExpandMoreIcon className="ml-2 text-lg" />}
                 </button>

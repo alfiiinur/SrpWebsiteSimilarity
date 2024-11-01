@@ -113,7 +113,7 @@ export function HasilPerhitunganSimilaritas() {
                     }}
                 >
                     <section className='max-w-4xl mx-auto text-center'>
-                        <h1 className='text-2xl font-bold font-poppins py-5'>Hasil Perhitungan Similaritas</h1>
+                        <h1 className='text-2xl font-bold font-poppins py-5'>Hasil Perhitungan Similarity</h1>
                         <p className='text-sm px-10 py-5 font-sm font-poppins'>
                             <TabelView />
                         </p>

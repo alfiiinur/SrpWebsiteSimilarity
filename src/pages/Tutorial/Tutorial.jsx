@@ -10,6 +10,7 @@ import Navigator from '../../components/Navigate/Navigator';
 import VideoTutorialModal from '../../components/modal/VidioTutorialModal';
 import BodyTutorial from '../Layout/Tutorial/BodyTutorial.jsx';
 import FormLayoutTutorial from '../Layout/Tutorial/FormTutorial.jsx';
+import { getInitialData } from '../../api/getDataSet.js';
 
 const Tutorial = () => {
 
@@ -19,6 +20,7 @@ const Tutorial = () => {
             element: <DropdownMethodBased
                 onChange={(method) => {
                     setSelectedMethod(method);
+                    handleTurnDescription(false)
                 }} />
         },
         {
@@ -26,6 +28,7 @@ const Tutorial = () => {
             element: <DropdownSimilarityMeasure
                 onChange={(similaritas) => {
                     setSelectedSimilarity(similaritas);
+                    handleTurnDescription(false)
                 }} />
         },
     ]
@@ -34,6 +37,10 @@ const Tutorial = () => {
     const toggleDescription = () => {
         setDescriptionVisible(!isDescriptionVisible);
     };
+
+    const handleTurnDescription = (condition) => {
+        setDescriptionVisible(condition)
+    }
 
 
     const [selectedMethod, setSelectedMethod] = useState('');
@@ -104,8 +111,16 @@ const Tutorial = () => {
                             header={"Hasil dan Pembahasan :"}
                             subheader={""}
                         >
-                            <DetailPageBox method={selectedMethod}
+                            <DetailPageBox
+                                method={selectedMethod}
                                 similarity={selectedSimilarity}
+                                data={[
+                                    [5, 0, 4, 3, 5, 4],
+                                    [4, 5, 0, 3, 2, 3],
+                                    [0, 3, 0, 2, 1, 0],
+                                    [1, 2, 2, 0, 3, 4],
+                                    [1, 0, 1, 2, 3, 3]
+                                ]}
                             />
                         </BodyTutorial>
                     </div>

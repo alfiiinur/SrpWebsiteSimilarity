@@ -1,19 +1,10 @@
 import { getFormulaPredictionIndex, getFormulaPredictionValue } from "../Formula/FormulaPrediction"
 import { MathJax, MathJaxContext } from "better-react-mathjax"
 import mathjaxConfig from "../../../../mathjax-config"
+import { transposeMatrix } from "../../../../helper/helper"
 
 const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selectedValue, selectedIndex, data, result, close }) => {
-
-    console.log(` <ModalPredictionMeasure
-        opsional=${opsional}
-        similarity=${similarity}
-        topSimilarities=${topSimilarities}
-        selectedIndex=${selectedIndex}
-        data=${data}
-        result=${result}
-        close=${close}
-        selectedValue=${selectedValue}
-    />`)
+    const dataModify = opsional === "user-based" ? (data) : data
     const PredictionIndex = ({ rowIndex, colIndex, similarity, opsional }) => {
         const expression = getFormulaPredictionIndex(rowIndex, colIndex, similarity, opsional)
         return (
@@ -48,12 +39,8 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((row, rowIndex) => {
-                                console.log(`
-                                    data[rowIndex][selectedIndex[0]],${data[rowIndex][selectedIndex[opsional === "item-based" ? 0 : 1]]} 
-                                    rowIndex,${rowIndex} 
-                                    selectedIndex[0],${selectedIndex[0]}`);
-                                const IsZero = data[rowIndex][selectedIndex[opsional === "item-based" ? 0 : 1]] === 0
+                            {dataModify.map((row, rowIndex) => {
+                                const IsZero = opsional === "item-based" ? dataModify[rowIndex][selectedIndex[0]] === 0 : dataModify[rowIndex][selectedIndex[1]] === 0
 
 
                                 return (
@@ -81,7 +68,7 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                         </thead>
                         <tbody>
                             {result['mean-list'].map((mean, index) => {
-                                const isActiveUser = index === selectedIndex[0]; // Highlight the active user in the mean rating table
+                                const isActiveUser = index === selectedIndex[opsional === "user-based" ? 0 : 1]; // Highlight the active user in the mean rating table
 
                                 return (
                                     <tr key={index}
@@ -111,15 +98,14 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                         </thead>
                         <tbody>
                             {result['mean-centered'].map((row, rowIndex) => {
-                                const OriginalValue = opsional === "user-based" ? (data[rowIndex][selectedIndex[0]]) : (data[selectedIndex[0]][rowIndex])
-                                const IsZero = OriginalValue === 0
+                                const IsZero = opsional === "item-based" ? dataModify[rowIndex][selectedIndex[0]] === 0 : dataModify[rowIndex][selectedIndex[1]] === 0 === 0
                                 const isTopSimilarity = topSimilarities.some(top => top.index === rowIndex && !IsZero)
 
                                 return (
                                     <tr key={rowIndex}>
                                         <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                         <td className={`border border-black px-4 py-2 text-center ${IsZero ? 'bg-red-200' : ''} ${isTopSimilarity ? 'bg-green-200' : ''}`}>
-                                            {row[selectedIndex[0]]?.toFixed(2) || 'N/A'} {/* Display mean-centered value */}
+                                            {row[selectedIndex[opsional === "item-based" ? 0 : 1]]?.toFixed(2) || 'N/A'} {/* Display mean-centered value */}
                                         </td>
                                     </tr>
                                 );
@@ -130,11 +116,11 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
 
 
                     <h2 className='font-semibold my-4'>Nilai Similarity</h2>
-                    {selectedIndex[1] < result['similarity'].length ? (
+                    {selectedIndex[opsional === "user-based" ? 0 : 1] < result['similarity'].length ? (
                         <table className="border border-black mt-4 mx-auto text-center">
                             <thead>
                                 <tr className="bg-gray-200">
-                                    <th className="border border-black px-4 py-2">Item</th>
+                                    <th className="border border-black px-4 py-2">{opsional === "item-based" ? "Item" : "User"}</th>
                                     <th className="border border-black px-4 py-2">Nilai Similaritas
                                         (Item {selectedIndex[1] + 1})
                                     </th>
@@ -143,12 +129,13 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                             <tbody>
                                 {result['similarity'].map((row, colIndex) => {
                                     const isTopSimilarity = topSimilarities.some(top => top.index === colIndex); // Check if this row is in the top similarities
+                                    console.log("row", row);
 
                                     return (
                                         <tr key={colIndex}>
                                             <td className="border border-black px-4 py-2 bg-gray-200">{colIndex + 1}</td>
                                             <td className={`border border-black px-4 py-2 text-center  ${isTopSimilarity ? 'bg-green-200' : ''}`}>
-                                                {row[selectedIndex[1]]?.toFixed(4) || 'N/A'} {/* Display similarity value */}
+                                                {row[selectedIndex[opsional === "user-based" ? 0 : 1]]?.toFixed(4) || 'N/A'} {/* Display similarity value */}
                                             </td>
                                         </tr>
                                     );

@@ -6,10 +6,10 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 const ModalMeanCenteredMeasure = ({ similarity, selectedIndex, selectedValue, dataOnly, result, opsional, close }) => {
 
-    const dataModify = opsional === "item-based" ? transposeMatrix(dataOnly) : dataOnly
+    const dataModify = dataOnly
 
     const MeanCenteredIndex = ({ rowIndex, colIndex }) => {
-        const expression = getFormulaMeanCenteredIndex(rowIndex, colIndex)
+        const expression = getFormulaMeanCenteredIndex(rowIndex, colIndex, opsional)
         return (
             <MathJax>
                 {expression}
@@ -18,7 +18,7 @@ const ModalMeanCenteredMeasure = ({ similarity, selectedIndex, selectedValue, da
     }
 
     const MeanCenteredValue = ({ rowIndex, colIndex, data, result }) => {
-        const expression = getFormulaMeanCenteredValue(rowIndex, colIndex, data, result, opsional)
+        const expression = getFormulaMeanCenteredValue(rowIndex, colIndex, data, result, opsional, similarity)
         return (
             <MathJax>
                 {expression}
@@ -52,10 +52,16 @@ const ModalMeanCenteredMeasure = ({ similarity, selectedIndex, selectedValue, da
                                 <tr key={rowIndex}>
                                     <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
                                     {row.map((value, colIndex) => {
-                                        const isSelected = (opsional === "item-based" ? (selectedIndex[0] === rowIndex && selectedIndex[1] === colIndex) : (selectedIndex[0] === colIndex && selectedIndex[1] === rowIndex));
+                                        const isSelected = similarity === "Adjusted Vector Cosine" ?
+                                            (opsional === "item-based" ? (selectedIndex[0] === rowIndex && selectedIndex[1] === colIndex) : (selectedIndex[0] === colIndex && selectedIndex[1] === rowIndex))
+                                            : (opsional === "item-based" ? (selectedIndex[0] === rowIndex && selectedIndex[1] === colIndex) : (selectedIndex[1] === colIndex && selectedIndex[0] === rowIndex));
                                         const cellClass = value === 0
                                             ? 'border border-black px-4 py-2 text-center text-red-500'
                                             : 'border border-black px-4 py-2 text-center';
+                                        if (isSelected) {
+
+                                            console.log(rowIndex, colIndex, selectedIndex[0], selectedIndex[1]);
+                                        }
                                         return (
                                             <td key={rowIndex}
                                                 // className="border border-black px-4 py-2 text-center"

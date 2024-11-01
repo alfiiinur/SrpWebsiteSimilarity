@@ -27,14 +27,21 @@ export const getFormulaMeanCentered = (similarity, opsional) => {
     }
 }
 
-export const getFormulaMeanCenteredIndex = (rowIndex, colIndex) => {
-    return `\\[ S_{${rowIndex + 1}${colIndex + 1}} = r_{${rowIndex + 1}${colIndex + 1}} -\\mu_{${rowIndex + 1}} \\]`
+export const getFormulaMeanCenteredIndex = (rowIndex, colIndex, opsional) => {
+    return `\\[ S_{${rowIndex + 1}${colIndex + 1}} = r_{${rowIndex + 1}${colIndex + 1}} -\\mu_{${(opsional === "user-based" ? rowIndex : colIndex) + 1}} \\]`
 }
 
 export const getFormulaMeanCenteredValue = (rowIndex, colIndex, data, result, opsional, similarity) => {
-    console.log(data, rowIndex, colIndex);
 
-    const selectedValue = rowIndex !== null && colIndex !== null ? similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? data[colIndex][rowIndex] : data[rowIndex][colIndex]) : (opsional === "user-based" ? data[rowIndex][colIndex] : data[colIndex][rowIndex]) : null
+    // console.log(data, rowIndex, colIndex)
+
+    const selectedValue = rowIndex !== null && colIndex !== null ?
+        (
+            similarity === "Adjusted Vector Cosine" ?
+                (opsional === "user-based" ? data[colIndex][rowIndex] : data[rowIndex][colIndex])
+                : (data[rowIndex][colIndex]))
+        : null
+
     const selectedMeanValue = rowIndex !== null ? result['mean-list'][opsional === "user-based" ? rowIndex : colIndex] : null
 
     return `\\[ S_{${rowIndex + 1}${colIndex + 1}} = ${selectedValue} - ${selectedMeanValue} \\]`

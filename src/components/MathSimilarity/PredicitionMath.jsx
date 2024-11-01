@@ -581,9 +581,6 @@ export function ItemBasedPrediciton({ opsional, similaritas }) {
         return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = {${selectedUserMean}} + \\frac{${simPart}}{${denominatorPart}} \\]`;
     };
 
-
-
-
     const RenderItemTabelPrediksi = () => {
         if (!result || !result['prediction']) return null;
 
