@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NotationCard } from "../Tabel_Data";
+import NotationCard from "./NotaionCard";
 
 function InputList({ children, change }) {
     const handleInputChange = (e) => {

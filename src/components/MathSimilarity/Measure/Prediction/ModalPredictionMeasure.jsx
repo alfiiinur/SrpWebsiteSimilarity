@@ -1,10 +1,12 @@
-import { getFormulaPredictionIndex, getFormulaPredictionValue } from "../Formula/FormulaPrediction"
+import { getFormulaArgMax, getFormulaPredictionIndex, getFormulaPredictionValue } from "../Formula/FormulaPrediction"
 import { MathJax, MathJaxContext } from "better-react-mathjax"
 import mathjaxConfig from "../../../../mathjax-config"
 import { transposeMatrix } from "../../../../helper/helper"
 
 const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selectedValue, selectedIndex, data, result, close }) => {
     const dataModify = opsional === "user-based" ? (data) : data
+    const resultMean = similarity === "Adjusted Vector Cosine" ? (result["mean-list-brother"]) : result["mean-list"]
+    const resultMeanCentered = similarity === "Adjusted Vector Cosine" ? transposeMatrix(result["mean-centered-brother"]) : result["mean-centered"]
     const PredictionIndex = ({ rowIndex, colIndex, similarity, opsional }) => {
         const expression = getFormulaPredictionIndex(rowIndex, colIndex, similarity, opsional)
         return (
@@ -14,7 +16,7 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
         )
     }
 
-    const PredictionValue = (rowIndex, colIndex, similarValues, result, similarity, opsional) => {
+    const PredictionValue = ({ rowIndex, colIndex, similarValues, result, similarity, opsional }) => {
         const expression = getFormulaPredictionValue(rowIndex, colIndex, similarValues, result, similarity, opsional)
         return (
             <MathJax>
@@ -23,12 +25,23 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
         )
     }
 
+    const ArgMaxNeighbor = ({ rowIndex, colIndex, opsional, similarity, topSimilarity }) => {
+        const expression = getFormulaArgMax(rowIndex, colIndex, opsional, similarity, topSimilarity)
+        return (
+            <MathJax>
+                {expression}
+            </MathJax>)
+    }
+
     return (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
                 <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Prediksi</h2>
                 <div className="overflow-x-auto">
-                    <h2 className='font-semibold'>Data Matrix Rating</h2>
+                    <MathJaxContext options={mathjaxConfig}>
+                        <h2 className='font-semibold'><span className="flex">Data Rating<MathJax>{`\\[ r_${selectedIndex[1] + 1}* \\]`}</MathJax></span>
+                        </h2>
+                    </MathJaxContext>
                     <table className="border border-black mt-4 mx-auto text-center my-4 ">
                         <thead>
                             <tr className="bg-gray-200">
@@ -67,7 +80,7 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                             </tr>
                         </thead>
                         <tbody>
-                            {result['mean-list'].map((mean, index) => {
+                            {resultMean.map((mean, index) => {
                                 const isActiveUser = index === selectedIndex[opsional === "user-based" ? 0 : 1]; // Highlight the active user in the mean rating table
 
                                 return (
@@ -97,7 +110,7 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                             </tr>
                         </thead>
                         <tbody>
-                            {result['mean-centered'].map((row, rowIndex) => {
+                            {resultMeanCentered.map((row, rowIndex) => {
                                 const IsZero = opsional === "item-based" ? dataModify[rowIndex][selectedIndex[0]] === 0 : dataModify[rowIndex][selectedIndex[1]] === 0 === 0
                                 const isTopSimilarity = topSimilarities.some(top => top.index === rowIndex && !IsZero)
 
@@ -129,7 +142,6 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                             <tbody>
                                 {result['similarity'].map((row, colIndex) => {
                                     const isTopSimilarity = topSimilarities.some(top => top.index === colIndex); // Check if this row is in the top similarities
-                                    console.log("row", row);
 
                                     return (
                                         <tr key={colIndex}>
@@ -150,6 +162,22 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                 </div>
 
                 {/* Menampilkan perhitungan manual */}
+
+                <MathJaxContext options={mathjaxConfig}>
+                    <div className='flex justify-center items-center flex-col px-10'>
+                        {selectedIndex ? (
+                            <ArgMaxNeighbor
+                                rowIndex={selectedIndex[0]}
+                                colIndex={selectedIndex[1]}
+                                opsional={opsional}
+                                similarity={similarity}
+                                topSimilarity={topSimilarities}
+                            />
+                        ) : (
+                            <p>No expression selected.</p>
+                        )}
+                    </div>
+                </MathJaxContext>
 
                 <MathJaxContext options={mathjaxConfig}>
                     <div className='flex justify-center items-center flex-col px-10'>
@@ -184,7 +212,7 @@ const ModalPredictionMeasure = ({ opsional, similarity, topSimilarities, selecte
                 </MathJaxContext>
 
 
-                <p className="text-xl font-bold text-gray-700">Hasil prdiksi rating Item
+                <p className="text-xl font-bold text-gray-700">Hasil prediksi rating Item
                     target {selectedIndex[1] + 1} terhadap
                     item {selectedIndex[1] + 1} adalah = {selectedValue.toFixed(3)}</p>
 

@@ -5,42 +5,44 @@ const ModalMean = ({ opsional, data, selectedIndex, selectedMean, close, meanRum
 
     return (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">Detail Perhitungan Mean <span
                     className='italic'>(μ)</span> {opsional.split("-")[0]} - {selectedIndex + 1}</h2>
-                <div className='overflow-x-auto'>
-                    <h2 className='font-semibold'>Data Rating (r)</h2>
-                    <table className="border border-black mt-4 mx-auto text-center">
-                        <thead>
-                            <tr className="bg-gray-200">
-                                <th className="border border-black px-4 py-2">U/I</th>
-                                {Array.from({ length: data[0].length }, (_, index) => (  // Menggunakan panjang kolom dari data
-                                    <th key={index}
-                                        className="border border-black px-4 py-2">{index + 1}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((row, rowIndex) => (
-                                <tr key={rowIndex}>
-                                    <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
-                                    {row.map((value, colIndex) => {
-                                        const cellClass = value === 0
-                                            ? 'border border-black px-4 py-2 text-center bg-red-200'
-                                            : 'border border-black px-4 py-2 text-center';
-                                        return (
-                                            <td key={colIndex}
-                                                // className="border border-black px-4 py-2 text-center"
-                                                className={`${cellClass}`}
-                                            >
-                                                {value.toFixed ? value.toFixed(0) : value} {/* Format desimal hanya jika diperlukan */}
-                                            </td>
-                                        )
-                                    })}
+                <div className='flex flex-row justify-center m-3 overflow-x-auto'>
+                    <div className='overflow-x-auto'>
+                        <h2 className='font-semibold'>Data Rating (r)</h2>
+                        <table className="border border-black mt-4 mx-auto text-center">
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th className="border border-black px-4 py-2">U/I</th>
+                                    {Array.from({ length: data[0].length }, (_, index) => (  // Menggunakan panjang kolom dari data
+                                        <th key={index}
+                                            className="border border-black px-4 py-2">{index + 1}</th>
+                                    ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {data.map((row, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                        <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                                        {row.map((value, colIndex) => {
+                                            const cellClass = value === 0
+                                                ? 'border border-black px-4 py-2 text-center bg-red-200'
+                                                : 'border border-black px-4 py-2 text-center';
+                                            return (
+                                                <td key={colIndex}
+                                                    // className="border border-black px-4 py-2 text-center"
+                                                    className={`${cellClass}`}
+                                                >
+                                                    {value.toFixed ? value.toFixed(0) : value} {/* Format desimal hanya jika diperlukan */}
+                                                </td>
+                                            )
+                                        })}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 {/* Menampilkan rumus mean menggunakan MathJax */}
                 <MathJaxContext options={mathjaxConfig}>

@@ -301,27 +301,3 @@ export const IndexProbability = (rowIndex, colIndex) => {
 
     return `\\[  BC(${rowIndex + 1},${colIndex + 1}) =  ${sumTerms} \\]`;
 }
-
-const IndexValueProbability = (rowIndex, colIndex, dataSimilarityRow, dataSimilarityCol) => {
-    const ratings = [1, 2, 3, 4, 5]; // Daftar rating
-    const sumTerms = ratings.map(rating => {
-        const rowProb = dataSimilarityRow[rating - 1] || 0;
-        const colProb = dataSimilarityCol[rating - 1] || 0;
-
-        return `\\sqrt{\\left(${rowProb}\\right)\\times \\left(${colProb}\\right)}`;
-    }).join(' + ')
-
-    const productTerms = ratings.map(rating => {
-        const rowProb = dataSimilarityRow[rating - 1] || 0;
-        const colProb = dataSimilarityCol[rating - 1] || 0;
-        const product = Math.sqrt(rowProb * colProb);
-
-        return `{\\left(${product.toFixed(4)}\\right)}`;
-    }).join(' + ')
-
-
-    return {
-        FormulaWithoutValue: `\\[  BC(${rowIndex + 1},${colIndex + 1}) = ${sumTerms} \\]`,
-        FormulaWithValue: `\\[  BC(${rowIndex + 1},${colIndex + 1}) = ${productTerms} \\]`,
-    };
-};

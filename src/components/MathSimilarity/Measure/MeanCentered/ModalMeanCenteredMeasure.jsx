@@ -1,4 +1,3 @@
-import { transposeMatrix } from "../../../../helper/helper";
 import { getFormulaMeanCenteredIndex, getFormulaMeanCenteredValue } from "../Formula/FormulaMeanCentered";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import mathjaxConfig from "../../../../mathjax-config";
@@ -27,15 +26,15 @@ const ModalMeanCenteredMeasure = ({ similarity, selectedIndex, selectedValue, da
     }
 
     return (<div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-auto max-h-[80%] overflow-y-auto ">
             <h1 className='text-lg font-semibold mb-4'>Detail Menghitung <span
                 className='italic'>Mean-Centerd</span> untuk setiap Data rating yang diketahui </h1>
 
             {/* Menampilkan rumus mean menggunakan MathJax */}
 
-            <div className='flex flex-row justify-center m-3'>
+            <div className='flex flex-row justify-center m-3 overflow-x-auto'>
                 {/*tabel data rating */}
-                <div>
+                <div className="overflow-x-auto">
                     <h2 className='font-semibold'>Data Rating (r)</h2>
                     <table className="border border-black mt-4 mr-3">
                         <thead>

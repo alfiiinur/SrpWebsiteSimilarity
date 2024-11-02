@@ -83,10 +83,8 @@ export function PredictionMeasure({ opsional, similarity, initialData }) {
                                 const IsZero = dataOnly[rowIndex][colIndex] === 0;
                                 return (
                                     <td key={colIndex}
-                                        // className={`border border-black px-4 py-2 text-center ${IsZero ? 'bg-red-200 cursor-pointer hover:bg-card_green_primary' : ''}`}
-                                        // onClick={IsZero ? () => handleMeanClick(value, rowIndex, colIndex) : undefined}
                                         className={`border border-black px-4 py-2 text-center ${IsZero ? 'bg-red-200 cursor-pointer hover:bg-card_green_primary' : ''}`}
-                                        onClick={() => handleMeanClick(value, rowIndex, colIndex)}
+                                        onClick={IsZero ? () => handleMeanClick(value, rowIndex, colIndex) : undefined}
 
                                     >
                                         {value.toFixed(3)} {/* Format desimal */}

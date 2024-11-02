@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TabelView, { NotationCard } from "../../components/Tabel_Data";
+import TabelView from "../../components/table/TabelView.jsx";
 import CardSteps from "../../components/Card/Main/CardSteps.jsx";
 import DropdownMethodBased from '../../components/Form/Tutorial/DropdownMethodBased.jsx';
 import DropdownSimilarityMeasure from '../../components/Form/Tutorial/DropdownSimilarityMeasure.jsx';
@@ -10,7 +10,7 @@ import Navigator from '../../components/Navigate/Navigator';
 import VideoTutorialModal from '../../components/modal/VidioTutorialModal';
 import BodyTutorial from '../Layout/Tutorial/BodyTutorial.jsx';
 import FormLayoutTutorial from '../Layout/Tutorial/FormTutorial.jsx';
-import { getInitialData } from '../../api/getDataSet.js';
+import NotationCard from '../../components/table/NotaionCard.jsx';
 
 const Tutorial = () => {
 
@@ -43,6 +43,13 @@ const Tutorial = () => {
     }
 
 
+    const [data] = useState([
+        [5, 0, 4, 3, 5, 4],
+        [4, 5, 0, 3, 2, 3],
+        [0, 3, 0, 2, 1, 0],
+        [1, 2, 2, 0, 3, 4],
+        [1, 0, 1, 2, 3, 3]
+    ]);
     const [selectedMethod, setSelectedMethod] = useState('');
     const [selectedSimilarity, setSelectedSimilarity] = useState('');
 
@@ -91,7 +98,7 @@ const Tutorial = () => {
                 subheader={"Data rating yaitu suatu kumpulan data yang telah diberikan rating pada item tertentu oleh user."}
             >
                 <TabelView />
-                <NotationCard />
+                <NotationCard opsional={selectedMethod.toLowerCase()} data={data} />
             </BodyTutorial>
             <FormLayoutTutorial
                 data={form}
@@ -114,13 +121,7 @@ const Tutorial = () => {
                             <DetailPageBox
                                 method={selectedMethod}
                                 similarity={selectedSimilarity}
-                                data={[
-                                    [5, 0, 4, 3, 5, 4],
-                                    [4, 5, 0, 3, 2, 3],
-                                    [0, 3, 0, 2, 1, 0],
-                                    [1, 2, 2, 0, 3, 4],
-                                    [1, 0, 1, 2, 3, 3]
-                                ]}
+                                data={data}
                             />
                         </BodyTutorial>
                     </div>

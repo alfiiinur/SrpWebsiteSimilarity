@@ -18,6 +18,8 @@ export const getFormulaMean = (opsional) => {
                     `\\[ r_{uv} = \\text{Rating user u terhadap item i} \\]`
                 ]
             }
+        default:
+            return
     }
 }
 
@@ -33,6 +35,8 @@ export const getFormulaMeanIndex = (opsional, data) => {
             return data.map((_, index) => {
                 return `\\[ \\mu_{${index + 1}} = \\frac{\\sum_{i\\in I_{${index + 1}}} r_{${index + 1}i}}{\\left|I_{${index + 1}}\\right|}   \\forall ${index + 1}\\in\\left\\{1...${data.length}\\right\\} \\]`;
             })
+        default:
+            return
     }
 }
 
@@ -52,6 +56,8 @@ export const getFormulaMeanExpression = (opsional, data) => {
 
                 return `\\[ \\mu_{${index + 1}} = \\frac{(${nonZeroIndices.map(idx => `r_{${index + 1}${idx}}`).join(" + ")})}{ | \\left\\{ ${nonZeroIndices.join(" , ")} \\right\\} | }  \\]`;
             });
+        default:
+            return
     }
 }
 
@@ -65,5 +71,7 @@ export const getFormulaMeanValue = (opsional, data) => {
             return data.map((row, index) => {
                 return `\\[ \\mu_{${index + 1}} = \\frac{${row.filter((val) => val !== 0).join(" + ")}}{ ${row.filter((val) => val !== 0).length}}   \\]`;
             });
+        default:
+            return
     }
 }

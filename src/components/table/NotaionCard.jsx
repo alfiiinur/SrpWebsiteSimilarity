@@ -1,94 +1,22 @@
-// src/App.js
+
 import React, { useState } from 'react';
 import { FaChevronDown } from "react-icons/fa";
-import TabelViewDataStatis from "./tabelData/TabelStatis";
-import { AllSimilaritas, getInitialData } from "../api/getDataSet";
-import MathJaxComponent from '../MathJaxComponent';
+import { getInitialData } from '../../api/getDataSet';
+import MathJaxComponent from '../../MathJaxComponent';
+import { Input } from '@headlessui/react';
 
-function TabelView() {
-    const data = [
-        ['1', '5', '?', '4', '3', '5', '4'],
-        ['2', '4', '5', '?', '3', '2', '3'],
-        ['3', '?', '3', '?', '2', '1', '?'],
-        ['4', '1', '2', '2', '?', '3', '4'],
-        ['5', '1', '?', '1', '2', '3', '3'],
-    ];
-
-    const headers = ['U/I', '1', '2', '3', '4', '5', '6'];
-
-    return (
-        <div className="flex flex-col items-center justify-center">
-            <table className="min-w-full border-collapse border border-black">
-                <thead>
-                    <tr>
-                        {headers.map((header, index) => (
-                            <th key={index} className="border border-black px-4 py-2 bg-yellow-btn-primary">
-                                {header}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {row.map((cell, colIndex) => {
-                                // Menentukan kelas berdasarkan nilai sel
-                                const isFirstColumn = colIndex === 0; // Mengecek apakah kolom pertama
-                                const cellClass = cell === '?' || cell === ''
-                                    ? 'border border-black px-4 py-2 text-center bg-red-500'
-                                    : `border border-black px-4 py-2 text-center ${isFirstColumn ? 'bg-blue-200' : ''}`; // Warnai kolom pertama
-
-                                return (
-                                    <td key={colIndex} className={cellClass}>
-                                        {cell}
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="mt-4 text-left">
-                <p className="font-bold">Keterangan:</p>
-                <ul className="flex space-x-4">
-                    <li className="flex items-center">
-                        <div
-                            className="w-10 h-5 bg-red-500 border border-1 border-black mr-2 flex items-center justify-center text-white">
-                            ?
-                        </div>
-                        Cell berwarna merah menandakan data rating yang tidak diketahui atau Data Sparsity
-                    </li>
-                    <li className="flex items-center">
-                        <div className="w-10 h-5 bg-blue-200 border border-1 border-black mr-2"></div>
-                        Menandakan User yang telah memberikan nilai
-                    </li>
-                    <li className="flex items-center">
-                        <div className="w-10 h-5 bg-yellow-btn-primary border border-1 border-black mr-2"></div>
-                        Menandakan Item yang telah di diberikan rating oleh user
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    );
-}
-
-export default TabelView;
-
-
-
-
-export const TabelRatingData = ({ opsional }) => {
-    const initialData = getInitialData(opsional);
-    const [dataOnly, setDataOnly] = useState(initialData.data);
+export const TabelRatingData = ({ data, opsional }) => {
+    const initialData = getInitialData(data, opsional);
+    const [dataOnly] = useState(initialData.data);
 
 
     const [showModal, setShowModal] = useState(false);
+    const [isNotation, setIsNotation] = useState(false)
+
     const [selectedData, setSelectedData] = useState({ user: null, itemIndex: null, value: null });
 
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [ratingValue, setRatingValue] = useState(null);
 
     const user = dataOnly.length; // Number of items (rows)
     const item = dataOnly.length > 0 ? dataOnly[0].length : 0; // Number of users (columns)
@@ -103,37 +31,55 @@ export const TabelRatingData = ({ opsional }) => {
         setSelectedData({ user: null, itemIndex: null, value: null });
     };
 
-
+    const handleIsNotation = () => {
+        setIsNotation(!isNotation)
+    }
 
     const handleUserChange = (e) => {
         const userIndex = e.target.value ? parseInt(e.target.value) : null;
-        setSelectedUser(userIndex);
-        // setSelectedItem(null); // Reset item selection
+        setSelectedUser(userIndex)
     };
 
     const handleItemChange = (e) => {
         const itemIndex = e.target.value ? parseInt(e.target.value) : null;
-        setSelectedItem(itemIndex);
-        // setSelectedUser(null); // Reset user selection
+        setSelectedItem(itemIndex)
     };
 
 
 
     return (
         <div className='flex flex-col mb-5 font-poppins'>
-            <table className="border border-black mt-4 mr-3 text-center">
+            <em>R ∈ R<sup> {user}×{item}</sup></em>
+
+            <div className='w-[30%]'>
+                <label class="inline-flex items-center cursor-pointer">
+                    <Input
+                        type="checkbox"
+                        value=""
+                        class="sr-only peer"
+                        onChange={handleIsNotation}
+                    />
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-300"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-950">Tampilkan Notasi</span>
+                </label>
+            </div>
+
+
+            <table className="w-[100%] h-[100%] border border-black mt-4 mr-3 text-center overflow-auto">
                 <thead>
-                    <tr className="bg-card_blue_primary">
+                    <tr className="bg-card_blue_primary text-white">
                         <th className="border border-black px-4 py-2">U/I</th>
                         {Array.from({ length: item }, (_, index) => (
-                            <th key={index} className="border border-black px-4 py-2">{index + 1}</th>
+                            <th key={index} className="border border-black px-4 py-2">
+                                {!isNotation ? (index + 1) : <MathJaxComponent>{`\\[ i_{${index + 1}} \\]`}</MathJaxComponent>}
+                            </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {dataOnly.map((row, rowIndex) => (
                         <tr key={rowIndex}>
-                            <td className="border border-black px-4 py-2 bg-gray-200">{rowIndex + 1}</td>
+                            <td className="border border-black px-4 py-2 bg-gray-200">{!isNotation ? (rowIndex + 1) : <MathJaxComponent>{`\\[ u_{${rowIndex + 1}} \\]`}</MathJaxComponent>}</td>
                             {row.map((value, colIndex) => {
                                 const cellClass = value === 0
                                     ? 'border border-black px-4 py-2 text-center bg-red-200'
@@ -145,7 +91,9 @@ export const TabelRatingData = ({ opsional }) => {
                                         className={cellClass}
                                         onClick={() => handleCellClick(rowIndex, colIndex, value)} // Handle cell click
                                     >
-                                        {value.toFixed ? value.toFixed(0) : value}
+                                        {!isNotation ? (value.toFixed ? value.toFixed(0) : value)
+                                            : <MathJaxComponent>{`\\[ r_{${rowIndex + 1}${colIndex + 1}} \\]`}</MathJaxComponent>
+                                        }
                                     </td>
                                 );
                             })}
@@ -154,7 +102,6 @@ export const TabelRatingData = ({ opsional }) => {
                 </tbody>
             </table>
 
-            {/* Modal for detailed view */}
             {showModal && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg font-poppins">
@@ -178,10 +125,8 @@ export const TabelRatingData = ({ opsional }) => {
                 <div className="flex items-start justify-start space-x-6">
                     {/* Left Column */}
                     <div className="w-1/2   space-y-2 text-start">
-                        <p><strong>m</strong> : {user}</p>
-                        <p><strong>n</strong> : {item}</p>
-                        <p><strong>R</strong> : <em>R ∈ R<sup> {user}×{item}</sup></em>
-                        </p>
+                        <p><i>m</i> : {user}</p>
+                        <p><i>n</i> : {item}</p>
                     </div>
 
                     {/* Right Column */}
@@ -263,7 +208,7 @@ export const TabelRatingData = ({ opsional }) => {
 };
 
 
-export const NotationCard = () => {
+export const NotationCard = ({ data, opsional }) => {
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -276,19 +221,19 @@ export const NotationCard = () => {
             <div className="flex space-x-6">
                 {/* Left Column */}
                 <div className="w-1/2 space-y-2 font-poppins text-start">
-                    <span className='' ><MathJaxComponent>{`\\[ m = \\ jumlah \\ user \\]`}</MathJaxComponent></span>
-                    <p><strong>n</strong>: jumlah <span className="italic">item</span></p>
-                    <p><strong>U</strong>: himpunan <span className="italic">user</span></p>
-                    <p><strong>I</strong>: himpunan <span className="italic">item</span></p>
-                    <p><strong>I<sub>u</sub></strong>: himpunan <span className="italic">item</span> yang telah diberi
+                    <p><strong><i>m</i></strong> : jumlah <span className="italic">user</span></p>
+                    <p><strong><i>n</i></strong> : jumlah <span className="italic">item</span></p>
+                    <p><strong><i>U</i></strong> : himpunan <span className="italic">user</span></p>
+                    <p><strong><i>I</i></strong> : himpunan <span className="italic">item</span></p>
+                    <p><strong><i>I<sub>u</sub></i></strong> : himpunan <span className="italic">item</span> yang telah diberi
                         rating oleh <span className="italic">user</span> <em>u</em></p>
                 </div>
 
                 {/* Right Column */}
                 <div className="w-1/2 space-y-2 font-poppins text-start">
-                    <p><strong>R</strong>: matriks <span className="italic">item</span> dimana <em>R ∈ R<sup> m×n</sup></em>
+                    <p><strong><em>R ∈ ℝ<sup> m×n</sup></em></strong> : Matriks yang berisi bilangan asli dengan panjang m dan lebar n
                     </p>
-                    <p><strong>r<sub>uj</sub></strong>: rating <span className="italic">user</span>
+                    <p><strong>r<sub>uj</sub></strong> : rating <span className="italic">user</span>
                         <em> u</em> terhadap <span className="italic">item</span> <em>j</em></p>
                 </div>
             </div>
@@ -305,7 +250,7 @@ export const NotationCard = () => {
             {/* Dropdown Card */}
             {isOpen && (
                 <div className="mt-4 bg-gray-100 shadow rounded-lg p-4">
-                    <TabelRatingData opsional={1} />
+                    <TabelRatingData data={data} opsional={opsional} />
 
 
                 </div>
@@ -315,3 +260,4 @@ export const NotationCard = () => {
     );
 };
 
+export default NotationCard

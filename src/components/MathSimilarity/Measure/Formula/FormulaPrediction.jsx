@@ -1,3 +1,5 @@
+import { transposeMatrix } from "../../../../helper/helper"
+
 export const getFormulaPrediction = (similarity, opsional) => {
     const opsionalModify = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? "item-based" : "user-based") : opsional
 
@@ -29,34 +31,50 @@ export const getFormulaPrediction = (similarity, opsional) => {
     }
 }
 
+export const getFormulaArgMax = (rowIndex, colIndex, opsional, similarity, topSimilarity) => {
+    console.log(topSimilarity);
+    switch (opsional) {
+        case "user-based":
+            return `\\[  Y_${(colIndex + 1)}(${(rowIndex + 1)})=\\ \\begin{matrix}2\\\\argmax\\ \\\\u \\in U_{${(colIndex + 1)}} \\end{matrix}Sim(${(rowIndex + 1)},u)\\ = \\{ ${topSimilarity.map(sim => sim.index + 1).join(",")} \\} \\]`
+        case "item-based":
+            return `\\[  Y_${(rowIndex + 1)}(${(colIndex + 1)})=\\ \\begin{matrix}2\\\\argmax\\ \\\\i \\in I_{${(rowIndex + 1)}} \\end{matrix}Sim(i,${(colIndex + 1)})\\ = \\ \\{ ${topSimilarity.map(sim => sim.index + 1).join(",")} \\} \\]`
+        default:
+            return;
+    }
+}
+
 export const getFormulaPredictionIndex = (rowIndex, colIndex, similarity, opsional) => {
     const opsionalModify = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? "item-based" : "user-based") : opsional
 
     switch (opsionalModify) {
         case "user-based":
-            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = \\overline{r_{${rowIndex + 1}}} +\\frac{\\sum_{v\\in N_${rowIndex + 1}^${colIndex + 1}} Sim_{${rowIndex + 1}v} \\times \\left(r_{v${colIndex + 1}} - \\overline{r_{v}}\\right)}{\\sum_{v \\in N_${rowIndex + 1}^${colIndex + 1}}\\mid Sim_{${rowIndex + 1}v} \\mid} \\]`
+            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = \\overline{r_{${rowIndex + 1}}} +\\frac{\\sum_{v\\in Y_${rowIndex + 1}(${colIndex + 1})} Sim_{${rowIndex + 1}v} \\times s_{v${colIndex + 1}}}{\\sum_{v \\in Y_${rowIndex + 1}(${colIndex + 1})}\\mid Sim_{${rowIndex + 1}v} \\mid} \\]`
         case "item-based":
-            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = \\overline{r_{${rowIndex + 1}}} +\\frac{\\sum_{v\\in N_${rowIndex + 1}^${colIndex + 1}} Sim_{${rowIndex + 1}v} \\times \\left(r_{v${colIndex + 1}} - \\overline{r_{v}}\\right)}{\\sum_{v \\in N_${rowIndex + 1}^${colIndex + 1}}\\mid Sim_{${rowIndex + 1}v} \\mid} \\]`
+            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = \\overline{r_{${colIndex + 1}}} +\\frac{\\sum_{v\\in Y_${(colIndex + 1)}(${(rowIndex + 1)})} Sim_{v${rowIndex + 1}} \\times s_{${colIndex + 1}v}}{\\sum_{v \\in Y_${(colIndex + 1)}(${(rowIndex + 1)})}\\mid Sim_{v${rowIndex + 1}} \\mid} \\]`
         default:
             break;
     }
 }
 
 export const getFormulaPredictionValue = (rowIndex, colIndex, similarValues, result, similarity, opsional) => {
-    const opsionalModify = similarity === "Adjusted Vector Cosine" ? (opsional === "user-based" ? "item-based" : "user-based") : opsional
+    console.log(rowIndex, colIndex, similarValues, result, similarity, opsional);
 
-    switch (opsionalModify) {
+    const resultMeanCentered = similarity === "Adjusted Vector Cosine" ? transposeMatrix(result["mean-centered-brother"]) : result["mean-centered"]
+    const resultMean = similarity === "Adjusted Vector Cosine" ? (result["mean-list-brother"]) : result["mean-list"]
+
+
+    switch (opsional) {
         case "user-based":
-            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = {${result['mean-list'][rowIndex]}} + \\frac{${similarValues.filter(sim => result['mean-centered'][sim.index][rowIndex] !== 0)
-                .map(sim => (`\\left(${sim.value.toFixed(4)} \\times \\left(${result['mean-centered'][sim.index][rowIndex].toFixed(2)}\\right)\\right)`
-                )).join(' + ')}}{${similarValues.filter(sim => result['mean-centered'][sim.index][rowIndex] !== 0)
+            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = {${resultMean[rowIndex].toFixed(3)}} + \\frac{${similarValues.filter(sim => resultMeanCentered[sim.index][colIndex] !== 0)
+                .map(sim => (`\\left(${sim.value.toFixed(4)} \\times \\left(${resultMeanCentered[sim.index][colIndex].toFixed(2)}\\right)\\right)`
+                )).join(' + ')}}{${similarValues.filter(sim => resultMeanCentered[sim.index][colIndex] !== 0)
                     .map(sim => `\\mid ${sim.value.toFixed(4)} \\mid`)
                     .join(' + ')}} \\]`;
 
         case "item-based":
-            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = {${result['mean-list'][rowIndex]}} + \\frac{${similarValues.filter(sim => result['mean-centered'][sim.index][rowIndex] !== 0)
-                .map(sim => (`\\left(${sim.value.toFixed(4)} \\times \\left(${result['mean-centered'][sim.index][rowIndex].toFixed(2)}\\right)\\right)`))
-                .join(' + ')}}{${similarValues.filter(sim => result['mean-centered'][sim.index][rowIndex] !== 0)
+            return `\\[ {\\widetilde{r_{${rowIndex + 1}${colIndex + 1}}}} = {${resultMean[colIndex].toFixed(3)}} + \\frac{${similarValues.filter(sim => resultMeanCentered[sim.index][rowIndex] !== 0)
+                .map(sim => (`\\left(${sim.value.toFixed(4)} \\times \\left(${resultMeanCentered[sim.index][rowIndex].toFixed(2)}\\right)\\right)`))
+                .join(' + ')}}{${similarValues.filter(sim => resultMeanCentered[sim.index][rowIndex] !== 0)
                     .map(sim => `\\mid ${sim.value.toFixed(4)} \\mid`)
                     .join(' + ')}} \\]`
         default:

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { MathJaxContext, MathJax } from "better-react-mathjax";
-import mathjaxConfig from "../../../mathjax-config";
+import mathjaxConfig from "../../../mathjax-config.js";
 import { FunctionMeasureDropdown } from "../DropdownFunction/FunctionMeasureDropdown.jsx";
-import { AllSimilaritas, getInitialData } from "../../../api/getDataSet.js";
+import { AllSimilaritas } from "../../../api/getDataSet.js";
 import { getFormulaSimilarity } from './Formula/FormulaSimilarity.jsx';
 import ModalSimilarity from './ModalSimilarityMeasure.jsx';
 
@@ -43,9 +43,9 @@ const TrTableSimilarity = ({ children, key }) => {
         </tr>)
 }
 
-const TdTableSimilarity = ({ onClick, children, value, key }) => {
+const TdTableSimilarity = ({ rowIndex, colIndex, onClick, children, key }) => {
     return (
-        <td key={key} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${value === 1 ? 'bg-red-200' : ''}`}
+        <td key={key} className={`border border-black px-4 py-2 text-center cursor-pointer hover:bg-card_green_primary ${rowIndex === colIndex ? 'bg-red-200' : ''}`}
             onClick={onClick}
         >
             {children}
@@ -100,7 +100,8 @@ export default function SimilarityMeasure({ opsional, similarity, initialData },
                                 {row.map((value, colIndex) => (
                                     <TdTableSimilarity
                                         key={colIndex}
-                                        value={value}
+                                        rowIndex={rowIndex}
+                                        colIndex={colIndex}
                                         onClick={() => handleMeanClick(value, rowIndex, colIndex)}
                                     >
                                         {value.toFixed(4)}

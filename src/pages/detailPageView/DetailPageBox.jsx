@@ -3,13 +3,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import SdCardAlertIcon from '@mui/icons-material/SdCardAlert';
-import TabelView from "../../components/Tabel_Data";
-import { useRef, useState } from "react";
-import { AllSimilaritas, getInitialData } from '../../api/getDataSet';
-import MeanMeasure from '../../components/MathSimilarity/Pearson/Mean/MeanMeasure';
-import MeanCenteredMeasure from '../../components/MathSimilarity/Pearson/MeanCentered/MeanCenteredMeasure';
-import SimilarityMeasure from '../../components/MathSimilarity/Pearson/SimilarityMeasure';
-import PredictionMeasure from '../../components/MathSimilarity/Pearson/Prediction/PredictionMeasure';
+import TabelView from "../../components/table/TabelView";
+import { useRef } from "react";
+import { getInitialData } from '../../api/getDataSet';
+import MeanMeasure from '../../components/MathSimilarity/Measure/Mean/MeanMeasure';
+import MeanCenteredMeasure from '../../components/MathSimilarity/Measure/MeanCentered/MeanCenteredMeasure';
+import SimilarityMeasure from '../../components/MathSimilarity/Measure/SimilarityMeasure';
+import PredictionMeasure from '../../components/MathSimilarity/Measure/Prediction/PredictionMeasure';
 
 
 export default function DetailPageBox({ method, similarity, data }) {
@@ -75,7 +75,7 @@ export default function DetailPageBox({ method, similarity, data }) {
                         boxShadow: 3,
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'flex-start', // Change this to 'flex-start' for better alignment
+                        alignItems: 'flex-start',
                     }}
                 >
                     <section className='max-w-4xl mx-auto text-center'>

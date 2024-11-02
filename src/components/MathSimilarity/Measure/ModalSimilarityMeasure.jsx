@@ -2,7 +2,6 @@ import { MathJaxContext, MathJax } from "better-react-mathjax";
 import mathjaxConfig from "../../../mathjax-config";
 import { FormulaSimilarityIndex, FormulaSimilarityNonZero, FormulaSimilarityValue, getFormulaSimilarity } from "./Formula/FormulaSimilarity";
 import { transposeMatrix } from "../../../helper/helper";
-import { Input } from "@headlessui/react";
 
 const SimilarityIndex = ({ rowIndex, colIndex, similarity, opsional }) => {
     const expression = FormulaSimilarityIndex(rowIndex, colIndex, opsional, similarity)
