@@ -21,13 +21,13 @@ export default function MeanMeasure({ opsional, similarity, initialData }) {
 
 
     const [selectedMean, setSelectedMean] = useState(null); // State untuk menyimpan mean yang dipilih
-    const [selectedIndex, setSelectedIndex] = useState(null); // State untuk menyimpan user yang dipilih
+    const [selectedIndex, setSelectedIndex] = useState([]); // State untuk menyimpan user yang dipilih
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
 
 
     const handleMeanClick = (mean, index) => {
         setSelectedMean(mean); // Simpan nilai mean yang ditekan
-        setSelectedIndex(index)
+        setSelectedIndex([index])
         setShowModal(true); // Tampilkan modal
     };
 
@@ -38,11 +38,6 @@ export default function MeanMeasure({ opsional, similarity, initialData }) {
 
     const meanFormula = getFormulaMean(opsionalModify, similarity)
 
-    const meanRumusIdx = getFormulaMeanIndex(opsionalModify, dataModify, similarity)
-
-    const meanIndexExp = getFormulaMeanExpression(opsionalModify, dataModify, similarity)
-
-    const meanExpressionsValues = getFormulaMeanValue(opsionalModify, dataModify, similarity)
 
     const RenderItemTableMean = () => {
         if (!result || !result['mean-list']) {
@@ -78,9 +73,7 @@ export default function MeanMeasure({ opsional, similarity, initialData }) {
                     <ModalMean
                         opsional={opsionalModify}
                         data={dataModify}
-                        meanRumusIdx={meanRumusIdx}
-                        meanIndexExp={meanIndexExp}
-                        meanExpressionsValues={meanExpressionsValues}
+                        similarity={similarity}
                         selectedIndex={selectedIndex}
                         selectedMean={selectedMean}
                         close={closeModal}
